@@ -1,0 +1,25 @@
+{
+  "name": "GSM",
+  "version": "1.0.0",
+  "description": "Rate your friends, find people, visualize and gain the full benefit of your network.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": "0.12.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/willgu29/GSM.git"
+  },
+  "author": "Will Gu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/willgu29/GSM/issues"
+  },
+  "homepage": "https://github.com/willgu29/GSM",
+  "dependencies": {
+    "express": "^4.13.0"
+  }
+}
