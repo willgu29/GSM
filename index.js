@@ -13,13 +13,10 @@ app.engine('js', require('express-react-views').createEngine());
 
 
 app.get("/", function (req, res) {
-	res.render('GSMHeaderBar');
+	res.render('Pages/HomePage');
 
 });
 
-// app.get("/ReactViews/build/:componentName", function (req, res) {
-// 	res.sendFile(__dirname + req.url);
-// });
 
 
 app.listen(3000);
