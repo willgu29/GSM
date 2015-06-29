@@ -21,9 +21,13 @@
   "homepage": "https://github.com/willgu29/GSM",
   "dependencies": {
     "body-parser": "^1.13.1",
+    "cookie-parser": "^1.3.5",
     "express": "^4.13.0",
     "express-react-views": "^0.8.1",
+    "express-session": "^1.11.3",
     "mongoose": "^4.0.6",
+    "passport": "^0.2.2",
+    "passport-local": "^1.0.0",
     "react": "^0.13.3"
   }
 }

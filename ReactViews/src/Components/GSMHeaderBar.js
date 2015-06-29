@@ -13,7 +13,7 @@ var GSMHeaderBar = React.createClass({
     return (
       <div style={headerStyle}>
         <p>Hello world!</p>
-        <GenericHeaderBarButton url="http://tupleapp.com">Re-experience Dining</GenericHeaderBarButton>
+        <GenericHeaderBarButton url="http://tupleapp.com" displayName="Experience Social" />
       </div>
     );
   }

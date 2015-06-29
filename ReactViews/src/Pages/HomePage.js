@@ -1,7 +1,7 @@
 var React = require('react');
-var GSMHeaderBar = require('../GSMHeaderBar');
+var GSMHeaderBar = require('../Components/GSMHeaderBar');
 
-var Hi = React.createClass({
+var HomePage = React.createClass({
 	render: function() {
 		return (
 			<GSMHeaderBar />
@@ -9,4 +9,4 @@ var Hi = React.createClass({
 	}
 });
 
-module.exports = Hi;
+module.exports = HomePage;
