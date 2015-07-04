@@ -8,7 +8,8 @@ var express = require('express'),
 	cookieParser = require('cookie-parser');
 	passport = require('passport'),
 	LocalStrategy = require('passport-local').Strategy,
-	session = require('express-session');
+	session = require('express-session'),
+	User = require('./Models/User.js');
 
 
 
@@ -19,10 +20,9 @@ app.use(cookieParser());
 app.use(session({ secret: 'baeMaxLoving'}))
 app.use(passport.initialize());
 app.use(passport.session());
-app.set('views', __dirname + '/ReactViews/src');
-app.set('view engine', 'js');
-app.engine('js', require('express-react-views').createEngine());
 
+app.use("/style", express.static(__dirname + '/style'));
+app.use("/ReactViews/build", express.static(__dirname + '/ReactViews/build'));
 
 
 //**********************************
@@ -30,12 +30,36 @@ app.engine('js', require('express-react-views').createEngine());
 
 //ROUTING
 
-app.get("/", function (req, res) {
-	res.render('Pages/HomePage');
+	//VIEWS 
 
+app.get("/", function (req, res) {
+	if (!req.user) {
+		res.sendFile(__dirname + "/public/landingPage.html");
+	} else {
+		res.sendFile(__dirname + "/public/index.html");
+	}
 });
 
 
+app.get("/login" ,function (req, res) {
+	res.sendFile(__dirname + "/public/login.html");
+});
+
+	//***************
+
+	//API Calls
+
+app.post('/login',  passport.authenticate('local', { failureRedirect: '/login'}),
+  function(req, res) {
+        res.redirect('/');
+ });
+
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
+});
+
+	//********************
 
 app.listen(3000);
 
