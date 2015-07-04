@@ -8,7 +8,6 @@ var CreateAccountForm = React.createClass({displayName: "CreateAccountForm",
              	"first name: ", React.createElement("input", {type: "text", name: "firstName"}), " ", React.createElement("br", null), 
                 "last name: ", React.createElement("input", {type: "text", name: "lastName"}), " ", React.createElement("br", null), 
                 "email: ", React.createElement("input", {type: "email", name: "email"}), " ", React.createElement("br", null), 
-                "phone number: (xxxxxxxxxx) ", React.createElement("input", {type: "tel", name: "phoneNumber"}), " ", React.createElement("br", null), 
                 "password: ", React.createElement("input", {type: "password", name: "password"}), " ", React.createElement("br", null), 
                 React.createElement("br", null), 
                 React.createElement("input", {type: "submit", value: "create account", id: "createAccount"})

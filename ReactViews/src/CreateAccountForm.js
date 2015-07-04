@@ -7,7 +7,8 @@ var CreateAccountForm = React.createClass({
 			 <form className="createAccountForm" method="post" action="createAccount" >
              	first name: <input type="text" name="firstName" /> <br />
                 last name: <input type="text" name="lastName" /> <br />
-                email: <input type="text" name="email" /> <br />
+                email: <input type="email" name="email" /> <br />
+                phone number: (xxxxxxxxxx) <input type="tel" name="phoneNumber" /> <br />
                 password: <input type="password" name="password" /> <br />
                 <br />
                 <input type="submit" value="create account" id="createAccount" />

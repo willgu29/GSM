@@ -48,13 +48,21 @@ app.get("/login" ,function (req, res) {
 	res.sendFile(__dirname + "/public/login.html");
 });
 
+app.get("/editAccount", function (req, res) {
+	console.log("/editAccount GET");
+
+	res.sendFile(__dirname = "/public/editAccount.html");
+})
+
 	//***************
 
 	//API Calls
 
+//Authentication and Login
 app.post('/createAccount', function (req, res) {
         console.log("/createAccount POST");
         var newUser = new User({ email: req.body.email,
+        						phoneNumber: req.body.phoneNumber,
                                 password: req.body.password,
                                 firstName: req.body.firstName,
                                 lastName: req.body.lastName,
@@ -73,15 +81,29 @@ app.post('/createAccount', function (req, res) {
 
 
 app.post('/login',  passport.authenticate('local', { failureRedirect: '/login'}),
-  function(req, res) {
+  function (req, res) {
   		console.log("/login POST");
         res.redirect('/');
  });
 
-app.get('/logout', function(req, res){
+app.get('/logout', function (req, res){
   req.logout();
   res.redirect('/');
 });
+//*************************
+
+app.get("/api/users", function (req, res) { ///limit, skip, user
+	User.find({}, function (err, memories) {
+                if (err) return console.error(err);
+                console.log(memories);
+                res.json(memories);
+    }).limit(req.body.limit).skip(req.body.skip);
+});
+
+  //Database Edits
+app.put("/api/users/userID:")
+
+  ///***********
 
 	//********************
 

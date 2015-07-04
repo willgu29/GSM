@@ -4,7 +4,7 @@ var UserImg = React.createClass({
 
     return (
 
-      <p>Name</p>
+      <p>{this.props.fullName}</p>
     );
   }
 });
@@ -41,29 +41,66 @@ var RatingStars = React.createClass({
 });
 
 
+var UserRow = React.createClass({
+  
+  render: function() {
+    return(
+      <tr>
+        <td><UserImg fullName={this.props.fullName} /></td>
+        <td>CSS,HTML</td>
+        <td>INTP, Big Five Link</td>
+        <td>You want to get lunch/dinner or would like free tutoring in iOS. Also let me know if you would like to help with BAB</td>
+        <td>Low-key paradoxical nerd.</td>
+      </tr>
+    );
+  }
+
+});
+
 var tableStyle = {
 
   width: "100%"
 }
 
 var GSMUserTableView = React.createClass({
+  getInitialState:  function() {
+    return ({users:[]});
+  },
+  componentDidMount: function() {
+    $.ajax({
+      url: this.props.url,
+      dataType: 'json',
+      cache: false,
+      success: function(arrayOfUsers){
+      if (this.isMounted()){
+        this.setState({users:arrayOfUsers});
+      }
+      }.bind(this),
+      error: function(xhr,status,err){
+        console.error(status, err.toString());
+      }.bind(this)
+      });
+  },
 
   render: function() {
-
+    var arrayOfUsers = this.state.users;
+    var arrayOfUserRows = [];
+    for (var i = 0 ; i < arrayOfUsers.length; i++) {
+      var user = arrayOfUsers[i];
+ 
+      arrayOfUserRows.push(<UserRow fullName={user.fullName} />);
+    }
     return(
       <table border="1" style={tableStyle} >
         <tr>
           <th>Name</th>
           <th>Skills</th>
           <th>Personality</th>
+          <th>Contact Me If..</th>
           <th>Interesting Facts</th>
         </tr>
-        <tr>
-          <td> <UserImg /> </td>
-          <td> CSS, HTML </td>
-          <td> INTP, Big Five Link </td>
-          <td> Low-key paradoxical nerd. </td>
-        </ tr>
+        {arrayOfUserRows}
+        
      
 
       </table>
@@ -73,4 +110,4 @@ var GSMUserTableView = React.createClass({
   }
 });
 
-React.render(<GSMUserTableView />, document.body);
+React.render(<GSMUserTableView url="/api/users" />, document.getElementById("gsmUserTableView"));

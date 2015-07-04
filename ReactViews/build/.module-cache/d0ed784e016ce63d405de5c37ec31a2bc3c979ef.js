@@ -4,7 +4,7 @@ var UserImg = React.createClass({displayName: "UserImg",
 
     return (
 
-      React.createElement("p", null, this.props.fullName)
+      React.createElement("p", null, "Name")
     );
   }
 });
@@ -46,10 +46,10 @@ var UserRow = React.createClass({displayName: "UserRow",
   render: function() {
     return(
       React.createElement("tr", null, 
-        React.createElement("td", null, React.createElement(UserImg, {fullName: this.props.fullName})), 
+        React.createElement("td", null, React.createElement(UserImg, null)), 
         React.createElement("td", null, "CSS,HTML"), 
         React.createElement("td", null, "INTP, Big Five Link"), 
-        React.createElement("td", null, "You want to get lunch/dinner or would like free tutoring in iOS. Also let me know if you would like to help with BAB"), 
+        React.createElement("td", null, "Lunch/Dinner"), 
         React.createElement("td", null, "Low-key paradoxical nerd.")
       )
     );
@@ -88,7 +88,7 @@ var GSMUserTableView = React.createClass({displayName: "GSMUserTableView",
     for (var i = 0 ; i < arrayOfUsers.length; i++) {
       var user = arrayOfUsers[i];
  
-      arrayOfUserRows.push(React.createElement(UserRow, {fullName: user.fullName}));
+      arrayOfUserRows.push(React.createElement(UserRow, null));
     }
     return(
       React.createElement("table", {border: "1", style: tableStyle}, 
@@ -96,7 +96,7 @@ var GSMUserTableView = React.createClass({displayName: "GSMUserTableView",
           React.createElement("th", null, "Name"), 
           React.createElement("th", null, "Skills"), 
           React.createElement("th", null, "Personality"), 
-          React.createElement("th", null, "Contact Me If.."), 
+          React.createElement("th", null, "Contact me if.."), 
           React.createElement("th", null, "Interesting Facts")
         ), 
         arrayOfUserRows

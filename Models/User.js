@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 
 var userSchema = new mongoose.Schema({
   email: String,
+  phoneNumber: Number,
   password: String,
   firstName: String,
   lastName: String,
@@ -12,7 +13,7 @@ var userSchema = new mongoose.Schema({
   identity : {
   	skills: [String],
   	personality: [String],
-  	wants: [String],
+  	contactIf: [String],
   	interesting: [String]
 
   }
