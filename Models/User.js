@@ -1,7 +1,6 @@
 var mongoose = require('mongoose');
 
 var userSchema = new mongoose.Schema({
-  _id: mongoose.Schema.Types.ObjectId,
   email: String,
   password: String,
   firstName: String,
@@ -9,8 +8,14 @@ var userSchema = new mongoose.Schema({
   fullName: String,
   avatarURL: String,
   dateCreated: {type: Date, default: Date.now},
-  overallRating: Number
+  overallRating: Number,
+  identity : {
+  	skills: [String],
+  	personality: [String],
+  	wants: [String],
+  	interesting: [String]
 
+  }
 
 });
 

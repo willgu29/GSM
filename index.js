@@ -33,6 +33,7 @@ app.use("/ReactViews/build", express.static(__dirname + '/ReactViews/build'));
 	//VIEWS 
 
 app.get("/", function (req, res) {
+	console.log('/ GET');
 	if (!req.user) {
 		res.sendFile(__dirname + "/public/landingPage.html");
 	} else {
@@ -42,6 +43,8 @@ app.get("/", function (req, res) {
 
 
 app.get("/login" ,function (req, res) {
+	console.log("/login GET");
+
 	res.sendFile(__dirname + "/public/login.html");
 });
 
@@ -49,8 +52,29 @@ app.get("/login" ,function (req, res) {
 
 	//API Calls
 
+app.post('/createAccount', function (req, res) {
+        console.log("/createAccount POST");
+        var newUser = new User({ email: req.body.email,
+                                password: req.body.password,
+                                firstName: req.body.firstName,
+                                lastName: req.body.lastName,
+                                fullName: req.body.firstName+' '+req.body.lastName});
+        
+        newUser.save(function (err, newUser) {
+                if (err) {
+                	console.error(err);
+                	return res.send("There was an error creating your account. Please try again in a minute.");
+                } else {
+                	console.log(newUser);
+                	return res.send("Account created! Feel free to login and update your user profile!");
+                }
+        })
+})
+
+
 app.post('/login',  passport.authenticate('local', { failureRedirect: '/login'}),
   function(req, res) {
+  		console.log("/login POST");
         res.redirect('/');
  });
 
@@ -132,6 +156,17 @@ passport.deserializeUser(function(id, done) {
 
 //*************************
 
+//Helpers that should be placed in separate files 
+
+function generateUUID() {
+    var d = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+};
 
 
 

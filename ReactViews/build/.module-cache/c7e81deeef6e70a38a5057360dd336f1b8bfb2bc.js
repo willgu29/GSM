@@ -1,10 +1,29 @@
 var CreateAccountForm = React.createClass({displayName: "CreateAccountForm",
 
+	handleSubmit: function(e) {
+		console.log(JSON.stringify(e));
+		
+		e.preventDefault();
+		$.ajax({
+    	  url: this.props.url,
+      	  dataType: 'json',
+      	  type: 'POST',
+      	  data: e,
+      	  success: function(data) {
+      	  	console.log("SUCCESS");
+      	  }.bind(this),
+      	  error: function(xhr, status, err) {
+       		console.error(this.props.url, status, err.toString());
+      	  }.bind(this)
+    	});
+	
+	},
+
 	render: function() {
 		return(	
 			React.createElement("div", null, 
 			React.createElement("h4", null, "Create Account"), 
-			 React.createElement("form", {className: "createAccountForm", method: "post", action: "createAccount"}, 
+			 React.createElement("form", {className: "createAccountForm", onSubmit: this.handleSubmit}, 
              	"first name: ", React.createElement("input", {type: "text", name: "firstName"}), " ", React.createElement("br", null), 
                 "last name: ", React.createElement("input", {type: "text", name: "lastName"}), " ", React.createElement("br", null), 
                 "email: ", React.createElement("input", {type: "text", name: "email"}), " ", React.createElement("br", null), 

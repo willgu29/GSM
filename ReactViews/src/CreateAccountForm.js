@@ -1,21 +1,16 @@
 var CreateAccountForm = React.createClass({
 
-	handleSubmit: function(e) {
-		if (!this.validate) {
-			e.preventDefault();
-		} 
-		alert("HI");
-	},
-
 	render: function() {
-		return(
+		return(	
 			<div>
-			 <form className="createAccountForm" onsubmit={this.handleSubmit} method="post">
-             	First name: <input type="text" name="firstName" /> <br />
-                Last name: <input type="text" name="lastName" /> <br />
-                Email: <input type="text" name="email" /> <br />
-                Password: <input type="password" name="password" /> <br />
-                <input type="submit" value="Create Account" id="createAccount" />
+			<h4>Create Account</h4>
+			 <form className="createAccountForm" method="post" action="createAccount" >
+             	first name: <input type="text" name="firstName" /> <br />
+                last name: <input type="text" name="lastName" /> <br />
+                email: <input type="text" name="email" /> <br />
+                password: <input type="password" name="password" /> <br />
+                <br />
+                <input type="submit" value="create account" id="createAccount" />
             </form>
             </div>
              
@@ -23,4 +18,6 @@ var CreateAccountForm = React.createClass({
 	} 
 });
 
-React.render(<CreateAccountForm />, document.body);
+React.render(<CreateAccountForm url="/createAccount" />, document.getElementById("createAccountForm"));
+
+
