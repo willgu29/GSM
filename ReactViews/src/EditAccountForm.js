@@ -4,11 +4,18 @@ var EditAccountForm = React.createClass({
 		return(	
 			<div>
 			<h4>Edit Account</h4>
-			 <form className="editAccountForm" method="post" action="editAccount" >
-             	Add skills: <input type="text" name="skills" placeholder="separate with commas only (no spaces)" /> <br />
-                Add personality traits: <input type="text" name="personality" placeholder="separate with commas only (no spaces)" /> <br />
-                Why should someone contact you? (things you want/things you can give perhaps) <input type="text" name="contactIf" placeholder="separate with commas only (no spaces)"/> <br />
-                Tell us something interesting about yourself: <textarea name="interesting" cols="60" row="5" ></textarea> <br />
+			 <form className="editAccountForm" method="put" action="api/users/me" >
+             	Add skills: <br /> 
+                <input size="60" type="text" name="skills" placeholder="separate with commas only (no spaces)" /> <br />
+                <br />
+                Add personality traits: <br /> 
+                <input size="60" type="text" name="personality" placeholder="separate with commas only (no spaces)" /> <br />
+                <br />
+                Why should someone contact you? (things you want/things you can give perhaps) <br /> 
+                <input size="60" type="text" name="contactIf" placeholder="separate with commas only (no spaces)"/> <br />
+                <br />
+                Tell us something interesting about yourself: <br /> 
+                <textarea name="interesting" cols="60" row="10" ></textarea> <br />
                 <br />
                 <input type="submit" value="edit account" id="editAccount" />
             </form>
@@ -18,6 +25,6 @@ var EditAccountForm = React.createClass({
 	} 
 });
 
-React.render(<CreateAccountForm url="/editAccount" />, document.getElementById("editAccountForm"));
+React.render(<EditAccountForm url="/api/users/me" />, document.getElementById("editAccountForm"));
 
 

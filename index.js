@@ -32,6 +32,8 @@ app.use("/ReactViews/build", express.static(__dirname + '/ReactViews/build'));
 
 	//VIEWS 
 
+
+
 app.get("/", function (req, res) {
 	console.log('/ GET');
 	if (!req.user) {
@@ -41,18 +43,18 @@ app.get("/", function (req, res) {
 	}
 });
 
-
 app.get("/login" ,function (req, res) {
-	console.log("/login GET");
+  console.log("/login GET");
 
-	res.sendFile(__dirname + "/public/login.html");
+  res.sendFile(__dirname + "/public/login.html");
 });
 
 app.get("/editAccount", function (req, res) {
-	console.log("/editAccount GET");
+  console.log("/editAccount GET");
 
-	res.sendFile(__dirname = "/public/editAccount.html");
-})
+  res.sendFile(__dirname + "/public/editAccount.html");
+});
+
 
 	//***************
 
@@ -101,7 +103,22 @@ app.get("/api/users", function (req, res) { ///limit, skip, user
 });
 
   //Database Edits
-app.put("/api/users/userID:")
+app.put("/api/users/:userID", function (req, res) {
+  console.log("/api/users/:userID PUT");
+
+    var skillsArray = req.body.skills.split(',');
+    var personalityArray = req.body.personality.split(',');
+
+    var query = {'email':req.user.email};
+    req.newData.identity.skills = skillsArray;
+    req.newData.identity.personality = personalityArray;
+    req.newData.identity.contactIf = req.body.contactIf;
+    req.newData.identity.interesting = req.body.interesting;
+    User.findOneAndUpdate(query, req.newData, {upsert:false}, function(err, doc){
+      if (err) return res.send(500, { error: err });
+      return res.send("succesfully saved");
+    });
+});
 
   ///***********
 

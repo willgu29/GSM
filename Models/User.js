@@ -13,8 +13,8 @@ var userSchema = new mongoose.Schema({
   identity : {
   	skills: [String],
   	personality: [String],
-  	contactIf: [String],
-  	interesting: [String]
+  	contactIf: String,
+  	interesting: String
 
   }
 

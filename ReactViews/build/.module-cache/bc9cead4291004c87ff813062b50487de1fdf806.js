@@ -4,7 +4,7 @@ var EditAccountForm = React.createClass({displayName: "EditAccountForm",
 		return(	
 			React.createElement("div", null, 
 			React.createElement("h4", null, "Edit Account"), 
-			 React.createElement("form", {className: "editAccountForm", method: "put", action: "api/users/me"}, 
+			 React.createElement("form", {className: "editAccountForm", method: "post", action: "api/users/me"}, 
              	"Add skills: ", React.createElement("br", null), 
                 React.createElement("input", {size: "60", type: "text", name: "skills", placeholder: "separate with commas only (no spaces)"}), " ", React.createElement("br", null), 
                 React.createElement("br", null), 
