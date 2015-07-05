@@ -33,51 +33,29 @@ var EditAccountForm = React.createClass({
             }.bind(this)
         });
      },
-    handleChange: function(event) {
-        if (event.target.id == "interesting") {
-            this.setState({interesting: event.target.interesting});
-        } else if (event.target.id == "contactIf") {
-            this.setState({contactIf: event.target.contactIf});
-        } else if (event.target.id == "skills") {
-            this.setState({skills: event.target.skills});
-        } else if (event.target.id == "personality") {
-            this.setState({personality: event.target.personality});
-        } else {
-            //???
-        }
+    handleChange: function(name, event) {
+        var change = {};
+        change[name] = event.target.value;
+        this.setState(change);
     },
 	render: function() {
 
-        var personalityArray = this.state.personality;
-        var skillsArray = this.state.skills;
-        var personalityDisplay = [];
-        var skillsDisplay = [];
-
-        for (var i=0; i < personalityArray.length; i++) {
-            var personalityTrait = personalityArray[i];
-            personalityDisplay.push(personalityTrait);
-        }
-        for (var i=0; i < this.state.skills.length; i++) {
-            var skillsTrait = this.state.skills[i];
-            skillsDisplay.push(skillsTrait);
-        }
-  
 
 		return(	
             <div>
 			 <h4>Edit Account</h4>
 			  <form className="editAccountForm" method="post" action="api/users/me" >
                  	Add skills: (separate with commas only (no spaces)) <br /> 
-                    <input id="skills" size="60" type="text" name="skills" value={skillsDisplay} onChange={this.handleChange} /> <br />
+                    <input id="skills" size="60" type="text" name="skills" value={this.state.skills} onChange={this.handleChange.bind(this, "skills")} /> <br />
                     <br />
                     Add personality traits: (separate with commas only (no spaces))  <br /> 
-                    <input id="personality" size="60" type="text" name="personality" value={personalityDisplay} onChange={this.handleChange} /> <br />
+                    <input id="personality" size="60" type="text" name="personality" value={this.state.personality} onChange={this.handleChange.bind(this, "personality")} /> <br />
                     <br />
                     Why should someone contact you? (things you want/things you can give perhaps) <br /> 
-                    <textarea id="contactIf" name="contactIf" value={this.state.contactIf} onChange={this.handleChange} cols="60" row="10" ></textarea> <br /><br />
+                    <textarea id="contactIf" name="contactIf" value={this.state.contactIf} onChange={this.handleChange.bind(this, "contactIf")} cols="60" row="10" ></textarea> <br /><br />
                     <br />
                     Tell us something interesting about yourself: <br /> 
-                    <textarea id="interesting" name="interesting" value={this.state.interesting} onChange={this.handleChange} cols="60" row="10" ></textarea> <br />
+                    <textarea id="interesting" name="interesting" value={this.state.interesting} onChange={this.handleChange.bind(this, "interesting")} cols="60" row="10" ></textarea> <br />
                     <br />
                     <input type="submit" value="edit account" id="editAccount" />
                 </form>
