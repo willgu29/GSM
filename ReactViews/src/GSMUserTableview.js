@@ -1,4 +1,6 @@
 
+//Tabular Data Columns
+
 var UserImg = React.createClass({
   render: function() {
 
@@ -8,6 +10,65 @@ var UserImg = React.createClass({
     );
   }
 });
+
+var SkillsColumn = React.createClass({
+
+
+  render: function() {
+
+    var skillsArray = this.props.skills;
+    var arrayOfSkills = [];
+    for (var i = 0 ; i < skillsArray.length; i++) {
+      var skill = skillsArray[i];
+ 
+      arrayOfSkills.push(skill+" ");
+    }
+    return (
+        <p>{arrayOfSkills}</p>
+    );
+  }
+
+});
+
+var PersonalityColumn = React.createClass({
+  render: function() {
+
+    var personalityArray = this.props.personality;
+
+    var arrayOfPersonality = [];
+    for (var i = 0 ; i < personalityArray.length; i++) {
+      var personalityTrait = personalityArray[i];
+ 
+      arrayOfPersonality.push(personalityTrait+" ");
+    }
+    return (
+        <p>{arrayOfPersonality}</p>
+    );
+  }
+
+});
+
+var ContactIfColumn = React.createClass({
+  render: function() {
+
+    return(
+      <p>{this.props.contactIf}</p>
+    );
+  }
+
+});
+
+var InterestingColumn = React.createClass({
+  render: function() {
+
+    return(
+      <p>{this.props.interesting}</p>
+    );
+  }
+
+});
+
+/////
 
 var StarImg = React.createClass({
   
@@ -47,10 +108,10 @@ var UserRow = React.createClass({
     return(
       <tr>
         <td><UserImg fullName={this.props.fullName} /></td>
-        <td>CSS,HTML</td>
-        <td>INTP, Big Five Link</td>
-        <td>You want to get lunch/dinner or would like free tutoring in iOS. Also let me know if you would like to help with BAB</td>
-        <td>Low-key paradoxical nerd.</td>
+        <td><SkillsColumn skills={this.props.skills} /></td>
+        <td><PersonalityColumn personality={this.props.personality}/></td>
+        <td><ContactIfColumn contactIf={this.props.contactIf} /></td>
+        <td><InterestingColumn interesting={this.props.interesting} /></td>
       </tr>
     );
   }
@@ -88,7 +149,10 @@ var GSMUserTableView = React.createClass({
     for (var i = 0 ; i < arrayOfUsers.length; i++) {
       var user = arrayOfUsers[i];
  
-      arrayOfUserRows.push(<UserRow fullName={user.fullName} />);
+      arrayOfUserRows.push(<UserRow fullName={user.fullName} 
+                                    skills={user.identity.skills} 
+                                    personality={user.identity.personality} 
+                                    contactIf={user.identity.contactIf} />);
     }
     return(
       <table border="1" style={tableStyle} >

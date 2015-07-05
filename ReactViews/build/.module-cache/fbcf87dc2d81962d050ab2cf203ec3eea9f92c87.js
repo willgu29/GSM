@@ -17,6 +17,9 @@ var SkillsColumn = React.createClass({displayName: "SkillsColumn",
   render: function() {
 
     var skillsArray = this.props.skills;
+    if (skillsArray == undefined) {
+      skillsArray = [];
+    }
     var arrayOfSkills = [];
     for (var i = 0 ; i < skillsArray.length; i++) {
       var skill = skillsArray[i];
@@ -34,7 +37,9 @@ var PersonalityColumn = React.createClass({displayName: "PersonalityColumn",
   render: function() {
 
     var personalityArray = this.props.personality;
-
+    if (personalityArray == undefined) {
+      personalityArray = [];
+    }
     var arrayOfPersonality = [];
     for (var i = 0 ; i < personalityArray.length; i++) {
       var personalityTrait = personalityArray[i];
@@ -43,26 +48,6 @@ var PersonalityColumn = React.createClass({displayName: "PersonalityColumn",
     }
     return (
         React.createElement("p", null, arrayOfPersonality)
-    );
-  }
-
-});
-
-var ContactIfColumn = React.createClass({displayName: "ContactIfColumn",
-  render: function() {
-
-    return(
-      React.createElement("p", null, this.props.contactIf)
-    );
-  }
-
-});
-
-var InterestingColumn = React.createClass({displayName: "InterestingColumn",
-  render: function() {
-
-    return(
-      React.createElement("p", null, this.props.interesting)
     );
   }
 
@@ -110,8 +95,8 @@ var UserRow = React.createClass({displayName: "UserRow",
         React.createElement("td", null, React.createElement(UserImg, {fullName: this.props.fullName})), 
         React.createElement("td", null, React.createElement(SkillsColumn, {skills: this.props.skills})), 
         React.createElement("td", null, React.createElement(PersonalityColumn, {personality: this.props.personality})), 
-        React.createElement("td", null, React.createElement(ContactIfColumn, {contactIf: this.props.contactIf})), 
-        React.createElement("td", null, React.createElement(InterestingColumn, {interesting: this.props.interesting}))
+        React.createElement("td", null, "You want to get lunch/dinner or would like free tutoring in iOS. Also let me know if you would like to help with BAB"), 
+        React.createElement("td", null, "Low-key paradoxical nerd.")
       )
     );
   }
@@ -149,10 +134,7 @@ var GSMUserTableView = React.createClass({displayName: "GSMUserTableView",
     for (var i = 0 ; i < arrayOfUsers.length; i++) {
       var user = arrayOfUsers[i];
  
-      arrayOfUserRows.push(React.createElement(UserRow, {fullName: user.fullName, 
-                                    skills: user.identity.skills, 
-                                    personality: user.identity.personality, 
-                                    contactIf: user.identity.contactIf}));
+      arrayOfUserRows.push(React.createElement(UserRow, {fullName: user.fullName, skills: user.identity.skills}));
     }
     return(
       React.createElement("table", {border: "1", style: tableStyle}, 

@@ -103,18 +103,24 @@ app.get("/api/users", function (req, res) { ///limit, skip, user
 });
 
   //Database Edits
-app.put("/api/users/:userID", function (req, res) {
-  console.log("/api/users/:userID PUT");
+app.post("/api/users/:userID", function (req, res) {
+  console.log("/api/users/:userID POST");
 
     var skillsArray = req.body.skills.split(',');
     var personalityArray = req.body.personality.split(',');
 
     var query = {'email':req.user.email};
-    req.newData.identity.skills = skillsArray;
-    req.newData.identity.personality = personalityArray;
-    req.newData.identity.contactIf = req.body.contactIf;
-    req.newData.identity.interesting = req.body.interesting;
-    User.findOneAndUpdate(query, req.newData, {upsert:false}, function(err, doc){
+
+    var newData = {
+      identity: {
+        skills: skillsArray,
+        personality: personalityArray,
+        contactIf: req.body.contactIf,
+        interesting: req.body.interesting
+      }
+    }
+
+    User.findOneAndUpdate(query, newData, {upsert:false}, function(err, doc){
       if (err) return res.send(500, { error: err });
       return res.send("succesfully saved");
     });

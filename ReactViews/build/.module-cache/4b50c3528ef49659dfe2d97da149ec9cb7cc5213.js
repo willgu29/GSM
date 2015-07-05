@@ -58,16 +58,6 @@ var ContactIfColumn = React.createClass({displayName: "ContactIfColumn",
 
 });
 
-var InterestingColumn = React.createClass({displayName: "InterestingColumn",
-  render: function() {
-
-    return(
-      React.createElement("p", null, this.props.interesting)
-    );
-  }
-
-});
-
 /////
 
 var StarImg = React.createClass({displayName: "StarImg",
@@ -111,7 +101,7 @@ var UserRow = React.createClass({displayName: "UserRow",
         React.createElement("td", null, React.createElement(SkillsColumn, {skills: this.props.skills})), 
         React.createElement("td", null, React.createElement(PersonalityColumn, {personality: this.props.personality})), 
         React.createElement("td", null, React.createElement(ContactIfColumn, {contactIf: this.props.contactIf})), 
-        React.createElement("td", null, React.createElement(InterestingColumn, {interesting: this.props.interesting}))
+        React.createElement("td", null, "Low-key paradoxical nerd.")
       )
     );
   }

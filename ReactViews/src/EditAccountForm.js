@@ -4,7 +4,7 @@ var EditAccountForm = React.createClass({
 		return(	
 			<div>
 			<h4>Edit Account</h4>
-			 <form className="editAccountForm" method="put" action="api/users/me" >
+			 <form className="editAccountForm" method="post" action="api/users/me" >
              	Add skills: <br /> 
                 <input size="60" type="text" name="skills" placeholder="separate with commas only (no spaces)" /> <br />
                 <br />
@@ -12,7 +12,7 @@ var EditAccountForm = React.createClass({
                 <input size="60" type="text" name="personality" placeholder="separate with commas only (no spaces)" /> <br />
                 <br />
                 Why should someone contact you? (things you want/things you can give perhaps) <br /> 
-                <input size="60" type="text" name="contactIf" placeholder="separate with commas only (no spaces)"/> <br />
+                <textarea name="contactIf" cols="60" row="10" ></textarea> <br /><br />
                 <br />
                 Tell us something interesting about yourself: <br /> 
                 <textarea name="interesting" cols="60" row="10" ></textarea> <br />
