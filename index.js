@@ -101,6 +101,25 @@ app.get("/api/users", function (req, res) { ///limit, skip, user
                 res.json(memories);
     }).limit(req.body.limit).skip(req.body.skip);
 });
+app.get("/api/users/:userID", function (req, res) {
+  console.log("/api/users/:userID GET " +  req.params.userID);
+
+  var searchEmail;
+  if (req.params.userID == "me") {
+    searchEmail = req.user.email;
+  } else {
+    searchEmail = req.params.userID;
+  }
+  User.findOne({email:searchEmail}, function (err, user) {
+    if (err) { 
+      console.log(err);
+    } else {
+      console.log(user);
+      res.json(user);
+    }
+  });
+
+});
 
   //Database Edits
 app.post("/api/users/:userID", function (req, res) {

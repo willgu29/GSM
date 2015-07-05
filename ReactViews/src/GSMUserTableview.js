@@ -127,7 +127,7 @@ var GSMUserTableView = React.createClass({
   getInitialState:  function() {
     return ({users:[]});
   },
-  componentDidMount: function() {
+  componentWillMount: function() {
     $.ajax({
       url: this.props.url,
       dataType: 'json',
@@ -152,7 +152,8 @@ var GSMUserTableView = React.createClass({
       arrayOfUserRows.push(<UserRow fullName={user.fullName} 
                                     skills={user.identity.skills} 
                                     personality={user.identity.personality} 
-                                    contactIf={user.identity.contactIf} />);
+                                    contactIf={user.identity.contactIf}
+                                    interesting={user.identity.interesting} />);
     }
     return(
       <table border="1" style={tableStyle} >

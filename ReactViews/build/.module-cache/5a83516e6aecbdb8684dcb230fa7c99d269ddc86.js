@@ -1,0 +1,77 @@
+var EditAccountForm = React.createClass({displayName: "EditAccountForm",
+    getInitialState: function() {
+        return ({user:{}})
+    },
+    componentDidMount: function() {
+        $.ajax({
+            url: this.props.url,
+            dataType: 'json',
+            cache: false,
+            success: function(userData){
+            if (this.isMounted()){
+                this.setState({user:userData});
+            }
+            }.bind(this),
+            error: function(xhr,status,err){
+                console.error(status, err.toString());
+            }.bind(this)
+        });
+     },
+    handleChange: function() {
+
+    },
+	render: function() {
+
+        var personalityDisplay = "";
+        var skillsDisplay = "";
+        var contactIfDisplay = "";
+        var interestingDisplay = "";
+
+        if (this.state.user == undefined) {
+            //Do nothing
+        } else {
+            var userData = this.state.user;
+            
+            var personalityArray = userData.identity.personality;
+            var skillsArray = userData.identity.skills;
+
+            for (var i=0; i < personalityArray.length; i++) {
+                var personalityTrait = personalityArray[i];
+                personalityDisplay = personalityDisplay + " " + personalityTrait;
+            }
+            for (var i=0; i < skillsArray.length; i++) {
+                var skillsTrait = skillsArray[i];
+                skillsDisplay = skillsDisplay + " " + skillsTrait;
+            }
+
+            contactIfDisplay = userData.identity.contactIf;
+            interestingDisplay = userData.identity.interesting;
+        }
+
+		return(	
+			React.createElement("div", null, 
+			React.createElement("h4", null, "Edit Account"), 
+			 React.createElement("form", {className: "editAccountForm", method: "post", action: "api/users/me"}, 
+             	"Add skills: (separate with commas only (no spaces)) ", React.createElement("br", null), 
+                React.createElement("input", {size: "60", type: "text", name: "skills", defaultValue: skillsDisplay}), " ", React.createElement("br", null), 
+                React.createElement("br", null), 
+                "Add personality traits: (separate with commas only (no spaces))  ", React.createElement("br", null), 
+                React.createElement("input", {size: "60", type: "text", name: "personality", defaultValue: personalityDisplay}), " ", React.createElement("br", null), 
+                React.createElement("br", null), 
+                "Why should someone contact you? (things you want/things you can give perhaps) ", React.createElement("br", null), 
+                React.createElement("textarea", {name: "contactIf", cols: "60", row: "10"}), " ", React.createElement("br", null), React.createElement("br", null), 
+                React.createElement("br", null), 
+                "Tell us something interesting about yourself: ", React.createElement("br", null), 
+                React.createElement("textarea", {name: "interesting", cols: "60", row: "10"}), " ", React.createElement("br", null), 
+                React.createElement("br", null), 
+                React.createElement("input", {type: "submit", value: "edit account", id: "editAccount"})
+            )
+            )
+             
+		);
+	} 
+});
+
+React.render(React.createElement(EditAccountForm, {url: "/api/users/me"}), document.getElementById("editAccountForm"));
+
+
