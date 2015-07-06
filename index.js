@@ -24,7 +24,6 @@ app.use(passport.session());
 app.use("/style", express.static(__dirname + '/style'));
 app.use("/ReactViews/build", express.static(__dirname + '/ReactViews/build'));
 
-app.listen(3000);
 
 //**********************************
 
@@ -152,6 +151,8 @@ app.post("/api/users/:userID", function (req, res) {
 
 
 
+
+app.listen(process.env.PORT || 3000);
 
 
 
