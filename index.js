@@ -55,7 +55,7 @@ app.get("/editAccount", function (req, res) {
   res.sendFile(__dirname + "/public/editAccount.html");
 });
 app.get("/users/:userID", function (req, res) {
-  console.log("/users/:userID GET" + req.params.userID);
+  console.log("/users/:userID GET " + req.params.userID);
   res.sendFile(__dirname + "/public/userPage.html");
 });
 
@@ -80,7 +80,8 @@ app.post('/createAccount', function (req, res) {
                 	return res.send("There was an error creating your account. Please try again in a minute.");
                 } else {
                 	console.log(newUser);
-                	return res.send("Account created! Feel free to login and update your user profile!");
+                  var htmlLazyMe = "<p>Account created! Feel free to login and update your user profile!</p>" + "<a href=/login>Back</a>";
+                	return res.send(htmlLazyMe);
                 }
         })
 })
