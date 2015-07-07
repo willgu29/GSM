@@ -55,7 +55,7 @@ var EditAccountForm = React.createClass({
                     What do you want? (separate with commas only (no spaces)) <br /> 
                     <input id="wants" size="60" type="text" name="wants" value={this.state.wants} onChange={this.handleChange.bind(this, "wants")} /> <br />
                     <br />
-                    Why should someone contact you? (things you want/things you can give perhaps) <br /> 
+                    Why should someone contact you? <br /> 
                     <textarea id="contactIf" name="contactIf" value={this.state.contactIf} onChange={this.handleChange.bind(this, "contactIf")} cols="60" row="10" ></textarea> <br /><br />
                     <br />
 
