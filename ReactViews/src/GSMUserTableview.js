@@ -17,14 +17,9 @@ var SkillsColumn = React.createClass({
   render: function() {
 
     var skillsArray = this.props.skills;
-    var arrayOfSkills = [];
-    for (var i = 0 ; i < skillsArray.length; i++) {
-      var skill = skillsArray[i];
- 
-      arrayOfSkills.push(skill+" ");
-    }
+    var displaySkills = skillsArray.join(", ");
     return (
-        <p>{arrayOfSkills}</p>
+        <p>{displaySkills}</p>
     );
   }
 
@@ -35,14 +30,11 @@ var PersonalityColumn = React.createClass({
 
     var personalityArray = this.props.personality;
 
-    var arrayOfPersonality = [];
-    for (var i = 0 ; i < personalityArray.length; i++) {
-      var personalityTrait = personalityArray[i];
- 
-      arrayOfPersonality.push(personalityTrait+" ");
-    }
+  
+    var displayPersonality = personalityArray.join(", ");
+
     return (
-        <p>{arrayOfPersonality}</p>
+        <p>{displayPersonality}</p>
     );
   }
 
@@ -67,6 +59,53 @@ var InterestingColumn = React.createClass({
   }
 
 });
+
+var MoreInfoColumn = React.createClass({
+  render: function() {
+
+    var profileLink = "/users/" + this.props.email;
+
+    return(
+      <a href={profileLink}>More Info</a>
+    );
+  }
+});
+
+var CanOfferColumn = React.createClass({
+  render: function() {
+
+    var canOfferArray = this.props.canOffer;
+
+    var displayCanOffer = canOfferArray.join(", ");
+    return (
+        <p>{displayCanOffer}</p>
+    );
+  }
+
+});
+
+var WantsColumn = React.createClass({
+  render: function() {
+
+    var wantsArray = this.props.wants;
+
+    var displayWants = wantsArray.join(", ");
+  
+    return (
+        <p>{displayWants}</p>
+    );
+  }
+
+});
+
+var ReputationColumn = React.createClass({
+  render: function() {
+    return(
+      <a href={nameNoSpace}>Click</a>
+    );
+  }
+
+})
 
 /////
 
@@ -108,10 +147,10 @@ var UserRow = React.createClass({
     return(
       <tr>
         <td><UserImg fullName={this.props.fullName} /></td>
-        <td><SkillsColumn skills={this.props.skills} /></td>
-        <td><PersonalityColumn personality={this.props.personality}/></td>
+        <td><WantsColumn wants={this.props.wants} /></td>
+        <td><CanOfferColumn canOffer={this.props.canOffer} /></td>
         <td><ContactIfColumn contactIf={this.props.contactIf} /></td>
-        <td><InterestingColumn interesting={this.props.interesting} /></td>
+        <td><MoreInfoColumn email={this.props.email}  /></td>
       </tr>
     );
   }
@@ -127,7 +166,7 @@ var GSMUserTableView = React.createClass({
   getInitialState:  function() {
     return ({users:[]});
   },
-  componentWillMount: function() {
+  componentDidMount: function() {
     $.ajax({
       url: this.props.url,
       dataType: 'json',
@@ -150,19 +189,19 @@ var GSMUserTableView = React.createClass({
       var user = arrayOfUsers[i];
  
       arrayOfUserRows.push(<UserRow fullName={user.fullName} 
-                                    skills={user.identity.skills} 
-                                    personality={user.identity.personality} 
+                                    canOffer={user.identity.canOffer}
+                                    wants={user.identity.wants}
                                     contactIf={user.identity.contactIf}
-                                    interesting={user.identity.interesting} />);
+                                    email={user.email} />);
     }
     return(
       <table border="1" style={tableStyle} >
         <tr>
           <th>Name</th>
-          <th>Skills</th>
-          <th>Personality</th>
-          <th>Contact Me If..</th>
-          <th>Interesting Facts</th>
+          <th>Wants...</th>
+          <th>Can Offer...</th>
+          <th>Contact If...</th>
+          <th>More Info</th>
         </tr>
         {arrayOfUserRows}
         

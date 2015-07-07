@@ -17,9 +17,14 @@ var SkillsColumn = React.createClass({displayName: "SkillsColumn",
   render: function() {
 
     var skillsArray = this.props.skills;
-    var displaySkills = skillsArray.join(", ");
+    var arrayOfSkills = [];
+    for (var i = 0 ; i < skillsArray.length; i++) {
+      var skill = skillsArray[i];
+ 
+      arrayOfSkills.push(skill+" ");
+    }
     return (
-        React.createElement("p", null, displaySkills)
+        React.createElement("p", null, arrayOfSkills)
     );
   }
 
@@ -30,11 +35,14 @@ var PersonalityColumn = React.createClass({displayName: "PersonalityColumn",
 
     var personalityArray = this.props.personality;
 
-  
-    var displayPersonality = personalityArray.join(", ");
-
+    var arrayOfPersonality = [];
+    for (var i = 0 ; i < personalityArray.length; i++) {
+      var personalityTrait = personalityArray[i];
+ 
+      arrayOfPersonality.push(personalityTrait+" ");
+    }
     return (
-        React.createElement("p", null, displayPersonality)
+        React.createElement("p", null, arrayOfPersonality)
     );
   }
 
@@ -63,10 +71,10 @@ var InterestingColumn = React.createClass({displayName: "InterestingColumn",
 var MoreInfoColumn = React.createClass({displayName: "MoreInfoColumn",
   render: function() {
 
-    var profileLink = "/users/" + this.props.email;
+    var nameNoSpace = this.props.firstName + this.props.lastName;
 
     return(
-      React.createElement("a", {href: profileLink}, "More Info")
+      React.createElement("a", {href: nameNoSpace}, "More Info")
     );
   }
 });
@@ -76,9 +84,14 @@ var CanOfferColumn = React.createClass({displayName: "CanOfferColumn",
 
     var canOfferArray = this.props.canOffer;
 
-    var displayCanOffer = canOfferArray.join(", ");
+    var displayCanOffer = [];
+    for (var i = 0 ; i < canOfferArray.length; i++) {
+      var canOffer = canOfferArray[i];
+ 
+      displayCanOffer.push(canOffer+",");
+    }
     return (
-        React.createElement("p", null, displayCanOffer)
+        React.createElement("p", null, this.props.canO)
     );
   }
 
@@ -89,8 +102,12 @@ var WantsColumn = React.createClass({displayName: "WantsColumn",
 
     var wantsArray = this.props.wants;
 
-    var displayWants = wantsArray.join(", ");
-  
+    var displayWants = [];
+    for (var i = 0 ; i < wantsArray.length; i++) {
+      var want = wantsArray[i];
+ 
+      displayWants.push(want+" ");
+    }
     return (
         React.createElement("p", null, displayWants)
     );
@@ -101,7 +118,7 @@ var WantsColumn = React.createClass({displayName: "WantsColumn",
 var ReputationColumn = React.createClass({displayName: "ReputationColumn",
   render: function() {
     return(
-      React.createElement("a", {href: nameNoSpace}, "Click")
+      React.createElement("a", {href: nameNoSpace}, "More Info")
     );
   }
 
@@ -150,7 +167,7 @@ var UserRow = React.createClass({displayName: "UserRow",
         React.createElement("td", null, React.createElement(WantsColumn, {wants: this.props.wants})), 
         React.createElement("td", null, React.createElement(CanOfferColumn, {canOffer: this.props.canOffer})), 
         React.createElement("td", null, React.createElement(ContactIfColumn, {contactIf: this.props.contactIf})), 
-        React.createElement("td", null, React.createElement(MoreInfoColumn, {email: this.props.email}))
+        React.createElement("td", null, React.createElement(MoreInfoColumn, {firstName: this.props.firstName, lastName: this.props.lastName}))
       )
     );
   }
@@ -192,7 +209,8 @@ var GSMUserTableView = React.createClass({displayName: "GSMUserTableView",
                                     canOffer: user.identity.canOffer, 
                                     wants: user.identity.wants, 
                                     contactIf: user.identity.contactIf, 
-                                    email: user.email}));
+                                    firstName: user.firstName, 
+                                    lastName: user.lastName}));
     }
     return(
       React.createElement("table", {border: "1", style: tableStyle}, 

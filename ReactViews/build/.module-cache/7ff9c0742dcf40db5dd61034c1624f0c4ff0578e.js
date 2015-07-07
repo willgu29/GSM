@@ -17,9 +17,14 @@ var SkillsColumn = React.createClass({displayName: "SkillsColumn",
   render: function() {
 
     var skillsArray = this.props.skills;
-    var displaySkills = skillsArray.join(", ");
+    var arrayOfSkills = [];
+    for (var i = 0 ; i < skillsArray.length; i++) {
+      var skill = skillsArray[i];
+ 
+      arrayOfSkills.push(skill+" ");
+    }
     return (
-        React.createElement("p", null, displaySkills)
+        React.createElement("p", null, arrayOfSkills)
     );
   }
 

@@ -5,9 +5,7 @@ var EditAccountForm = React.createClass({displayName: "EditAccountForm",
             interesting: "",
             contactIf:  "",
             personality: [],
-            skills: [],
-            wants: [],
-            canOffer: []
+            skills: []
 
     
             
@@ -24,9 +22,7 @@ var EditAccountForm = React.createClass({displayName: "EditAccountForm",
                                 interesting: userData.identity.interesting,
                                 contactIf: userData.identity.contactIf,
                                 personality: userData.identity.personality,
-                                skills: userData.identity.skills,
-                                canOffer: userData.identity.canOffer,
-                                wants: userData.identity.wants
+                                skills: userData.identity.skills
                                 
                             
                         });

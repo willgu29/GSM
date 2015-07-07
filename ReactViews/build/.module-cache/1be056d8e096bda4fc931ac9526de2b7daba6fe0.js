@@ -5,9 +5,7 @@ var EditAccountForm = React.createClass({displayName: "EditAccountForm",
             interesting: "",
             contactIf:  "",
             personality: [],
-            skills: [],
-            wants: [],
-            canOffer: []
+            skills: []
 
     
             
@@ -24,9 +22,7 @@ var EditAccountForm = React.createClass({displayName: "EditAccountForm",
                                 interesting: userData.identity.interesting,
                                 contactIf: userData.identity.contactIf,
                                 personality: userData.identity.personality,
-                                skills: userData.identity.skills,
-                                canOffer: userData.identity.canOffer,
-                                wants: userData.identity.wants
+                                skills: userData.identity.skills
                                 
                             
                         });
@@ -58,13 +54,14 @@ var EditAccountForm = React.createClass({displayName: "EditAccountForm",
                     "Why should someone contact you? (things you want/things you can give perhaps) ", React.createElement("br", null), 
                     React.createElement("textarea", {id: "contactIf", name: "contactIf", value: this.state.contactIf, onChange: this.handleChange.bind(this, "contactIf"), cols: "60", row: "10"}), " ", React.createElement("br", null), React.createElement("br", null), 
                     React.createElement("br", null), 
-
+                    
                  	"Add skills: (separate with commas only (no spaces)) ", React.createElement("br", null), 
                     React.createElement("input", {id: "skills", size: "60", type: "text", name: "skills", value: this.state.skills, onChange: this.handleChange.bind(this, "skills")}), " ", React.createElement("br", null), 
                     React.createElement("br", null), 
                     "Add personality traits: (separate with commas only (no spaces))  ", React.createElement("br", null), 
                     React.createElement("input", {id: "personality", size: "60", type: "text", name: "personality", value: this.state.personality, onChange: this.handleChange.bind(this, "personality")}), " ", React.createElement("br", null), 
                     React.createElement("br", null), 
+                    
                     "Tell us something interesting about yourself: ", React.createElement("br", null), 
                     React.createElement("textarea", {id: "interesting", name: "interesting", value: this.state.interesting, onChange: this.handleChange.bind(this, "interesting"), cols: "60", row: "10"}), " ", React.createElement("br", null), 
                     React.createElement("br", null), 

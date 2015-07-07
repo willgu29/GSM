@@ -17,9 +17,14 @@ var SkillsColumn = React.createClass({displayName: "SkillsColumn",
   render: function() {
 
     var skillsArray = this.props.skills;
-    var displaySkills = skillsArray.join(", ");
+    var arrayOfSkills = [];
+    for (var i = 0 ; i < skillsArray.length; i++) {
+      var skill = skillsArray[i];
+ 
+      arrayOfSkills.push(skill+" ");
+    }
     return (
-        React.createElement("p", null, displaySkills)
+        React.createElement("p", null, arrayOfSkills)
     );
   }
 
@@ -30,11 +35,14 @@ var PersonalityColumn = React.createClass({displayName: "PersonalityColumn",
 
     var personalityArray = this.props.personality;
 
-  
-    var displayPersonality = personalityArray.join(", ");
-
+    var arrayOfPersonality = [];
+    for (var i = 0 ; i < personalityArray.length; i++) {
+      var personalityTrait = personalityArray[i];
+ 
+      arrayOfPersonality.push(personalityTrait+" ");
+    }
     return (
-        React.createElement("p", null, displayPersonality)
+        React.createElement("p", null, arrayOfPersonality)
     );
   }
 
@@ -89,8 +97,12 @@ var WantsColumn = React.createClass({displayName: "WantsColumn",
 
     var wantsArray = this.props.wants;
 
-    var displayWants = wantsArray.join(", ");
-  
+    var displayWants = [];
+    for (var i = 0 ; i < wantsArray.length; i++) {
+      var want = wantsArray[i];
+ 
+      displayWants.push(want+", ");
+    }
     return (
         React.createElement("p", null, displayWants)
     );

@@ -54,6 +54,10 @@ app.get("/editAccount", function (req, res) {
 
   res.sendFile(__dirname + "/public/editAccount.html");
 });
+app.get("/users/:userID", function (req, res) {
+  console.log("/users/:userID GET" + req.params.userID);
+  res.sendFile(__dirname + "/public/userPage.html");
+});
 
 
 	//***************
@@ -127,6 +131,8 @@ app.post("/api/users/:userID", function (req, res) {
 
     var skillsArray = req.body.skills.split(',');
     var personalityArray = req.body.personality.split(',');
+    var canOfferArray = req.body.canOffer.split(',');
+    var wantsArray = req.body.wants.split(',');
 
     var query = {'email':req.user.email};
 
@@ -135,13 +141,18 @@ app.post("/api/users/:userID", function (req, res) {
         skills: skillsArray,
         personality: personalityArray,
         contactIf: req.body.contactIf,
-        interesting: req.body.interesting
+        interesting: req.body.interesting,
+        canOffer: canOfferArray,
+        wants: wantsArray
       }
     }
 
     User.findOneAndUpdate(query, newData, {upsert:false}, function(err, doc){
       if (err) return res.send(500, { error: err });
-      return res.send("succesfully saved");
+
+      var htmlLazyMe = "<p>Successfully saved</p>" + "<a href=/editAccount>Back</a>";
+
+      return res.send(htmlLazyMe);
     });
 });
 
