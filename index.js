@@ -139,11 +139,18 @@ app.get("/api/users/:userID", function (req, res) {
 
 });
 
-app.get("/api/media", loggedIn, function (req, res) {
-  Media.find({}, function (err, users) {
+app.get("/api/media/:userID", loggedIn, function (req, res) {
+  console.log("/api/media/:userID GET " + req.params.userID);
+  var searchEmail;
+  if (req.params.userID == "me") {
+    searchEmail = req.user.email;
+  } else {
+    searchEmail = req.params.userID;
+  }
+  Media.find({user_id:searchEmail}, function (err, mediaObjects) {
                 if (err) return console.error(err);
-                console.log(users);
-                res.json(users);
+                console.log(mediaObjects);
+                res.json(mediaObjects);
     }).limit(req.body.limit).skip(req.body.skip);
 });
 
@@ -151,7 +158,7 @@ app.get("/api/media", loggedIn, function (req, res) {
 ///
   //Database Edits
 app.post("/api/users/:userID", function (req, res) {
-  console.log("/api/users/:userID POST");
+  console.log("/api/users/:userID POST " + req.params.userID);
 
     var skillsArray = req.body.skills.split(',');
     var personalityArray = req.body.personality.split(',');
@@ -254,6 +261,7 @@ app.post('/api/media/:userID', function(req, res){
     var newMedia =new Media({ user_id: userEmail, 
                               mediaType: mediaType,
                               mediaLink: req.body.mediaLink,
+                              extensionType: extension,
                               displayOnProfile: true });
 
 

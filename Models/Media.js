@@ -4,6 +4,7 @@ var mediaSchema = new mongoose.Schema({
 	user_id: String,
 	dateCreated: {type: Date, default: Date.now},
     mediaType: String,
+    extensionType: String,
     mediaLink: String,
     displayOnProfile: Boolean
 
