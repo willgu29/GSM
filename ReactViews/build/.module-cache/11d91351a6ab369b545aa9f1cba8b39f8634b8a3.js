@@ -1,4 +1,4 @@
-var Comment = React.createClass({
+var Comment = React.createClass({displayName: "Comment",
 	render: function() {
 		var displayAuthor;
 		var isAnonymous = this.props.anonymous;
@@ -8,14 +8,14 @@ var Comment = React.createClass({
 			displayAuthor = this.props.author;
 		}
 		return(
-			<div className="comment">
-       			<p><em>{displayAuthor}</em> says: {this.props.children}</p>
-     		</div>
+			React.createElement("div", {className: "comment"}, 
+       			React.createElement("p", null, React.createElement("em", null, displayAuthor), " says: ", this.props.children)
+     		)
 		);	
 	}
 
 })
-var CommentBox = React.createClass({
+var CommentBox = React.createClass({displayName: "CommentBox",
 	loadCommentsFromServer: function() {
 		console.log("URL:"+ this.props.url);
 		$.ajax({
@@ -59,35 +59,35 @@ var CommentBox = React.createClass({
 	},
 	render: function() {
 		return(
-			<div>
-				<h4>Comments</h4>
-				<CommentList data={this.state.data} />
-				<CommentForm onCommentSubmit={this.handleCommentSubmit} />
-			</div>
+			React.createElement("div", null, 
+				React.createElement("h4", null, "Comments"), 
+				React.createElement(CommentList, {data: this.state.data}), 
+				React.createElement(CommentForm, {onCommentSubmit: this.handleCommentSubmit})
+			)
 		);
 	}
 
 });
 
-var CommentList = React.createClass({
+var CommentList = React.createClass({displayName: "CommentList",
 
 	render: function() {
 		var commentNodes = this.props.data.map(function (comment) {
       		return (
-        	<Comment author={comment.authorFullName} anonymous={comment.isAnonymous}>
-          		{comment.text}
-        	</Comment>
+        	React.createElement(Comment, {author: comment.authorFullName, anonymous: comment.isAnonymous}, 
+          		comment.text
+        	)
       		);
     	});
     	return (
-      		<div className="commentList">
-        	{commentNodes}
-      		</div>
+      		React.createElement("div", {className: "commentList"}, 
+        	commentNodes
+      		)
     	);
 	}
 });
 
-var CommentForm = React.createClass({
+var CommentForm = React.createClass({displayName: "CommentForm",
 	handleSubmit: function(e) {
   	  	e.preventDefault();
    		var checkbox = React.findDOMNode(this.refs.anonymous);
@@ -109,11 +109,11 @@ var CommentForm = React.createClass({
   },
 	render: function() {
 		return(
-			<form className="commentForm" onSubmit={this.handleSubmit}>
-				Anonymous? <input type="checkbox" name="anonymous" ref="anonymous"/>
-        		<input type="text" size="60" placeholder="Say something positive/negative..." ref="text" />
-        		<input type="submit" value="Post" />
-      		</form>
+			React.createElement("form", {className: "commentForm", onSubmit: this.handleSubmit}, 
+				"Anonymous? ", React.createElement("input", {type: "checkbox", name: "anonymous", ref: "anonymous"}), 
+        		React.createElement("input", {type: "text", size: "60", placeholder: "Say something positive/negative", ref: "text"}), 
+        		React.createElement("input", {type: "submit", value: "Post"})
+      		)
 		);
 	}
 
@@ -122,4 +122,4 @@ var CommentForm = React.createClass({
 var href=  window.location.href;
 var user_id = href.substr(href.lastIndexOf('/') + 1);
 var urlCall = "/api/comments/"+user_id;
-React.render(<CommentBox url={urlCall} />, document.getElementById("commentForm"));
+React.render(React.createElement(CommentBox, {url: urlCall}), document.getElementById("commentForm"));
