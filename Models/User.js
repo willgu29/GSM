@@ -18,6 +18,7 @@ var userSchema = new mongoose.Schema({
     canOffer: [String],
     wants: [String],
     hobbies: [String],
+    reputation: String
     
 
   }

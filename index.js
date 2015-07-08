@@ -9,7 +9,8 @@ var express = require('express'),
 	passport = require('passport'),
 	LocalStrategy = require('passport-local').Strategy,
 	session = require('express-session'),
-	User = require('./Models/User.js');
+	User = require('./Models/User.js'),
+  Media = require('./Models/Media.js');
 
 
 
@@ -17,7 +18,7 @@ var express = require('express'),
 var app = express();
 app.use(bodyParser());
 app.use(cookieParser());
-app.use(session({ secret: 'baeMaxLoving'}))
+app.use(session({secret: 'baeMaxLoving'}))
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -49,12 +50,12 @@ app.get("/login" ,function (req, res) {
   res.sendFile(__dirname + "/public/login.html");
 });
 
-app.get("/editAccount", function (req, res) {
+app.get("/editAccount", loggedIn, function (req, res) {
   console.log("/editAccount GET");
 
   res.sendFile(__dirname + "/public/editAccount.html");
 });
-app.get("/users/:userID", function (req, res) {
+app.get("/users/:userID", loggedIn, function (req, res) {
   console.log("/users/:userID GET " + req.params.userID);
   res.sendFile(__dirname + "/public/userPage.html");
 });
@@ -94,16 +95,23 @@ app.post('/login',  passport.authenticate('local', { failureRedirect: '/login'})
  });
 
 app.get('/logout', function (req, res){
-  req.logout();
-  res.redirect('/');
+
+  req.logout(); //not working for some reason. Stack overflow says use below
+  req.session.destroy(function (err) {
+        res.redirect("/login");
+    
+  });
+
 });
 //*************************
 
-app.get("/api/users", function (req, res) { ///limit, skip, user
-	User.find({}, function (err, memories) {
+
+//GET CONTENT
+app.get("/api/users", loggedIn, function (req, res) { ///limit, skip, user
+	User.find({}, function (err, users) {
                 if (err) return console.error(err);
-                console.log(memories);
-                res.json(memories);
+                console.log(users);
+                res.json(users);
     }).limit(req.body.limit).skip(req.body.skip);
 });
 app.get("/api/users/:userID", function (req, res) {
@@ -126,6 +134,16 @@ app.get("/api/users/:userID", function (req, res) {
 
 });
 
+app.get("/api/media", loggedIn, function (req, res) {
+  Media.find({}, function (err, users) {
+                if (err) return console.error(err);
+                console.log(users);
+                res.json(users);
+    }).limit(req.body.limit).skip(req.body.skip);
+});
+
+
+///
   //Database Edits
 app.post("/api/users/:userID", function (req, res) {
   console.log("/api/users/:userID POST");
@@ -171,8 +189,59 @@ app.listen(process.env.PORT || 3000);
 ///*********************************
 
 
+// AWS File System
+
+var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
+var AWS_SECRET_KEY = process.env.AWS_SECRET_KEY;
+var S3_BUCKET = process.env.S3_BUCKET;
+
+app.get('/sign_s3', function(req, res){
+    console.log("Query: ", req.query.file_name, req.query.file_type, S3_BUCKET);
+    aws.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
+    var s3 = new aws.S3();
+    var urlKey = req.user.email+'/'+req.query.file_name;
+    var s3_params = {
+        Bucket: S3_BUCKET,
+        Key: urlKey,
+        Expires: 60,
+        ContentType: req.query.file_type,
+        ACL: 'public-read'
+    };
+    s3.getSignedUrl('putObject', s3_params, function(err, data){
+        if(err){
+            console.log(err);
+        }
+        else{
+                console.log("PUT OBJECT");
+            var return_data = {
+                signed_request: data,
+                url: 'https://'+S3_BUCKET+'.s3.amazonaws.com/'+req.user.email+'/'+req.query.file_name
+            };
+            res.write(JSON.stringify(return_data));
+            res.end();
+
+        }
+    });
+});
+
+app.post('/api/media/', function(req, res){
+    console.log("/api/media/ POST");
+
+    var newMedia =new Media({ user_id: req.user.email, 
+                              mediaType: req.body.mediaType,
+                              mediaLink: req.body.mediaLink,
+                              displayOnProfile: true });
 
 
+    newMedia.save(function (err, newMedia) {
+                if (err) return console.error(err);
+                return console.log(newMedia);
+        })
+
+    res.json('Response 200');
+    //update_account(username, full_name, avatar_url); // TODO: create this function
+    // TODO: Return something useful or redirect
+});
 
 
 
@@ -234,6 +303,14 @@ passport.deserializeUser(function(id, done) {
 //*************************
 
 //Helpers that should be placed in separate files 
+
+function loggedIn(req, res, next) {
+    if (req.user) {
+        next();
+    } else {
+        res.redirect('/login');
+    }
+}
 
 function generateUUID() {
     var d = new Date().getTime();
