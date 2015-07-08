@@ -4,7 +4,7 @@ var mediaSchema = new mongoose.Schema({
 	user_id: mongoose.Schema.Types.ObjectId,
 	dateCreated: {type: Date, default: Date.now},
     mediaType: String,
-    mediaLink: String
+    mediaLink: String,
     displayOnProfile: Boolean
 
 });

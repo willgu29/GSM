@@ -175,6 +175,34 @@ app.post("/api/users/:userID", function (req, res) {
     });
 });
 
+app.post("/api/media/:userID", function (req, res) {
+  console.log("/api/media/:userID POST " +  req.params.userID);
+
+  var searchEmail;
+  if (req.params.userID == "me") {
+    searchEmail = req.user.email;
+  } else {
+    searchEmail = req.params.userID;
+  }
+  var newMedia = new User({ email: req.body.email,
+                    phoneNumber: req.body.phoneNumber,
+                                password: req.body.password,
+                                firstName: req.body.firstName,
+                                lastName: req.body.lastName,
+                                fullName: req.body.firstName+' '+req.body.lastName});
+        
+        newUser.save(function (err, newUser) {
+                if (err) {
+                  console.error(err);
+                  return res.send("There was an error creating your account. Please try again in a minute.");
+                } else {
+                  console.log(newUser);
+                  var htmlLazyMe = "<p>Account created! Feel free to login and update your user profile!</p>" + "<a href=/login>Back</a>";
+                  return res.send(htmlLazyMe);
+                }
+        })
+
+});
   ///***********
 
 	//********************
@@ -224,23 +252,44 @@ app.get('/sign_s3', function(req, res){
     });
 });
 
-app.post('/api/media/', function(req, res){
-    console.log("/api/media/ POST");
+app.post('/api/media/:userID', function(req, res){
+    console.log("/api/media/:userID POST " + req.params.userID);
 
-    var newMedia =new Media({ user_id: req.user.email, 
-                              mediaType: req.body.mediaType,
+    var userEmail;
+    if (req.params.userID == "me") {
+      userEmail = req.user.email;
+    } else {
+      userEmail = req.params.userID;
+    }
+
+    var parts = req.body.mediaLink.split('.');
+    var extension = parts[parts.length-1];
+
+    var mediaType;
+    if (extension == "wav" || extension == "mp3" || extension == "aiff") {
+      mediaType = "AUDIO";
+    } else {
+      mediaType = "UNDETERMINED";
+    }
+
+    var newMedia =new Media({ user_id: userEmail, 
+                              mediaType: mediaType,
                               mediaLink: req.body.mediaLink,
                               displayOnProfile: true });
 
 
     newMedia.save(function (err, newMedia) {
-                if (err) return console.error(err);
-                return console.log(newMedia);
+                if (err) {
+                  console.error(err);
+                  return res.send("There was an error in saving your media. Please try again in a minute.");
+                } else {
+                  console.log(newMedia);
+                  var htmlLazyMe = "<p>Media saved! This content will now be displayed on your user profile for others to see!</p>" + "<a href=/editAccount>Back</a>";
+                  return res.send(htmlLazyMe);
+                }
         })
 
-    res.json('Response 200');
-    //update_account(username, full_name, avatar_url); // TODO: create this function
-    // TODO: Return something useful or redirect
+    // res.json('Response 200');
 });
 
 
