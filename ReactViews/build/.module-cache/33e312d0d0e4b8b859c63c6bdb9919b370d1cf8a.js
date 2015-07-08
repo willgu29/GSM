@@ -26,6 +26,7 @@ var SubmitMediaForm = React.createClass({displayName: "SubmitMediaForm",
     xhr.setRequestHeader('x-amz-acl', 'public-read');
     xhr.onload = function() {
         if (xhr.status === 200) {
+            // this.setState({mediaLink:url});
             // document.getElementById("mediaLink").value = url;
         }
     };

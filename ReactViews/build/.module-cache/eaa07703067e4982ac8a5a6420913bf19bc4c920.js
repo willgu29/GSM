@@ -7,7 +7,7 @@ var SubmitMediaForm = React.createClass({displayName: "SubmitMediaForm",
         if(xhr.readyState === 4){
             if(xhr.status === 200){
                 var response = JSON.parse(xhr.responseText);
-                this.setState({mediaLink:response.url});
+                // this.setState({mediaLink:response.url});
                 this.uploadFile(file,response.signed_request,response.url);
             }
             else{
@@ -26,12 +26,12 @@ var SubmitMediaForm = React.createClass({displayName: "SubmitMediaForm",
     xhr.setRequestHeader('x-amz-acl', 'public-read');
     xhr.onload = function() {
         if (xhr.status === 200) {
+            this.setState({mediaLink:url});
             // document.getElementById("mediaLink").value = url;
         }
     };
     xhr.onerror = function() {
         console.log("ERROR: " + xhr.status);
-        this,setState({mediaLink:""});
         alert("Could not upload file. Please try again in a minute.");
     };
     xhr.send(file);
