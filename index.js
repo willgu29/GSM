@@ -11,6 +11,7 @@ var express = require('express'),
 	session = require('express-session'),
 	User = require('./Models/User.js'),
   Media = require('./Models/Media.js'),
+  Comment = require('./Models/Comment.js'),
   aws = require('aws-sdk');
 
 
@@ -108,10 +109,6 @@ app.get('/logout', function (req, res){
 
 
 //GET CONTENT
-app.get('/help' , function (req, res) {
-
-  res.sendFile(__dirname + "/public/upload.html");
-});
 
 app.get("/api/users", loggedIn, function (req, res) { ///limit, skip, user
 	User.find({}, function (err, users) {
@@ -149,15 +146,29 @@ app.get("/api/media/:userID", loggedIn, function (req, res) {
   }
   Media.find({user_id:searchEmail}, function (err, mediaObjects) {
                 if (err) return console.error(err);
-                console.log(mediaObjects);
                 res.json(mediaObjects);
+    }).limit(req.body.limit).skip(req.body.skip);
+});
+
+app.get("/api/comments/:userID", loggedIn, function (req, res) {
+  console.log("/api/comments/:userID GET " + req.params.userID);
+  var searchEmail;
+  if (req.params.userID == "me") {
+    searchEmail = req.user.email;
+  } else {
+    searchEmail = req.params.userID;
+  }
+  Comment.find({user_id:searchEmail}, function (err, commentObjects) {
+                if (err) return console.error(err);
+                console.log(commentObjects);
+                res.json(commentObjects);
     }).limit(req.body.limit).skip(req.body.skip);
 });
 
 
 ///
   //Database Edits
-app.post("/api/users/:userID", function (req, res) {
+app.post("/api/users/:userID", loggedIn, function (req, res) {
   console.log("/api/users/:userID POST " + req.params.userID);
 
     var skillsArray = req.body.skills.split(',');
@@ -186,6 +197,42 @@ app.post("/api/users/:userID", function (req, res) {
       return res.send(htmlLazyMe);
     });
 });
+
+app.post("/api/comments/:userID", loggedIn, function (req, res) {
+    console.log("/api/comments/:userID POST " + req.params.userID);
+
+    var commentTo = req.params.userID;
+    var byUser_id = req.user.email;
+    var authorFullName = req.user.fullName;
+    
+    var isAnonymous;
+    console.log("Anonymous: "+ req.body.anonymous);
+    if (req.body.anonymous == "on"){
+      isAnonymous = true;
+    } else {
+      isAnonymous = false;
+    }
+
+    var newComment =new Comment({ user_id: commentTo, 
+                                  rating: 0,
+                                  text: req.body.text,
+                                  isAnonymous: isAnonymous,
+                                  byUser_id: byUser_id,
+                                  authorFullName: authorFullName,
+    });
+
+
+    newComment.save(function (err, newComment) {
+                if (err) {
+                  console.error(err);
+                  return res.send("There was an error in posting in comment. Please try again in a minute.");
+                } else {
+                  console.log(newComment);
+                  return res.json(newComment);
+                }
+    });
+});
+
 
   ///***********
 
@@ -274,7 +321,7 @@ app.post('/api/media/:userID', function(req, res){
                   var htmlLazyMe = "<p>Media saved! This content will now be displayed on your user profile for others to see!</p>" + "<a href=/editAccount>Back</a>";
                   return res.send(htmlLazyMe);
                 }
-        })
+    });
 
     // res.json('Response 200');
 });

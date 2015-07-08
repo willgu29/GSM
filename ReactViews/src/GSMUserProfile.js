@@ -13,7 +13,6 @@ var UserProfile = React.createClass({
 		});
 	},
 	componentDidMount: function() {
-		console.log("URL:"+ this.props.url);
 		$.ajax({
       		url: this.props.url,
       		dataType: 'json',

@@ -5,7 +5,7 @@ var ratingSchema = new mongoose.Schema({
 	dateCreated: {type: Date, default: Date.now},
     rating: Number,
     comment: String,
-    byUser_id: String,
+   	byUser_id: String,
 
 });
 
