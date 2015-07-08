@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var mediaSchema = new mongoose.Schema({
-	user_id: mongoose.Schema.Types.ObjectId,
+	user_id: String,
 	dateCreated: {type: Date, default: Date.now},
     mediaType: String,
     mediaLink: String,

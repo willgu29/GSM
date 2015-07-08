@@ -10,7 +10,8 @@ var express = require('express'),
 	LocalStrategy = require('passport-local').Strategy,
 	session = require('express-session'),
 	User = require('./Models/User.js'),
-  Media = require('./Models/Media.js');
+  Media = require('./Models/Media.js'),
+  aws = require('aws-sdk');
 
 
 
@@ -127,7 +128,6 @@ app.get("/api/users/:userID", function (req, res) {
     if (err) { 
       console.log(err);
     } else {
-      console.log(user);
       res.json(user);
     }
   });
@@ -175,34 +175,6 @@ app.post("/api/users/:userID", function (req, res) {
     });
 });
 
-app.post("/api/media/:userID", function (req, res) {
-  console.log("/api/media/:userID POST " +  req.params.userID);
-
-  var searchEmail;
-  if (req.params.userID == "me") {
-    searchEmail = req.user.email;
-  } else {
-    searchEmail = req.params.userID;
-  }
-  var newMedia = new User({ email: req.body.email,
-                    phoneNumber: req.body.phoneNumber,
-                                password: req.body.password,
-                                firstName: req.body.firstName,
-                                lastName: req.body.lastName,
-                                fullName: req.body.firstName+' '+req.body.lastName});
-        
-        newUser.save(function (err, newUser) {
-                if (err) {
-                  console.error(err);
-                  return res.send("There was an error creating your account. Please try again in a minute.");
-                } else {
-                  console.log(newUser);
-                  var htmlLazyMe = "<p>Account created! Feel free to login and update your user profile!</p>" + "<a href=/login>Back</a>";
-                  return res.send(htmlLazyMe);
-                }
-        })
-
-});
   ///***********
 
 	//********************
@@ -266,6 +238,8 @@ app.post('/api/media/:userID', function(req, res){
     var extension = parts[parts.length-1];
 
     var mediaType;
+    console.log("parts: " + parts);
+    console.log("extension : " + extension);
     if (extension == "wav" || extension == "mp3" || extension == "aiff") {
       mediaType = "AUDIO";
     } else {

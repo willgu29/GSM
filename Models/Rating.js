@@ -1,11 +1,11 @@
 var mongoose = require('mongoose');
 
 var ratingSchema = new mongoose.Schema({
-	user_id: mongoose.Schema.Types.ObjectId,
+	user_id: String,
 	dateCreated: {type: Date, default: Date.now},
     rating: Number,
     comment: String,
-    byUser_id: mongoose.Schema.Types.ObjectId,
+    byUser_id: String,
 
 });
 
