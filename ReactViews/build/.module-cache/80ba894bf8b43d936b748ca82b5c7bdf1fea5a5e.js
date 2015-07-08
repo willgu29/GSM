@@ -1,5 +1,5 @@
 //Only accepts audio currently
-var SubmitMediaForm = React.createClass({
+var SubmitMediaForm = React.createClass({displayName: "SubmitMediaForm",
   signS3Request: function(file) {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/sign_s3?file_name="+file.name+"&file_type="+file.type);
@@ -7,7 +7,8 @@ var SubmitMediaForm = React.createClass({
         if(xhr.readyState === 4){
             if(xhr.status === 200){
                 var response = JSON.parse(xhr.responseText);
-                // this.setState({mediaLink:response.url});
+                this.setState({mediaLink:response.url});
+                console.log("File before function: " + JSON.stringify(file.name));
                 this.uploadFile(file,response.signed_request,response.url);
             }
             else{
@@ -26,13 +27,13 @@ var SubmitMediaForm = React.createClass({
     xhr.setRequestHeader('x-amz-acl', 'public-read');
     xhr.onload = function() {
         if (xhr.status === 200) {
-            this.setState({mediaLink:url});
+            // this.setState({mediaLink:url});
             // document.getElementById("mediaLink").value = url;
         }
-    }.bind(this);
+    };//.bind(this);
     xhr.onerror = function() {
         console.log("ERROR: " + xhr.status);
-        alert("Could not upload file. Please try again in a minute.");
+        alert("Could not upload file.");
     };
     xhr.send(file);
   },
@@ -54,20 +55,20 @@ var SubmitMediaForm = React.createClass({
 	},
 	render: function() {
 		return(
-			<div>
-			<p>Add voice recording (that people can listen to when they reach your profile)</p>
-      <input id="file_input" type="file" name="file_input"  onChange={this.handleChange} accept="audio/*" />
-			<form method="POST" action={this.props.url}>
-        <input type="hidden" id="mediaLink" name="mediaLink" value={this.state.mediaLink} />
-        <br />
-  			<input type="submit" value="Save" />
-			</form>
-			</div>
+			React.createElement("div", null, 
+			React.createElement("p", null, "Add voice recording (that people can listen to when they reach your profile)"), 
+      React.createElement("input", {id: "file_input", type: "file", name: "file_input", onChange: this.handleChange, accept: "audio/*"}), 
+			React.createElement("form", {method: "POST", action: this.props.url}, 
+        React.createElement("input", {type: "hidden", id: "mediaLink", name: "mediaLink", value: this.state.mediaLink}), 
+        React.createElement("br", null), 
+  			React.createElement("input", {type: "submit", value: "Save"})
+			)
+			)
 		);
 	}
 
 });
 
 
-React.render(<SubmitMediaForm url="/api/media/me" />, document.getElementById("submitMediaForm"));
+React.render(React.createElement(SubmitMediaForm, {url: "/api/media/me"}), document.getElementById("submitMediaForm"));
 

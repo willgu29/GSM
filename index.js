@@ -108,6 +108,11 @@ app.get('/logout', function (req, res){
 
 
 //GET CONTENT
+app.get('/help' , function (req, res) {
+
+  res.sendFile(__dirname + "/public/upload.html");
+});
+
 app.get("/api/users", loggedIn, function (req, res) { ///limit, skip, user
 	User.find({}, function (err, users) {
                 if (err) return console.error(err);

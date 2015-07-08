@@ -7,7 +7,8 @@ var SubmitMediaForm = React.createClass({displayName: "SubmitMediaForm",
         if(xhr.readyState === 4){
             if(xhr.status === 200){
                 var response = JSON.parse(xhr.responseText);
-                // this.setState({mediaLink:response.url});
+                this.setState({mediaLink:response.url});
+                console.log("File before function: " + JSON.stringify(file.name));
                 this.uploadFile(file,response.signed_request,response.url);
             }
             else{
@@ -26,30 +27,46 @@ var SubmitMediaForm = React.createClass({displayName: "SubmitMediaForm",
     xhr.setRequestHeader('x-amz-acl', 'public-read');
     xhr.onload = function() {
         if (xhr.status === 200) {
-            this.setState({mediaLink:url});
+            // this.setState({mediaLink:url});
             // document.getElementById("mediaLink").value = url;
         }
-    }.bind(this);
+    };//.bind(this);
     xhr.onerror = function() {
         console.log("ERROR: " + xhr.status);
-        alert("Could not upload file. Please try again in a minute.");
+        alert("Could not upload file.");
     };
     xhr.send(file);
   },
   getInitialState: function() {
-    return ({mediaLink:""});
+    return ({ mediaFile:"",
+              mediaLink:""});
   },
 	handleChange: function(event) {
 		//event.preventDefault(); We specifically want the form to send its default action everytime...
     //this ^^ fucked me
     var files = document.getElementById("file_input").files;
     var file = files[0];
+    this.setState({mediaFile:file});
     if(file == null){
       alert("No file selected.");
       return;
     } 
     this.signS3Request(file);
-   
+    // var xhr = new XMLHttpRequest();
+    // xhr.open("GET", "/sign_s3?file_name="+file.name+"&file_type="+file.type);
+    // xhr.onreadystatechange = function(){
+    //     if(xhr.readyState === 4){
+    //         if(xhr.status === 200){
+    //             var response = JSON.parse(xhr.responseText);
+    //             this.setState({mediaLink:response.url});
+    //             upload_file(file, response.signed_request, response.url);
+    //         }
+    //         else{
+    //             alert("Could not get signed URL.");
+    //         }
+    //     }
+    // }.bind(this);
+    // xhr.send();
 
 	},
 	render: function() {
