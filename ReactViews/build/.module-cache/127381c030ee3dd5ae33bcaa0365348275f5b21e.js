@@ -90,14 +90,8 @@ var CommentList = React.createClass({displayName: "CommentList",
 var CommentForm = React.createClass({displayName: "CommentForm",
 	handleSubmit: function(e) {
   	  	e.preventDefault();
-   		var checkbox = React.findDOMNode(this.refs.anonymous);
-   		var anonymousStatus;
-   		if (checkbox.checked) {
-   			anonymousStatus = true;
-   		} else {
-   			anonymousStatus = false;
-   		}
-   		console.log("anonymousStatus : " + anonymousStatus);
+   		var anonymousStatus = React.findDOMNode(this.refs.anonymous).value.trim();
+   		console.log("Status: " +anonymousStatus);
     	var text = React.findDOMNode(this.refs.text).value.trim();
     	if (!text) {
       		return;

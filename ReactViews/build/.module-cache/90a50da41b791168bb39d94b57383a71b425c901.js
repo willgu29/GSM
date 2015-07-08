@@ -98,6 +98,7 @@ var CommentForm = React.createClass({displayName: "CommentForm",
    			anonymousStatus = false;
    		}
    		console.log("anonymousStatus : " + anonymousStatus);
+   		console.log("Status: " +anonymousStatus);
     	var text = React.findDOMNode(this.refs.text).value.trim();
     	if (!text) {
       		return;

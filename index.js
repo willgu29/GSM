@@ -113,7 +113,6 @@ app.get('/logout', function (req, res){
 app.get("/api/users", loggedIn, function (req, res) { ///limit, skip, user
 	User.find({}, function (err, users) {
                 if (err) return console.error(err);
-                console.log(users);
                 res.json(users);
     }).limit(req.body.limit).skip(req.body.skip);
 });
@@ -160,7 +159,6 @@ app.get("/api/comments/:userID", loggedIn, function (req, res) {
   }
   Comment.find({user_id:searchEmail}, function (err, commentObjects) {
                 if (err) return console.error(err);
-                console.log(commentObjects);
                 res.json(commentObjects);
     }).limit(req.body.limit).skip(req.body.skip);
 });
@@ -205,18 +203,11 @@ app.post("/api/comments/:userID", loggedIn, function (req, res) {
     var byUser_id = req.user.email;
     var authorFullName = req.user.fullName;
     
-    var isAnonymous;
-    console.log("Anonymous: "+ req.body.anonymous);
-    if (req.body.anonymous == "on"){
-      isAnonymous = true;
-    } else {
-      isAnonymous = false;
-    }
 
     var newComment =new Comment({ user_id: commentTo, 
                                   rating: 0,
                                   text: req.body.text,
-                                  isAnonymous: isAnonymous,
+                                  isAnonymous: req.body.anonymous,
                                   byUser_id: byUser_id,
                                   authorFullName: authorFullName,
     });
@@ -227,7 +218,6 @@ app.post("/api/comments/:userID", loggedIn, function (req, res) {
                   console.error(err);
                   return res.send("There was an error in posting in comment. Please try again in a minute.");
                 } else {
-                  console.log(newComment);
                   return res.json(newComment);
                 }
     });
