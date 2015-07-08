@@ -278,6 +278,8 @@ if (process.env.NODE_ENV == "production") {
   connectDBLink = "mongodb://localhost/gsm";
 } else if (process.env.NODE_ENV == "development") {
 	connectDBLink = "mongodb://localhost/gsm";
+} else if (process.env.NODE_ENV == "heroku") {
+  connectDBLink = "mongodb://"+process.env.MONGO_USERNAME+":"+process.env.MONGO_PASSWORD+"@ds053310.mongolab.com:53310/heroku_lh96h9bg";
 } else {
 	connectDBLink = "mongodb://localhost/gsm";
 }
