@@ -64,6 +64,11 @@ app.get("/editAccount", loggedIn, function (req, res) {
 
   res.sendFile(__dirname + "/public/editAccount.html");
 });
+
+app.get("/suggestions/:userID", function (req, res) {
+  res.sendFile(__dirname + "/public/suggestionsPage.html");
+}); 
+
 app.get("/users/:userID", loggedIn, function (req, res) {
   console.log("/users/:userID GET " + req.params.userID);
   res.sendFile(__dirname + "/public/userPage.html");
