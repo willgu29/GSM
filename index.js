@@ -12,6 +12,7 @@ var express = require('express'),
 	User = require('./Models/User.js'),
   Media = require('./Models/Media.js'),
   Comment = require('./Models/Comment.js'),
+  KnownNetwork = require("./Models/KnownNetwork.js"),
   aws = require('aws-sdk');
 
 
@@ -24,6 +25,7 @@ app.use(session({secret: 'baeMaxLoving'}))
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use("/react-0.13.3/build", express.static(__dirname + "/react-0.13.3/build"));
 app.use("/style", express.static(__dirname + '/style'));
 app.use("/ReactViews/build", express.static(__dirname + '/ReactViews/build'));
 
@@ -44,6 +46,11 @@ app.get("/", function (req, res) {
 	} else {
 		res.sendFile(__dirname + "/public/index.html");
 	}
+});
+
+app.get("/individuals", loggedIn, function (req, res) {
+  console.log('/individuals GET');
+  res.sendFile(__dirname + "/public/browseIndividuals.html");
 });
 
 app.get("/login" ,function (req, res) {
@@ -86,8 +93,8 @@ app.post('/createAccount', function (req, res) {
                   var htmlLazyMe = "<p>Account created! Feel free to login and update your user profile!</p>" + "<a href=/login>Back</a>";
                 	return res.send(htmlLazyMe);
                 }
-        })
-})
+        });
+});
 
 
 app.post('/login',  passport.authenticate('local', { failureRedirect: '/login'}),
@@ -163,9 +170,28 @@ app.get("/api/comments/:userID", loggedIn, function (req, res) {
     }).limit(req.body.limit).skip(req.body.skip);
 });
 
+app.get("/api/network/:userID", loggedIn, function (req, res) {
+  console.log("/api/network/:userID GET " + req.params.userID);
+  var searchEmail;
+  if (req.params.userID == "me") {
+    searchEmail = req.user.email;
+  } else {
+    searchEmail = req.params.userID;
+  }
+  KnownNetwork.findOne({user_id:searchEmail}, function (err, knownNetwork) {
+                if (err) return console.error(err);
+                res.json(knownNetwork);
+    }).limit(req.body.limit).skip(req.body.skip);
+});
 
 ///
   //Database Edits
+app.post("/api/network/:userID", loggedIn, function (req, res) {
+  console.log("/api/network/:userID POST " + req.params.userID);
+
+  //TODO: Add acquaintance / update KnownNetwork model of person
+
+});
 app.post("/api/users/:userID", loggedIn, function (req, res) {
   console.log("/api/users/:userID POST " + req.params.userID);
 
