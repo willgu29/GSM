@@ -8,7 +8,8 @@ var UserProfile = React.createClass({
             personality: [],
             skills: [],
             wants: [],
-            canOffer: []
+            canOffer: [],
+            contactIf: ""
 
 		});
 	},
@@ -27,7 +28,8 @@ var UserProfile = React.createClass({
                             personality: userData.identity.personality,
                             skills: userData.identity.skills,
                             canOffer: userData.identity.canOffer,
-                            wants: userData.identity.wants
+                            wants: userData.identity.wants,
+                            contactIf: userData.identity.contactIf
                                 
                             
                 });
@@ -55,6 +57,7 @@ var UserProfile = React.createClass({
 				<p>Personality: {personalityArray}</p>
 				<p>Can Offer: {canOfferArray}</p>
 				<p>Wants: {wantsArray}</p>
+				<p>Contact If: {this.state.contactIf}</p>
 			</div>
 
 		);
