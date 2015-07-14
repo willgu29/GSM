@@ -14,7 +14,6 @@ var MediaWidget = React.createClass({
 		return({mediaObjects:[]});
 	},
 	componentDidMount: function() {
-		console.log("Media url: " + this.props.url);
 		$.ajax({
   			url: this.props.url,
   			dataType: 'json',

@@ -21,7 +21,8 @@ var userSchema = new mongoose.Schema({
     reputation: String
     
 
-  }
+  },
+  role: String
 
 });
 

@@ -65,14 +65,20 @@ app.get("/editAccount", loggedIn, function (req, res) {
   res.sendFile(__dirname + "/public/editAccount.html");
 });
 
-app.get("/suggestions/:userID", function (req, res) {
+app.get("/suggestions/:userID", loggedIn, function (req, res) {
   res.sendFile(__dirname + "/public/suggestionsPage.html");
+}); 
+
+app.get("/messages/:userID", loggedIn, function (req, res) {
+  res.sendFile(__dirname + "/public/messages.html");
 }); 
 
 app.get("/users/:userID", loggedIn, function (req, res) {
   console.log("/users/:userID GET " + req.params.userID);
   res.sendFile(__dirname + "/public/userPage.html");
 });
+
+
 
 
 	//***************
@@ -408,6 +414,67 @@ passport.deserializeUser(function(id, done) {
 
 //*************************
 
+
+//Mandrill API
+
+var mandrill = require('mandrill-api/mandrill');
+var mandrill_client = new mandrill.Mandrill(process.env.MANDRILL_KEY);
+
+app.get("/admin/sendMail", ensureAdmin, function (req,res) {
+  res.sendFile(__dirname + "/public/sendMail.html");
+});
+
+app.post("/admin/sendMail", ensureAdmin, function (req,res){
+
+  var toArray = req.body.to_email.split(",");
+  var formattedArray = []
+  for (var i =0; i < toArray.length; i++) {
+    var format = {
+      "email": toArray[i],
+      "type": "to"
+    };
+    formattedArray.push(format);
+  }
+
+
+  var tagsArray = req.body.tags.split(",");
+  console.log(JSON.stringify(toArray));
+  var message = {
+    "key": process.env.MANDRILL_MESSAGE_KEY,
+    "html": req.body.html,
+    "subject": req.body.subject,
+    "from_email": req.body.from_email,
+    "from_name": req.body.from_name,
+    "to": formattedArray,
+    "track_opens": true,
+    "track_clicks": true,
+    "auto_text": true,
+    "preserve_recipients": false,  //display recipients
+    "tags": tagsArray
+
+  };
+
+
+  mandrill_client.messages.send({"message": message}, function(result) {
+    console.log(result);
+    /*
+    [{
+            "email": "recipient.email@example.com",
+            "status": "sent",
+            "reject_reason": "hard-bounce",
+            "_id": "abc123abc123abc123abc123abc123"
+        }]
+    */
+  }, function(e) {
+    // Mandrill returns the error as an object with name and message keys
+    console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
+    // A mandrill error occurred: Unknown_Subaccount - No subaccount exists with the id 'customer-123'
+  });
+
+});
+//**************************
+
+
 //Helpers that should be placed in separate files 
 
 function loggedIn(req, res, next) {
@@ -416,6 +483,16 @@ function loggedIn(req, res, next) {
     } else {
         res.redirect('/login');
     }
+}
+
+function ensureAdmin(req, res, next) {
+  // ensure authenticated user exists with admin role, 
+  // otherwise send 401 response status
+  if (req.user && req.user.role == 'ADMIN') {
+      return next();
+  } else {
+      return res.send(401);
+  }
 }
 
 function generateUUID() {

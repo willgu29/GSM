@@ -2,15 +2,15 @@ var Message = React.createClass({
 	render: function() {
 
 		return(
-			<div className="comment">
-       			<p><em>{this.props.author}</em> says: {this.props.children}</p>
+			<div className="message">
+       			<p><em>{this.props.author}</em>: {this.props.children}</p>
      		</div>
 		);	
 	}
 
 })
-var CommentBox = React.createClass({
-	loadCommentsFromServer: function() {
+var MessageBox = React.createClass({
+	loadMessagesFromServer: function() {
 		console.log("URL:"+ this.props.url);
 		$.ajax({
       		url: this.props.url,
@@ -24,7 +24,7 @@ var CommentBox = React.createClass({
       		}.bind(this)
     	});
 	},
-	handleCommentSubmit: function(comment) {
+	handleMessageSubmit: function(comment) {
 		//Instant comment load... don't need this for now
 		// var comments = this.state.data;
   //   	var newComments = comments.concat([comment]);
@@ -35,7 +35,7 @@ var CommentBox = React.createClass({
       		type: 'POST',
       		data: comment,
       		success: function(data) {
-      			this.loadCommentsFromServer();
+      			this.loadMessagesFromServer();
         		// this.setState({data: data});
       		}.bind(this),
       		error: function(xhr, status, err) {
@@ -47,7 +47,7 @@ var CommentBox = React.createClass({
 		return ({data: []});
 	},
 	componentDidMount: function() {
-		this.loadCommentsFromServer();
+		this.loadMessagesFromServer();
 		//Don't need constant polling for now
     	//setInterval(this.loadCommentsFromServer, this.props.pollInterval);
 	},
@@ -55,56 +55,46 @@ var CommentBox = React.createClass({
 		return(
 			<div>
 				<h4>Comments</h4>
-				<CommentList data={this.state.data} />
-				<CommentForm onCommentSubmit={this.handleCommentSubmit} />
+				<MessageList data={this.state.data} />
+				<MessageForm onCommentSubmit={this.handleCommentSubmit} />
 			</div>
 		);
 	}
 
 });
 
-var CommentList = React.createClass({
+var MessageList = React.createClass({
 
 	render: function() {
-		var commentNodes = this.props.data.map(function (comment) {
+		var messageNodes = this.props.data.map(function (message) {
       		return (
-        	<Comment author={comment.authorFullName} anonymous={comment.isAnonymous}>
-          		{comment.text}
-        	</Comment>
+        	<Message author={message.authorFullName}>
+          		{message.text}
+        	</Message>
       		);
     	});
     	return (
-      		<div className="commentList">
-        	{commentNodes}
+      		<div className="messageList">
+        	{messageNodes}
       		</div>
     	);
 	}
 });
 
-var CommentForm = React.createClass({
+var MessageForm = React.createClass({
 	handleSubmit: function(e) {
   	  	e.preventDefault();
-   		var checkbox = React.findDOMNode(this.refs.anonymous);
-   		var anonymousStatus;
-   		if (checkbox.checked) {
-   			anonymousStatus = true;
-   		} else {
-   			anonymousStatus = false;
-   		}
-   		console.log("anonymousStatus : " + anonymousStatus);
+
     	var text = React.findDOMNode(this.refs.text).value.trim();
     	if (!text) {
       		return;
     	}
-    	this.props.onCommentSubmit({anonymous:anonymousStatus, text: text});
-    	React.findDOMNode(this.refs.anonymous).value = '';
     	React.findDOMNode(this.refs.text).value = '';
     	return;
   },
 	render: function() {
 		return(
-			<form className="commentForm" onSubmit={this.handleSubmit}>
-				Anonymous? <input type="checkbox" name="anonymous" ref="anonymous"/>
+			<form className="messageForm" onSubmit={this.handleSubmit}>
         		<input type="text" size="60" placeholder="Say something positive/negative..." ref="text" />
         		<input type="submit" value="Post" />
       		</form>
@@ -115,5 +105,5 @@ var CommentForm = React.createClass({
 
 var href=  window.location.href;
 var user_id = href.substr(href.lastIndexOf('/') + 1);
-var urlCall = "/api/comments/"+user_id;
-React.render(<CommentBox url={urlCall} />, document.getElementById("commentForm"));
+var urlCall = "/api/message/"+user_id;
+React.render(<MessageBox url={urlCall} />, document.getElementById("chatroom"));
