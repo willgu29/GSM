@@ -1,0 +1,10 @@
+/* for nav bar items */
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+/* For inline nav */
+li {
+    display: inline;
+}

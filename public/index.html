@@ -4,9 +4,9 @@
     <title>GSM</title>
     <script src="../react-0.13.3/build/react.js"></script>
     <script src="../react-0.13.3/build/JSXTransformer.js"></script>
-    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="../jquery/jquery.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="../style/rating.css">
+    <link rel="stylesheet" type="text/css" href="../style/index.css">
 
    
   </head>
@@ -15,9 +15,17 @@
     <!-- THIS REFERENCES THE FILE BELOW AND MAKES IT -->
     <!-- This page will hold the main user page. (TODO list style adding people, rating, going to friends, and searching) -->
 
-    <p>Tip of the Week: Be social. Contact people.</p>
-    <a href="/editAccount">Edit Account</a>
-    <a href="/messages">Messages</a>
+    <div id="navBar">
+      <h1>iGrouply</h1>
+      <div id="gsmNavBarItems"></div>
+      <script type="text/jsx" src="../ReactViews/build/GSMNavBarItems.js"></script>
+     
+    </div>
+
+    
+    <h3>BAB Member List</h3>
+    <p>Tip of the Week: You're awake for 16 hours in a day. Do something.</p>
+    
 
 
     <div id="gsmUserTableView"></div>

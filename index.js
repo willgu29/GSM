@@ -13,7 +13,8 @@ var express = require('express'),
   Media = require('./Models/Media.js'),
   Comment = require('./Models/Comment.js'),
   KnownNetwork = require("./Models/KnownNetwork.js"),
-  aws = require('aws-sdk');
+  aws = require('aws-sdk'),
+  flash = require('connect-flash');
 
 
 
@@ -24,10 +25,13 @@ app.use(cookieParser());
 app.use(session({secret: 'baeMaxLoving'}))
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(flash());
 
 app.use("/react-0.13.3/build", express.static(__dirname + "/react-0.13.3/build"));
 app.use("/style", express.static(__dirname + '/style'));
 app.use("/ReactViews/build", express.static(__dirname + '/ReactViews/build'));
+app.use("/jquery", express.static(__dirname + '/jquery'));
+
 
 
 //**********************************
@@ -108,7 +112,8 @@ app.post('/createAccount', function (req, res) {
 });
 
 
-app.post('/login',  passport.authenticate('local', { failureRedirect: '/login'}),
+app.post('/login',  passport.authenticate('local', { failureRedirect: '/', 
+                                                      failureFlash: true}),
   function (req, res) {
   		console.log("/login POST");
         res.redirect('/');
@@ -118,8 +123,9 @@ app.get('/logout', function (req, res){
 
   req.logout(); //not working for some reason. Stack overflow says use below
   req.session.destroy(function (err) {
-        res.redirect("/login");
-    
+        req.user = undefined;
+        var htmlLazyMe = "<p>Successfully logged out</p>" + "<a href=/>Main Page</a>";
+        res.send(htmlLazyMe);    
   });
 
 });
@@ -465,8 +471,10 @@ app.post("/admin/sendMail", ensureAdmin, function (req,res){
             "_id": "abc123abc123abc123abc123abc123"
         }]
     */
+    res.json(result);
   }, function(e) {
     // Mandrill returns the error as an object with name and message keys
+    res.json(e.message);
     console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
     // A mandrill error occurred: Unknown_Subaccount - No subaccount exists with the id 'customer-123'
   });
@@ -481,7 +489,7 @@ function loggedIn(req, res, next) {
     if (req.user) {
         next();
     } else {
-        res.redirect('/login');
+        res.redirect('/');
     }
 }
 

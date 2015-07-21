@@ -1,0 +1,3 @@
+sources
+public/index.html
+.env
