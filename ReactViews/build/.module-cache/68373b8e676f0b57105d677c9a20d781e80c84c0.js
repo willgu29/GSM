@@ -51,7 +51,7 @@ var UserProfile = React.createClass({displayName: "UserProfile",
 
 		return(
 			React.createElement("div", null, 
-				React.createElement("h3", null, "About ", this.state.fullName), 
+				React.createElement("h4", null, "About ", this.state.fullName), 
 				React.createElement("p", null, "Interesting Info: ", this.state.interesting), 
 				React.createElement("p", null, "Skills: ", skillsArray), 
 				React.createElement("p", null, "Personality: ", personalityArray), 

@@ -47,7 +47,7 @@ var EditAccountForm = React.createClass({
 
 		return(	
             <div>
-			 <h4>Edit Account</h4>
+			 <h3>Edit Account</h3>
 			  <form className="editAccountForm" method="post" action="api/users/me" >
                     What can you offer people? (separate with commas only (no spaces)) <br /> 
                     <input id="canOffer" size="60" type="text" name="canOffer" value={this.state.canOffer} onChange={this.handleChange.bind(this, "canOffer")} /> <br />

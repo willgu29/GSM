@@ -51,7 +51,7 @@ var UserProfile = React.createClass({
 
 		return(
 			<div>
-				<p>{this.state.fullName}</p>
+				<h3>About {this.state.fullName}</h3>
 				<p>Interesting Info: {this.state.interesting}</p>
 				<p>Skills: {skillsArray}</p>
 				<p>Personality: {personalityArray}</p>
