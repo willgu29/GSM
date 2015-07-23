@@ -27,9 +27,8 @@ var LoginForm = React.createClass({displayName: "LoginForm",
      				console.log(info);
      				if (info == '/') {
      					window.location.href = "/";
-     				} else {
-						this.setState({loginStatus:info.message});     					
      				}
+     				this.setState({loginStatus:info.message});
       			}
       		}.bind(this),
       		error: function(xhr,status,err){

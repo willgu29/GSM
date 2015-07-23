@@ -147,7 +147,7 @@ var UserRow = React.createClass({
     return(
       <tr>
         <td><UserImg fullName={this.props.fullName} /></td>
-        <td><PersonalityColumn personality={this.props.personality} /></td>
+        <td><WantsColumn wants={this.props.wants} /></td>
         <td><CanOfferColumn canOffer={this.props.canOffer} /></td>
         <td><ContactIfColumn contactIf={this.props.contactIf} /></td>
         <td><MoreInfoColumn email={this.props.email}  /></td>
@@ -189,7 +189,7 @@ var GSMUserTableView = React.createClass({
       var user = arrayOfUsers[i];
  
       arrayOfUserRows.push(<UserRow fullName={user.fullName} 
-                                    personality={user.identity.personality}
+                                    wants={user.identity.wants}
                                     canOffer={user.identity.canOffer}
                                     contactIf={user.identity.contactIf}
                                     email={user.email} />);
@@ -198,7 +198,7 @@ var GSMUserTableView = React.createClass({
       <table border="1" style={tableStyle} >
         <tr>
           <th>Name</th>
-          <th>Personality</th>
+          <th>Wants</th>
           <th>Can Offer...</th>
           <th>Contact If...</th>
           <th>More Info</th>

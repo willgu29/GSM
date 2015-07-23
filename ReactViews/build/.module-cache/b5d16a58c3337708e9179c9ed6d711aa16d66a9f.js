@@ -1,8 +1,3 @@
-var errorStyle = {
-
-	color: "red"
-}
-
 var LoginForm = React.createClass({displayName: "LoginForm",
 	getInitialState: function() {
 		return ({loginStatus: ""});
@@ -12,6 +7,7 @@ var LoginForm = React.createClass({displayName: "LoginForm",
 
 		var email = React.findDOMNode(this.refs.email).value.trim();
 		var password = React.findDOMNode(this.refs.password).value.trim();
+		console.log(email + password);
 		var data = {
 			email: email,
 			password: password
@@ -25,11 +21,7 @@ var LoginForm = React.createClass({displayName: "LoginForm",
 			success: function(info){
      			if (this.isMounted()){
      				console.log(info);
-     				if (info == '/') {
-     					window.location.href = "/";
-     				} else {
-						this.setState({loginStatus:info.message});     					
-     				}
+     				this.setState({loginStatus:info});
       			}
       		}.bind(this),
       		error: function(xhr,status,err){
@@ -40,16 +32,15 @@ var LoginForm = React.createClass({displayName: "LoginForm",
 	},
 
 	render: function() {
-		var errorMessage;
-		if (this.state.loginStatus == "") {
-			errorMessage = "";
-		} else {
-			errorMessage = React.createElement("p", {style: errorStyle}, this.state.loginStatus);
-		}
+		// var errorMessage;
+		// if (this.state.loginStatus == "") {
+		// 	errorMessage = "";
+		// } else {
+		// 	errorMessage = <p>{this.state.loginStatus}</p>;
+		// }
 		return(
 			React.createElement("div", null, 
 				React.createElement("h4", null, "Login "), 
-				errorMessage, 
 				React.createElement("form", {onSubmit: this.handleSubmit, className: "loginForm", method: "post", action: "login"}, 
          		 "email: ", React.createElement("input", {type: "email", name: "email", ref: "email"}), " ", React.createElement("br", null), 
           		"password: ", React.createElement("input", {type: "password", name: "password", ref: "password"}), " ", React.createElement("br", null), 

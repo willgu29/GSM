@@ -111,13 +111,25 @@ app.post('/createAccount', function (req, res) {
         });
 });
 
+ 
 
-app.post('/login',  passport.authenticate('local', { failureRedirect: '/', 
-                                                      failureFlash: true}),
-  function (req, res) {
-  		console.log("/login POST");
-        res.redirect('/');
- });
+app.post('/login', function(req, res, next) {
+  passport.authenticate('local', function(err, user, info) {
+    if (err) { return res.json(err); }
+    if (!user) { return res.json(info); }
+    req.logIn(user, function(err) {
+      if (err) { return res.json(info); }
+      return res.json('/');
+    });
+  })(req, res, next);
+});
+
+// app.post('/login',  passport.authenticate('local', { failureRedirect: '/', 
+//                                                       failureFlash: false}),
+//   function (req, res) {
+//   		console.log("/login POST");
+//         res.redirect('/');
+//  });
 
 app.get('/logout', function (req, res){
 

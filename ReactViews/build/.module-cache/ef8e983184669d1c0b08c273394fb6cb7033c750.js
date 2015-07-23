@@ -1,8 +1,3 @@
-var errorStyle = {
-
-	color: "red"
-}
-
 var LoginForm = React.createClass({displayName: "LoginForm",
 	getInitialState: function() {
 		return ({loginStatus: ""});
@@ -10,11 +5,9 @@ var LoginForm = React.createClass({displayName: "LoginForm",
 	handleSubmit: function(e) {
 		e.preventDefault();
 
-		var email = React.findDOMNode(this.refs.email).value.trim();
-		var password = React.findDOMNode(this.refs.password).value.trim();
 		var data = {
-			email: email,
-			password: password
+			email: React.findDOMNode(this.refs.email).value.trim(),
+			password: React.findDOMNode(this.refs.password).value.trim()
 		};
 
 		$.ajax({
@@ -24,16 +17,11 @@ var LoginForm = React.createClass({displayName: "LoginForm",
 			type: "POST",
 			success: function(info){
      			if (this.isMounted()){
-     				console.log(info);
-     				if (info == '/') {
-     					window.location.href = "/";
-     				} else {
-						this.setState({loginStatus:info.message});     					
-     				}
+     				this.setState({loginStatus:info});
       			}
       		}.bind(this),
       		error: function(xhr,status,err){
-      			console.log(err);
+        		console.error(status, err.toString());
       		}.bind(this)
       	});
 
@@ -42,9 +30,9 @@ var LoginForm = React.createClass({displayName: "LoginForm",
 	render: function() {
 		var errorMessage;
 		if (this.state.loginStatus == "") {
-			errorMessage = "";
+
 		} else {
-			errorMessage = React.createElement("p", {style: errorStyle}, this.state.loginStatus);
+			errorMessage = this.state.loginStatus;
 		}
 		return(
 			React.createElement("div", null, 
