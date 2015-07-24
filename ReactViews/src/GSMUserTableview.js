@@ -68,7 +68,7 @@ var InterestingColumn = React.createClass({
 var MoreInfoColumn = React.createClass({
   render: function() {
 
-    var profileLink = "/users/" + this.props.email;
+    var profileLink = "/user/" + this.props.email;
 
     return(
       <a href={profileLink}>More Info</a>

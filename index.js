@@ -75,8 +75,8 @@ app.get("/messages/:userID", loggedIn, function (req, res) {
   res.sendFile(__dirname + "/public/messages.html");
 }); 
 
-app.get("/users/:userID", loggedIn, function (req, res) {
-  console.log("/users/:userID GET " + req.params.userID);
+app.get("/user/:userID", loggedIn, function (req, res) {
+  console.log("/user/:userID GET " + req.params.userID);
   res.sendFile(__dirname + "/public/userPage.html");
 });
 
