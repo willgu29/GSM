@@ -1,8 +1,6 @@
 var helpTextStyle = {
-  fontSize: "14px",
-  display: "inline"
+  fontSize: "14px"
 }
-
 
 //Tabular Data Columns
 
@@ -180,8 +178,7 @@ var SearchBar = React.createClass({displayName: "SearchBar",
 
     return(
       React.createElement("div", null, 
-        React.createElement("button", {type: "button", onClick: this.handleInfoClick}, "Info"), 
-        helpText, 
+        React.createElement("p", null, React.createElement("button", {type: "button", onClick: this.handleInfoClick}, "Info"), " ", helpText), 
         React.createElement("form", {onSubmit: this.handleSubmit, className: "searchForm", method: "get", action: "/api/users/"}, 
          React.createElement("input", {type: "text", name: "searchText", ref: "searchText"}), 
          React.createElement("input", {type: "submit", value: "Search"})

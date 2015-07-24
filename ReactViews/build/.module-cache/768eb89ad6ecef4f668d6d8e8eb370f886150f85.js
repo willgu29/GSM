@@ -1,8 +1,7 @@
 var helpTextStyle = {
-  fontSize: "14px",
-  display: "inline"
-}
+  fontSize: "14px"
 
+}
 
 //Tabular Data Columns
 

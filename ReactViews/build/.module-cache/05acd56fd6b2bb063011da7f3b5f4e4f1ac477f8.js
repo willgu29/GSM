@@ -1,7 +1,3 @@
-var helpTextStyle = {
-  fontSize: "14px",
-  display: "inline"
-}
 
 
 //Tabular Data Columns
@@ -148,16 +144,7 @@ var RatingStars = React.createClass({displayName: "RatingStars",
 
 
 var SearchBar = React.createClass({displayName: "SearchBar",
-  getInitialState: function() {
-    return ({infoText:""});
-  },
-  handleInfoClick: function() {
-    if (this.state.infoText == "") {
-      this.setState({infoText:"Search by keywords (name, skills, personality, etc). Search nothing to see everyone."});
-    } else {
-      this.setState({infoText:""});
-    }
-  },
+  
   handleSubmit: function(e) {
     e.preventDefault();
 
@@ -175,13 +162,9 @@ var SearchBar = React.createClass({displayName: "SearchBar",
     });
   },
   render: function() {
-
-    var helpText = React.createElement("p", {style: helpTextStyle}, this.state.infoText)
-
     return(
       React.createElement("div", null, 
-        React.createElement("button", {type: "button", onClick: this.handleInfoClick}, "Info"), 
-        helpText, 
+        React.createElement("button", {type: "button", onClick: this.handleInfoClick}, "Help"), 
         React.createElement("form", {onSubmit: this.handleSubmit, className: "searchForm", method: "get", action: "/api/users/"}, 
          React.createElement("input", {type: "text", name: "searchText", ref: "searchText"}), 
          React.createElement("input", {type: "submit", value: "Search"})

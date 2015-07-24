@@ -28,6 +28,7 @@ app.use("/react-0.13.3/build", express.static(__dirname + "/react-0.13.3/build")
 app.use("/style", express.static(__dirname + '/style'));
 app.use("/ReactViews/build", express.static(__dirname + '/ReactViews/build'));
 app.use("/jquery", express.static(__dirname + '/jquery'));
+app.use("/public/imgs", express.static(__dirname + '/public/imgs'));
 
 
 

@@ -180,7 +180,7 @@ var SearchBar = React.createClass({displayName: "SearchBar",
 
     return(
       React.createElement("div", null, 
-        React.createElement("button", {type: "button", onClick: this.handleInfoClick}, "Info"), 
+        React.createElement("button", {style: infoButtonStyle, type: "button", onClick: this.handleInfoClick}, "Info"), 
         helpText, 
         React.createElement("form", {onSubmit: this.handleSubmit, className: "searchForm", method: "get", action: "/api/users/"}, 
          React.createElement("input", {type: "text", name: "searchText", ref: "searchText"}), 

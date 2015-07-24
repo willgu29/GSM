@@ -1,3 +1,8 @@
+var helpTextStyle = {
+  fontSize: "14px",
+  display: "inline"
+}
+
 
 //Tabular Data Columns
 
@@ -143,6 +148,16 @@ var RatingStars = React.createClass({
 
 
 var SearchBar = React.createClass({
+  getInitialState: function() {
+    return ({infoText:""});
+  },
+  handleInfoClick: function() {
+    if (this.state.infoText == "") {
+      this.setState({infoText:"Search by keywords (name, skills, personality, etc). Search nothing to see everyone."});
+    } else {
+      this.setState({infoText:""});
+    }
+  },
   handleSubmit: function(e) {
     e.preventDefault();
 
@@ -152,7 +167,6 @@ var SearchBar = React.createClass({
       url: searchURL,
       dataType: 'json',
       success: function(data) {
-        console.log("Data: " + data);
         this.props.handleChange(data);
       }.bind(this),
       error: function(xhr,status,err){
@@ -161,11 +175,18 @@ var SearchBar = React.createClass({
     });
   },
   render: function() {
+
+    var helpText = <p style={helpTextStyle} >{this.state.infoText}</p>
+
     return(
-      <form onSubmit={this.handleSubmit} className="searchForm" method="get" action="/api/users/">
-        <input type="text" name="searchText" ref="searchText" />
-        <input type="submit" value="Search" />
-      </form>
+      <div>
+        <button type="button" onClick={this.handleInfoClick}>Info</button> 
+        {helpText}
+        <form onSubmit={this.handleSubmit} className="searchForm" method="get" action="/api/users/">
+         <input type="text" name="searchText" ref="searchText" />
+         <input type="submit" value="Search" />
+        </form>
+      </div>
     );
   }
 
@@ -214,7 +235,6 @@ var GSMUserTableView = React.createClass({
       });
   },
   handleChange: function(users) {
-    console.log("Users found by search: ", users);
     this.setState({users:users});
   },
 

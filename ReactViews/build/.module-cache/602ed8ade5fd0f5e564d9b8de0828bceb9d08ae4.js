@@ -1,8 +1,6 @@
 var helpTextStyle = {
-  fontSize: "14px",
-  display: "inline"
+  font: "10px"
 }
-
 
 //Tabular Data Columns
 
@@ -153,7 +151,7 @@ var SearchBar = React.createClass({displayName: "SearchBar",
   },
   handleInfoClick: function() {
     if (this.state.infoText == "") {
-      this.setState({infoText:"Search by keywords (name, skills, personality, etc). Search nothing to see everyone."});
+      this.setState({infoText:"Search by keywords (name, skills, personality, etc). Search nothing to see everyone"});
     } else {
       this.setState({infoText:""});
     }
@@ -176,7 +174,7 @@ var SearchBar = React.createClass({displayName: "SearchBar",
   },
   render: function() {
 
-    var helpText = React.createElement("p", {style: helpTextStyle}, this.state.infoText)
+    var helpText = React.createElement("p", null, this.state.infoText)
 
     return(
       React.createElement("div", null, 

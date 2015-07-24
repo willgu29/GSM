@@ -1,6 +1,5 @@
-var helpTextStyle = {
-  fontSize: "14px",
-  display: "inline"
+var infoButtonStyle = {
+  background: "url(http://static1.squarespace.com/static/5435072de4b074329dc325c6/t/557f2cb0e4b01c9c3ac098ea/1434397872690/)"
 }
 
 
@@ -148,16 +147,6 @@ var RatingStars = React.createClass({displayName: "RatingStars",
 
 
 var SearchBar = React.createClass({displayName: "SearchBar",
-  getInitialState: function() {
-    return ({infoText:""});
-  },
-  handleInfoClick: function() {
-    if (this.state.infoText == "") {
-      this.setState({infoText:"Search by keywords (name, skills, personality, etc). Search nothing to see everyone."});
-    } else {
-      this.setState({infoText:""});
-    }
-  },
   handleSubmit: function(e) {
     e.preventDefault();
 
@@ -175,17 +164,13 @@ var SearchBar = React.createClass({displayName: "SearchBar",
     });
   },
   render: function() {
-
-    var helpText = React.createElement("p", {style: helpTextStyle}, this.state.infoText)
-
     return(
       React.createElement("div", null, 
-        React.createElement("button", {type: "button", onClick: this.handleInfoClick}, "Info"), 
-        helpText, 
         React.createElement("form", {onSubmit: this.handleSubmit, className: "searchForm", method: "get", action: "/api/users/"}, 
          React.createElement("input", {type: "text", name: "searchText", ref: "searchText"}), 
          React.createElement("input", {type: "submit", value: "Search"})
-        )
+        ), 
+        React.createElement("button", {style: infoButtonStyle, type: "button"})
       )
     );
   }
