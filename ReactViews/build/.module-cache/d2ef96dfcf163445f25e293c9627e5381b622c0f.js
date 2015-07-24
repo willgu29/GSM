@@ -3,7 +3,7 @@ var errorStyle = {
 	color: "red"
 }
 
-var LoginForm = React.createClass({
+var LoginForm = React.createClass({displayName: "LoginForm",
 	getInitialState: function() {
 		return ({loginStatus: ""});
 	},
@@ -27,6 +27,7 @@ var LoginForm = React.createClass({
      				console.log(info);
      				if (info == '/') {
      					window.location.reload();
+     					window.location.href = "/";
      				} else {
 						this.setState({loginStatus:info.message});     					
      				}
@@ -44,23 +45,23 @@ var LoginForm = React.createClass({
 		if (this.state.loginStatus == "") {
 			errorMessage = "";
 		} else {
-			errorMessage = <p style={errorStyle}>{this.state.loginStatus}</p>;
+			errorMessage = React.createElement("p", {style: errorStyle}, this.state.loginStatus);
 		}
 		return(
-			<div>
-				<h4>Login </h4>
-				{errorMessage}
-				<form onSubmit={this.handleSubmit} className="loginForm" method="post" action="login" >
-         		 email: <input type="email" name="email" ref="email" /> <br />
-          		password: <input type="password" name="password"  ref="password" /> <br />
-          		<br />
-          		<input type="submit" value="login" id="login" />
-        		</form>
-			</div>
+			React.createElement("div", null, 
+				React.createElement("h4", null, "Login "), 
+				errorMessage, 
+				React.createElement("form", {onSubmit: this.handleSubmit, className: "loginForm", method: "post", action: "login"}, 
+         		 "email: ", React.createElement("input", {type: "email", name: "email", ref: "email"}), " ", React.createElement("br", null), 
+          		"password: ", React.createElement("input", {type: "password", name: "password", ref: "password"}), " ", React.createElement("br", null), 
+          		React.createElement("br", null), 
+          		React.createElement("input", {type: "submit", value: "login", id: "login"})
+        		)
+			)
 		);
 	}
 })
 
-React.render(<LoginForm url="/login" />, document.getElementById("loginForm"));
+React.render(React.createElement(LoginForm, {url: "/login"}), document.getElementById("loginForm"));
 
 //The form method post automatically posts to current URL

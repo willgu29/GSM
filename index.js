@@ -124,13 +124,6 @@ app.post('/login', function(req, res, next) {
   })(req, res, next);
 });
 
-// app.post('/login',  passport.authenticate('local', { failureRedirect: '/', 
-//                                                       failureFlash: false}),
-//   function (req, res) {
-//   		console.log("/login POST");
-//         res.redirect('/');
-//  });
-
 app.get('/logout', function (req, res){
 
   req.logout(); //not working for some reason. Stack overflow says use below
