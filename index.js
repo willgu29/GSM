@@ -13,9 +13,7 @@ var express = require('express'),
   Media = require('./Models/Media.js'),
   Comment = require('./Models/Comment.js'),
   KnownNetwork = require("./Models/KnownNetwork.js"),
-  aws = require('aws-sdk'),
-  flash = require('connect-flash');
-
+  aws = require('aws-sdk');
 
 
 
@@ -25,7 +23,6 @@ app.use(cookieParser());
 app.use(session({secret: 'baeMaxLoving'}))
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(flash());
 
 app.use("/react-0.13.3/build", express.static(__dirname + "/react-0.13.3/build"));
 app.use("/style", express.static(__dirname + '/style'));
@@ -148,19 +145,31 @@ app.get("/api/users", loggedIn, function (req, res) { ///limit, skip, user
 app.get("/api/users/:userID", function (req, res) {
   console.log("/api/users/:userID GET " +  req.params.userID);
 
-  var searchEmail;
+  var searchText;
   if (req.params.userID == "me") {
-    searchEmail = req.user.email;
+    searchText = req.user.email;
   } else {
-    searchEmail = req.params.userID;
+    searchText = req.params.userID;
   }
-  User.findOne({email:searchEmail}, function (err, user) {
+  
+  
+
+
+  var query = User.find({});
+  query.where({$text : {$search : searchText}});
+  //             { score : {$meta: "textScore"}});
+  // query.sort({score : {$meta : "textScore"}});
+
+  query.exec(function (err, users) {
     if (err) { 
       console.log(err);
     } else {
-      res.json(user);
+      res.json(users);
     }
   });
+  // User.findOne({email:searchEmail}, function (err, user) {
+    
+  // });
 
 });
 

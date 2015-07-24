@@ -32,8 +32,20 @@ var GSMNavBarItems = React.createClass({
 
 });
 
+var GSMHeader = React.createClass({
+
+	render: function() {
+		return(
+			<div id="navBar">
+				<h1>iGrouply</h1>
+				<GSMNavBarItems currentURL={this.props.currentURL} />
+			</div>
+		);
+	}
+});
+
 //        		<li><a href="/messages">Messages</a></li>
 
 var pathName = window.location.pathname;
 
-React.render(<GSMNavBarItems currentURL={pathName} />, document.getElementById("gsmNavBarItems"));
+React.render(<GSMHeader currentURL={pathName} />, document.getElementById("gsmHeader"));

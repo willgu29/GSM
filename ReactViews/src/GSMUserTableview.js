@@ -141,6 +141,38 @@ var RatingStars = React.createClass({
 });
 
 
+
+var SearchBar = React.createClass({
+  handleSubmit: function(e) {
+    e.preventDefault();
+
+    var searchTerm = React.findDOMNode(this.refs.searchText).value.trim();
+    var searchURL = this.props.url+searchTerm;
+    $.ajax({
+      url: searchURL,
+      dataType: 'json',
+      success: function(data) {
+        console.log("Data: " + data);
+        this.props.handleChange(data);
+      }.bind(this),
+      error: function(xhr,status,err){
+        console.log("Error: ", err);
+      }.bind(this)
+    });
+  },
+  render: function() {
+    return(
+      <form onSubmit={this.handleSubmit} className="searchForm" method="get" action="/api/users/">
+        <input type="text" name="searchText" ref="searchText" />
+        <input type="submit" value="Search" />
+      </form>
+    );
+  }
+
+});
+
+///****************
+
 var UserRow = React.createClass({
   
   render: function() {
@@ -181,6 +213,10 @@ var GSMUserTableView = React.createClass({
       }.bind(this)
       });
   },
+  handleChange: function(users) {
+    console.log("Users found by search: ", users);
+    this.setState({users:users});
+  },
 
   render: function() {
     var arrayOfUsers = this.state.users;
@@ -195,6 +231,8 @@ var GSMUserTableView = React.createClass({
                                     email={user.email} />);
     }
     return(
+      <div id="tableView">
+      <SearchBar url="/api/users/" handleChange={this.handleChange} />
       <table border="1" style={tableStyle} >
         <tr>
           <th>Name</th>
@@ -208,10 +246,12 @@ var GSMUserTableView = React.createClass({
      
 
       </table>
+      </div>
 
     );
 
   }
 });
 
-React.render(<GSMUserTableView url="/api/users" />, document.getElementById("gsmUserTableView"));
+
+React.render(<GSMUserTableView url="/api/users/" />, document.getElementById("gsmUserTableView"));

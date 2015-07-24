@@ -145,25 +145,21 @@ var RatingStars = React.createClass({displayName: "RatingStars",
 var SearchBar = React.createClass({displayName: "SearchBar",
   handleSubmit: function(e) {
     e.preventDefault();
-
-    var searchTerm = React.findDOMNode(this.refs.searchText).value.trim();
-    var searchURL = this.props.url+searchTerm;
     $.ajax({
-      url: searchURL,
+      url: this.props.url,
       dataType: 'json',
       success: function(data) {
-        console.log("Data: " + data);
-        this.props.handleChange(data);
+        this.handleChange(data);
       }.bind(this),
       error: function(xhr,status,err){
-        console.log("Error: ", err);
+        console.error(status, err.toString());
       }.bind(this)
     });
   },
   render: function() {
     return(
       React.createElement("form", {onSubmit: this.handleSubmit, className: "searchForm", method: "get", action: "/api/users/"}, 
-        React.createElement("input", {type: "text", name: "searchText", ref: "searchText"}), 
+        React.createElement("input", {type: "text", name: "searchText"}), 
         React.createElement("input", {type: "submit", value: "Search"})
       )
     );
@@ -213,10 +209,6 @@ var GSMUserTableView = React.createClass({displayName: "GSMUserTableView",
       }.bind(this)
       });
   },
-  handleChange: function(users) {
-    console.log("Users found by search: ", users);
-    this.setState({users:users});
-  },
 
   render: function() {
     var arrayOfUsers = this.state.users;
@@ -254,4 +246,4 @@ var GSMUserTableView = React.createClass({displayName: "GSMUserTableView",
 });
 
 
-React.render(React.createElement(GSMUserTableView, {url: "/api/users/"}), document.getElementById("gsmUserTableView"));
+React.render(React.createElement(GSMUserTableView, {url: "/api/users"}), document.getElementById("gsmUserTableView"));

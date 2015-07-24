@@ -143,27 +143,13 @@ var RatingStars = React.createClass({displayName: "RatingStars",
 
 
 var SearchBar = React.createClass({displayName: "SearchBar",
-  handleSubmit: function(e) {
-    e.preventDefault();
+  handleSubmit: function() {
 
-    var searchTerm = React.findDOMNode(this.refs.searchText).value.trim();
-    var searchURL = this.props.url+searchTerm;
-    $.ajax({
-      url: searchURL,
-      dataType: 'json',
-      success: function(data) {
-        console.log("Data: " + data);
-        this.props.handleChange(data);
-      }.bind(this),
-      error: function(xhr,status,err){
-        console.log("Error: ", err);
-      }.bind(this)
-    });
   },
   render: function() {
     return(
       React.createElement("form", {onSubmit: this.handleSubmit, className: "searchForm", method: "get", action: "/api/users/"}, 
-        React.createElement("input", {type: "text", name: "searchText", ref: "searchText"}), 
+        React.createElement("input", {type: "text", name: "searchText"}), 
         React.createElement("input", {type: "submit", value: "Search"})
       )
     );
@@ -213,10 +199,6 @@ var GSMUserTableView = React.createClass({displayName: "GSMUserTableView",
       }.bind(this)
       });
   },
-  handleChange: function(users) {
-    console.log("Users found by search: ", users);
-    this.setState({users:users});
-  },
 
   render: function() {
     var arrayOfUsers = this.state.users;
@@ -231,8 +213,6 @@ var GSMUserTableView = React.createClass({displayName: "GSMUserTableView",
                                     email: user.email}));
     }
     return(
-      React.createElement("div", {id: "tableView"}, 
-      React.createElement(SearchBar, {url: "/api/users/", handleChange: this.handleChange}), 
       React.createElement("table", {border: "1", style: tableStyle}, 
         React.createElement("tr", null, 
           React.createElement("th", null, "Name"), 
@@ -246,7 +226,6 @@ var GSMUserTableView = React.createClass({displayName: "GSMUserTableView",
      
 
       )
-      )
 
     );
 
@@ -254,4 +233,4 @@ var GSMUserTableView = React.createClass({displayName: "GSMUserTableView",
 });
 
 
-React.render(React.createElement(GSMUserTableView, {url: "/api/users/"}), document.getElementById("gsmUserTableView"));
+React.render(React.createElement(GSMUserTableView, {url: "/api/users"}), document.getElementById("gsmUserTableView"));

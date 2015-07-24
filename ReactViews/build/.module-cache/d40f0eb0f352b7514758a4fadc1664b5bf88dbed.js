@@ -149,7 +149,7 @@ var SearchBar = React.createClass({displayName: "SearchBar",
     var searchTerm = React.findDOMNode(this.refs.searchText).value.trim();
     var searchURL = this.props.url+searchTerm;
     $.ajax({
-      url: searchURL,
+      url: this.props.url,
       dataType: 'json',
       success: function(data) {
         console.log("Data: " + data);
