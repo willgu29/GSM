@@ -19,7 +19,7 @@ var EditAccountForm = React.createClass({
             dataType: 'json',
             cache: false,
             success: function(userData){
-            if (this.isMounted()){
+            if (this.isMounted()){               
                 this.setState({
                                 interesting: userData.identity.interesting,
                                 contactIf: userData.identity.contactIf,
@@ -75,6 +75,6 @@ var EditAccountForm = React.createClass({
 	} 
 });
 
-React.render(<EditAccountForm url="/api/users/me" />, document.getElementById("editAccountForm"));
+React.render(<EditAccountForm url="/api/user/me" />, document.getElementById("editAccountForm"));
 
 

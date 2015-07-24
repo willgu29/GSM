@@ -19,9 +19,14 @@ var EditAccountForm = React.createClass({displayName: "EditAccountForm",
             dataType: 'json',
             cache: false,
             success: function(userData){
-            if (this.isMounted()){               
+            if (this.isMounted()){
+                console.log("User Data: "+ JSON.stringify(userData));
+                var interesting = userData.identity;
+                if (interesting == undefined) {
+                    interesting = "";
+                }
                 this.setState({
-                                interesting: userData.identity.interesting,
+                                interesting: interesting,
                                 contactIf: userData.identity.contactIf,
                                 personality: userData.identity.personality,
                                 skills: userData.identity.skills,
@@ -75,6 +80,6 @@ var EditAccountForm = React.createClass({displayName: "EditAccountForm",
 	} 
 });
 
-React.render(React.createElement(EditAccountForm, {url: "/api/user/me"}), document.getElementById("editAccountForm"));
+React.render(React.createElement(EditAccountForm, {url: "/api/users/me"}), document.getElementById("editAccountForm"));
 
 

@@ -19,9 +19,11 @@ var EditAccountForm = React.createClass({displayName: "EditAccountForm",
             dataType: 'json',
             cache: false,
             success: function(userData){
-            if (this.isMounted()){               
+            if (this.isMounted()){
+                console.log("User Data: "+ JSON.stringify(userData));
+               
                 this.setState({
-                                interesting: userData.identity.interesting,
+                                interesting: userData.identity.interesting.toString(),
                                 contactIf: userData.identity.contactIf,
                                 personality: userData.identity.personality,
                                 skills: userData.identity.skills,

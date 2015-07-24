@@ -21,7 +21,7 @@ var EditAccountForm = React.createClass({displayName: "EditAccountForm",
             success: function(userData){
             if (this.isMounted()){               
                 this.setState({
-                                interesting: userData.identity.interesting,
+                                interesting: userData.identity.interesting.toString(),
                                 contactIf: userData.identity.contactIf,
                                 personality: userData.identity.personality,
                                 skills: userData.identity.skills,

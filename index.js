@@ -143,18 +143,28 @@ app.get("/api/users", loggedIn, function (req, res) { ///limit, skip, user
                 res.json(users);
     }).limit(req.body.limit).skip(req.body.skip);
 });
-app.get("/api/users/:userID", function (req, res) {
-  console.log("/api/users/:userID GET " +  req.params.userID);
 
-  var searchText;
+//Email find one
+app.get("/api/user/:userID", function (req, res) {
+  var searchEmail;
   if (req.params.userID == "me") {
-    searchText = req.user.email;
+    searchEmail = req.user.email;
   } else {
-    searchText = req.params.userID;
+    searchEmail = req.params.userID;
   }
-  
-  
+  User.findOne({email:searchEmail}, function (err, user) {
+    if (err) { 
+      console.log(err);
+    } else {
+      res.json(user);
+    }
+  });
+});
 
+//Full text search
+app.get("/api/users/:searchText", function (req, res) {
+  console.log("/api/users/:userID GET " +  req.params.searchText);
+  var searchText = req.params.searchText;
 
   var query = User.find({});
   query.where({$text : {$search : searchText}});
@@ -168,9 +178,7 @@ app.get("/api/users/:userID", function (req, res) {
       res.json(users);
     }
   });
-  // User.findOne({email:searchEmail}, function (err, user) {
-    
-  // });
+  
 
 });
 
