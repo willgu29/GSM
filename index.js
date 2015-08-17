@@ -53,6 +53,8 @@ app.get("/", function (req, res) {
   }
 });
 
+//Main Nav Bar
+
 app.get("/editAccount", loggedIn, function (req, res) {
   console.log("/editAccount GET");
 
@@ -62,6 +64,20 @@ app.get("/editAccount", loggedIn, function (req, res) {
 app.get("/messages/", loggedIn, function (req, res) {
   res.sendFile(__dirname + "/public/messages.html");
 }); 
+
+//---
+
+
+
+app.get("/user/:userID", loggedIn, function (req, res) {
+  console.log("/user/:userID GET " + req.params.userID);
+  res.render("userPage", {layout: "/layouts/main"});
+});
+
+
+
+
+//Other
 
 app.get("/individuals", loggedIn, function (req, res) {
   console.log('/individuals GET');
@@ -74,19 +90,12 @@ app.get("/login" ,function (req, res) {
   res.sendFile(__dirname + "/public/login.html");
 });
 
-
-
 app.get("/suggestions/:userID", loggedIn, function (req, res) {
   res.sendFile(__dirname + "/public/suggestionsPage.html");
 }); 
 
 
-
-app.get("/user/:userID", loggedIn, function (req, res) {
-  console.log("/user/:userID GET " + req.params.userID);
-  res.sendFile(__dirname + "/public/userPage.html");
-});
-
+//---
 
 
 
@@ -188,6 +197,32 @@ app.get("/api/users/:searchText", function (req, res) {
   
 
 });
+
+app.get("/api/messages/:convoID", loggedIn, function (req, res) {
+  console.log("/api/messages/:userID GET " + req.params.convoID);
+  var searchID;
+  if (req.params.userID == "me") {
+    searchID = req.user.email;
+  } else {
+    searchID = req.params.convoID;
+  }
+
+//sort by date created.
+
+  Message.find({toMessageThread_id:searchID}, function (err, messageObjects) {
+                if (err) return console.error(err);
+                res.json(messageObjects);
+  }).limit(req.body.limit).skip(req.body.skip);
+});
+
+app.get("/api/messages/", loggedIn, function (req, res) {
+  console.log("/api/messages/ GET");
+  MessageThread.find({participant_ids:req.user.email}, function (err, threadObjects) {
+                if (err) return console.error(err);
+                res.json(threadObjects);
+  }).limit(req.body.limit).skip(req.body.skip);
+});
+
 
 app.get("/api/media/:userID", loggedIn, function (req, res) {
   console.log("/api/media/:userID GET " + req.params.userID);
