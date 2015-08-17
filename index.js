@@ -53,6 +53,16 @@ app.get("/", function (req, res) {
   }
 });
 
+app.get("/editAccount", loggedIn, function (req, res) {
+  console.log("/editAccount GET");
+
+  res.render("editAccount", {layout: "/layouts/main"});
+});
+
+app.get("/messages/", loggedIn, function (req, res) {
+  res.sendFile(__dirname + "/public/messages.html");
+}); 
+
 app.get("/individuals", loggedIn, function (req, res) {
   console.log('/individuals GET');
   res.sendFile(__dirname + "/public/browseIndividuals.html");
@@ -64,19 +74,13 @@ app.get("/login" ,function (req, res) {
   res.sendFile(__dirname + "/public/login.html");
 });
 
-app.get("/editAccount", loggedIn, function (req, res) {
-  console.log("/editAccount GET");
 
-  res.sendFile(__dirname + "/public/editAccount.html");
-});
 
 app.get("/suggestions/:userID", loggedIn, function (req, res) {
   res.sendFile(__dirname + "/public/suggestionsPage.html");
 }); 
 
-app.get("/messages/:userID", loggedIn, function (req, res) {
-  res.sendFile(__dirname + "/public/messages.html");
-}); 
+
 
 app.get("/user/:userID", loggedIn, function (req, res) {
   console.log("/user/:userID GET " + req.params.userID);
