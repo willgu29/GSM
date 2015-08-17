@@ -47,9 +47,9 @@ app.use("/public/", express.static(__dirname + '/public/'));
 app.get("/", function (req, res) {
 	console.log('/ GET');
   if (!req.user) {
-    res.render('landingPage', {layout: false});
+    res.render('landingPage', {layout: "/layouts/main"});
   } else {
-    res.render('index', {layout: false});
+    res.render('index', {layout: "/layouts/main"});
   }
 });
 
