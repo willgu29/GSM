@@ -17,20 +17,15 @@ var GSMNavBarItems = React.createClass({displayName: "GSMNavBarItems",
 	render: function() {
 		var style1 = liStyle;
 		var style2 = liStyle;
-		var style3 = liStyle;
 		if (this.props.currentURL == "/") {
 			style1 = liStyleSelected;
 		} else if (this.props.currentURL == "/editAccount") {
 			style2 = liStyleSelected;
-		} else if (this.props.currentURL == "/messages") {
-			style3 = liStyleSelected;
 		}
 		return(
 			React.createElement("ul", {style: ulStyle}, 
 				React.createElement("li", {style: style1}, React.createElement("a", {href: "/"}, "Member List")), 
-				React.createElement("li", {style: style2}, React.createElement("a", {href: "/editAccount"}, "Edit Account")), 
-				React.createElement("li", {style: style3}, React.createElement("a", {href: "/messages"}, "Messages"))
-
+				React.createElement("li", {style: style2}, React.createElement("a", {href: "/editAccount"}, "Edit Account"))
 			)
 		);
 	}
@@ -49,6 +44,7 @@ var GSMHeader = React.createClass({displayName: "GSMHeader",
 	}
 });
 
+//        		<li><a href="/messages">Messages</a></li>
 
 var pathName = window.location.pathname;
 

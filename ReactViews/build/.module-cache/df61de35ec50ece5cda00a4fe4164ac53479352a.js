@@ -30,7 +30,6 @@ var GSMNavBarItems = React.createClass({displayName: "GSMNavBarItems",
 				React.createElement("li", {style: style1}, React.createElement("a", {href: "/"}, "Member List")), 
 				React.createElement("li", {style: style2}, React.createElement("a", {href: "/editAccount"}, "Edit Account")), 
 				React.createElement("li", {style: style3}, React.createElement("a", {href: "/messages"}, "Messages"))
-
 			)
 		);
 	}

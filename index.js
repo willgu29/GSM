@@ -4,6 +4,7 @@
 
 var express = require('express'),
 	bodyParser = require('body-parser'),
+  hbs = require('hbs'),
 	React = require('react'),
 	cookieParser = require('cookie-parser');
 	passport = require('passport'),
@@ -18,17 +19,19 @@ var express = require('express'),
 
 
 var app = express();
+
+app.set('views', __dirname + '/templates/views/');
+app.set('view engine', 'hbs');
+
 app.use(bodyParser());
 app.use(cookieParser());
 app.use(session({secret: 'baeMaxLoving'}))
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/react-0.13.3/build", express.static(__dirname + "/react-0.13.3/build"));
 app.use("/style", express.static(__dirname + '/style'));
 app.use("/ReactViews/build", express.static(__dirname + '/ReactViews/build'));
-app.use("/jquery", express.static(__dirname + '/jquery'));
-app.use("/public/imgs", express.static(__dirname + '/public/imgs'));
+app.use("/public/", express.static(__dirname + '/public/'));
 
 
 
@@ -43,11 +46,11 @@ app.use("/public/imgs", express.static(__dirname + '/public/imgs'));
 
 app.get("/", function (req, res) {
 	console.log('/ GET');
-	if (!req.user) {
-		res.sendFile(__dirname + "/public/landingPage.html");
-	} else {
-		res.sendFile(__dirname + "/public/index.html");
-	}
+  if (!req.user) {
+    res.render('landingPage', {layout: false});
+  } else {
+    res.render('index', {layout: false});
+  }
 });
 
 app.get("/individuals", loggedIn, function (req, res) {
