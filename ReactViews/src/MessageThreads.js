@@ -1,8 +1,16 @@
 var MessageThreadRow = React.createClass({
 
 	render: function() {
+		var fullName = this.props.fullName;
+		var unseenMessageCount = this.props.unseenMessageCount;
+		var infoText;
+		if (unseenMessageCount = 0) {
+			infoText = "No new messages";
+		} else {
+			infoText = unseenMessageCount + " new messages";
+		}
 		return(
-			<li>Hi</li>
+			<li>{fullName}: {infoText}</li>
 
 		);
 	}
@@ -35,7 +43,8 @@ var MessageThreads = React.createClass({
 		var arrayOfRows = [];
 		for (var i = 0; i < arrayOfThreads; i++) {
 			var thread = arrayOfThreads[i];
-			arrayOfRows.push(<MessageThreadRow />);
+			arrayOfRows.push(<MessageThreadRow fullName={thread.fullName} 
+												unseenMessageCount={thread.unseenMessageCount} />);
 		}
 
 		return(

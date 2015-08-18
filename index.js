@@ -61,8 +61,9 @@ app.get("/editAccount", loggedIn, function (req, res) {
   res.render("editAccount", {layout: "/layouts/main"});
 });
 
-app.get("/messages/", loggedIn, function (req, res) {
-  res.sendFile(__dirname + "/public/messages.html");
+app.get("/messages", loggedIn, function (req, res) {
+  console.log("/messages GET");
+  res.render("messages", {layout: "/layouts/main"});
 }); 
 
 //---
@@ -268,6 +269,12 @@ app.get("/api/network/:userID", loggedIn, function (req, res) {
 
 ///
   //Database Edits
+
+app.post("/api/messages/:userID", loggedIn, function (req, res) {
+  console.log("/api/messages/:userID POST " + req.params.userID);
+  //TODO: save messages
+});
+
 app.post("/api/network/:userID", loggedIn, function (req, res) {
   console.log("/api/network/:userID POST " + req.params.userID);
 
