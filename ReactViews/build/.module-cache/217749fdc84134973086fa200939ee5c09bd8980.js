@@ -17,11 +17,9 @@ var NewMessage = React.createClass({displayName: "NewMessage",
      				console.log(info);
   					if (info == "success") {
   						//TODO: segue to messages page
-  						var url = "/messages/" + info._id;
-     					window.location.href(url);
-     				} else {
-     					alert("There was an error. Please try again in a minute.");
-     				}
+  					} else {
+
+  					}
       			}
       		}.bind(this),
       		error: function(xhr,status,err){

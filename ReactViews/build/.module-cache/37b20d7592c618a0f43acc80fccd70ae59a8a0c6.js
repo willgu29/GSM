@@ -1,4 +1,4 @@
-var NewMessage = React.createClass({displayName: "NewMessage",
+var SendMessage = React.createClass({displayName: "SendMessage",
 	
 
 	createNewMessageThread: function() {
@@ -15,13 +15,7 @@ var NewMessage = React.createClass({displayName: "NewMessage",
 			success: function(info){
      			if (this.isMounted()){
      				console.log(info);
-  					if (info == "success") {
-  						//TODO: segue to messages page
-  						var url = "/messages/" + info._id;
-     					window.location.href(url);
-     				} else {
-     					alert("There was an error. Please try again in a minute.");
-     				}
+  
       			}
       		}.bind(this),
       		error: function(xhr,status,err){
@@ -34,7 +28,7 @@ var NewMessage = React.createClass({displayName: "NewMessage",
 
 	buttonClick: function(e) {
 		e.preventDefault();
-		this.createNewMessageThread();
+		
 	},
 
 	render: function() {
@@ -111,7 +105,7 @@ var UserProfile = React.createClass({displayName: "UserProfile",
 				React.createElement("p", null, "Wants: ", wantsArray), 
 				React.createElement("p", null, "Contact If: ", this.state.contactIf), 
 
-				React.createElement(NewMessage, {url: "/api/messages/", fullName: fullName, email: this.state.email})
+				React.createElement(SendMessage, {fullName: fullName, email: this.state.email})
 			)
 
 		);

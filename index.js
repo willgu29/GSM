@@ -13,6 +13,7 @@ var express = require('express'),
 	User = require('./Models/User.js'),
   Media = require('./Models/Media.js'),
   Comment = require('./Models/Comment.js'),
+  MessageThread = require("./Models/MessageThread.js"),
   KnownNetwork = require("./Models/KnownNetwork.js"),
   aws = require('aws-sdk');
 
@@ -66,9 +67,14 @@ app.get("/messages", loggedIn, function (req, res) {
   res.render("messages", {layout: "/layouts/main"});
 }); 
 
+
 //---
 
-
+app.get("/messages/:convoID", loggedIn, function (req, res) {
+  console.log("/messages/:userID GET " + req.params.convoID);
+  res.render("messageThread", {layout: "/layouts/main",
+                                convoID: req.params.convoID});
+})
 
 app.get("/user/:userID", loggedIn, function (req, res) {
   console.log("/user/:userID GET " + req.params.userID);
@@ -270,9 +276,52 @@ app.get("/api/network/:userID", loggedIn, function (req, res) {
 ///
   //Database Edits
 
-app.post("/api/messages/:userID", loggedIn, function (req, res) {
-  console.log("/api/messages/:userID POST " + req.params.userID);
-  //TODO: save messages
+//Create new message thread
+app.post("/api/messages/", loggedIn, function (req, res) {
+  console.log("/api/messages/ POST ");
+
+    var startEmail = req.user.email;
+    var clientOneFullName = req.user.fullName;
+    var participantEmail = req.body.email;
+    var clientTwoFullName = req.body.fullName;
+    var participant_ids = [startEmail, participantEmail];
+
+    var query = {'user_id':startEmail,
+                  "participant_ids": participant_ids};
+
+    
+
+    MessageThread.findOne(query, function (err, thread) {
+    if (err) { 
+      console.log(err);
+
+    } else {
+
+      if (thread) {
+          return res.json({info: "success", _id: thread._id});
+
+      } else {
+        //Create it
+        var newThread =new MessageThread({ user_id: startEmail, 
+                              fullName: clientOneFullName,
+                              participant_ids: participant_ids,
+                              participant_fullNames: [clientOneFullName, clientTwoFullName],
+                              messageCount: 0,
+                              unseenMessagesCount: 0});
+
+        newThread.save(function (err, newThread) {
+         if (err) {
+           console.error(err);
+           return res.json({info: "There was an error. Please try again in a minute."});
+          } else {
+           console.log(newThread);
+           return res.json({info: "success", _id: newThread._id});
+          }
+        });
+      }
+
+    }
+  });
 });
 
 app.post("/api/network/:userID", loggedIn, function (req, res) {

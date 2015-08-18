@@ -1,46 +1,14 @@
-var NewMessage = React.createClass({displayName: "NewMessage",
+var SendMessage = React.createClass({displayName: "SendMessage",
 	
-
-	createNewMessageThread: function() {
-		var data = {
-			email: this.props.email,
-			fullName: this.props.fullName
-		};
-
-		$.ajax({
-			url: this.props.url,
-			dataType: 'json',
-			data: data,
-			type: "POST",
-			success: function(info){
-     			if (this.isMounted()){
-     				console.log(info);
-  					if (info == "success") {
-  						//TODO: segue to messages page
-  						var url = "/messages/" + info._id;
-     					window.location.href(url);
-     				} else {
-     					alert("There was an error. Please try again in a minute.");
-     				}
-      			}
-      		}.bind(this),
-      		error: function(xhr,status,err){
-      			console.log(err);
-      		}.bind(this)
-
-
-		});
-	},
-
 	buttonClick: function(e) {
 		e.preventDefault();
-		this.createNewMessageThread();
+		alert("HELLO ", this.props.fullName, this.props.email);
 	},
 
 	render: function() {
 		
 		return(
-			React.createElement("button", {onClick: this.buttonClick}, "Send Message")
+			React.createElement("a", {onClick: this.buttonClick}, "Send Message")
 
 		);
 	}
@@ -111,7 +79,7 @@ var UserProfile = React.createClass({displayName: "UserProfile",
 				React.createElement("p", null, "Wants: ", wantsArray), 
 				React.createElement("p", null, "Contact If: ", this.state.contactIf), 
 
-				React.createElement(NewMessage, {url: "/api/messages/", fullName: fullName, email: this.state.email})
+				React.createElement(SendMessage, {fullName: fullName, email: this.state.email})
 			)
 
 		);
