@@ -95,8 +95,8 @@ var UserProfile = React.createClass({displayName: "UserProfile",
 
 	render: function () {
 
-		// var skillsArray = this.state.skills.join(", ");
-		// var personalityArray = this.state.personality.join(", ");
+		var skillsArray = this.state.skills.join(", ");
+		var personalityArray = this.state.personality.join(", ");
 		var canOfferArray = this.state.canOffer.join(", ");
 		var wantsArray = this.state.wants.join(", ");
 
@@ -105,9 +105,12 @@ var UserProfile = React.createClass({displayName: "UserProfile",
 		return(
 			React.createElement("div", null, 
 				React.createElement("h3", null, "About ", fullName), 
-				React.createElement("p", null, "Spends Time Mostly: ", this.state.topFiveTime), 
+				React.createElement("p", null, "Interesting Info: ", this.state.interesting), 
+				React.createElement("p", null, "Skills: ", skillsArray), 
+				React.createElement("p", null, "Personality: ", personalityArray), 
 				React.createElement("p", null, "Can Offer: ", canOfferArray), 
 				React.createElement("p", null, "Wants: ", wantsArray), 
+				React.createElement("p", null, "Contact If: ", this.state.contactIf), 
 
 				React.createElement(NewMessage, {url: "/api/messages/", fullName: fullName, email: this.state.email})
 			)
@@ -117,16 +120,5 @@ var UserProfile = React.createClass({displayName: "UserProfile",
 
 });
 
-
 var urlCall = "/api" + window.location.pathname;
 React.render(React.createElement(UserProfile, {url: urlCall}), document.getElementById("gsmUserProfile"));
-
-
-
-/*
-		<p>Interesting Info: {this.state.interesting}</p>
-				<p>Skills: {skillsArray}</p>
-				<p>Personality: {personalityArray}</p>
-				<p>Contact If: {this.state.contactIf}</p>
-
-				*/

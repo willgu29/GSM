@@ -45,15 +45,6 @@ var PersonalityColumn = React.createClass({displayName: "PersonalityColumn",
 
 });
 
-var TopFiveTimeColumn = React.createClass({displayName: "TopFiveTimeColumn",
-
-  render: function() {
-    return(
-      React.createElement("p", null, this.props.topFiveTime)
-    );
-  }
-});
-
 var ContactIfColumn = React.createClass({displayName: "ContactIfColumn",
   render: function() {
 
@@ -209,6 +200,7 @@ var UserRow = React.createClass({displayName: "UserRow",
     return(
       React.createElement("tr", null, 
         React.createElement("td", null, React.createElement(UserImg, {fullName: this.props.fullName})), 
+        React.createElement("td", null, React.createElement(TopFiveTime, {topFiveTime: this.props.topFiveTime})), 
         React.createElement("td", null, React.createElement(WantsColumn, {wants: this.props.wants})), 
         React.createElement("td", null, React.createElement(CanOfferColumn, {canOffer: this.props.canOffer})), 
         React.createElement("td", null, React.createElement(MoreInfoColumn, {email: this.props.email}))
@@ -264,6 +256,7 @@ var GSMUserTableView = React.createClass({displayName: "GSMUserTableView",
       React.createElement("table", {border: "1", style: tableStyle}, 
         React.createElement("tr", null, 
           React.createElement("th", null, "Name"), 
+          React.createElement("th", null, "Spends Time Mostly"), 
           React.createElement("th", null, "Wants"), 
           React.createElement("th", null, "Can Offer"), 
           React.createElement("th", null, "More Info")

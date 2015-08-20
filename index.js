@@ -378,8 +378,8 @@ app.post("/api/network/:userID", loggedIn, function (req, res) {
 app.post("/api/users/:userID", loggedIn, function (req, res) {
   console.log("/api/users/:userID POST " + req.params.userID);
 
-    var skillsArray = req.body.skills.split(',');
-    var personalityArray = req.body.personality.split(',');
+    //var skillsArray = req.body.skills.split(',');
+    //var personalityArray = req.body.personality.split(',');
     var canOfferArray = req.body.canOffer.split(',');
     var wantsArray = req.body.wants.split(',');
 
@@ -387,10 +387,10 @@ app.post("/api/users/:userID", loggedIn, function (req, res) {
 
     var newData = {
       identity: {
-        skills: skillsArray,
-        personality: personalityArray,
-        contactIf: req.body.contactIf,
-        interesting: req.body.interesting,
+        //skills: skillsArray,
+        //personality: personalityArray,
+        //interesting: req.body.interesting,
+        topFiveTime: req.body.topFiveTime,
         canOffer: canOfferArray,
         wants: wantsArray
       }

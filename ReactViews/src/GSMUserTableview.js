@@ -45,6 +45,15 @@ var PersonalityColumn = React.createClass({
 
 });
 
+var TopFiveTimeColumn = React.createClass({
+
+  render: function() {
+    return(
+      <p>{this.props.topFiveTime}</p>
+    );
+  }
+});
+
 var ContactIfColumn = React.createClass({
   render: function() {
 
@@ -202,7 +211,6 @@ var UserRow = React.createClass({
         <td><UserImg fullName={this.props.fullName} /></td>
         <td><WantsColumn wants={this.props.wants} /></td>
         <td><CanOfferColumn canOffer={this.props.canOffer} /></td>
-        <td><ContactIfColumn contactIf={this.props.contactIf} /></td>
         <td><MoreInfoColumn email={this.props.email}  /></td>
       </tr>
     );
@@ -245,9 +253,9 @@ var GSMUserTableView = React.createClass({
       var user = arrayOfUsers[i];
  
       arrayOfUserRows.push(<UserRow fullName={user.fullName} 
+                                    topFiveTime={user.identity.topFiveTime}
                                     wants={user.identity.wants}
                                     canOffer={user.identity.canOffer}
-                                    contactIf={user.identity.contactIf}
                                     email={user.email} />);
     }
     return(
@@ -257,8 +265,7 @@ var GSMUserTableView = React.createClass({
         <tr>
           <th>Name</th>
           <th>Wants</th>
-          <th>Can Offer...</th>
-          <th>Contact If...</th>
+          <th>Can Offer</th>
           <th>More Info</th>
         </tr>
         {arrayOfUserRows}

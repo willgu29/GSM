@@ -51,7 +51,7 @@ var EditAccountForm = React.createClass({displayName: "EditAccountForm",
              React.createElement("p", null, "Be sure to click edit account below to save your profile."), 
 			  React.createElement("form", {className: "editAccountForm", method: "post", action: "api/users/me"}, 
 
-                    "Top 5 things you spend your time on: (be specific) ", React.createElement("br", null), 
+                    "Top 5 things you spend your time on: (be specific ", React.createElement("br", null), 
                     React.createElement("textarea", {id: "topFiveTime", name: "topFiveTime", value: this.state.topFiveTime, onChange: this.handleChange.bind(this, "topFiveTime"), cols: "60", row: "10"}), " ", React.createElement("br", null), React.createElement("br", null), 
                     React.createElement("br", null), 
 

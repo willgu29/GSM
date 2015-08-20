@@ -55,13 +55,13 @@ var UserProfile = React.createClass({
 		return ({
 			email: "",
 			fullName: "",
-			interesting: "",
-            contactIf:  "",
-            personality: [],
-            skills: [],
+			// interesting: "",
+   //          contactIf:  "",
+   //          personality: [],
+   //          skills: [],
             wants: [],
             canOffer: [],
-            contactIf: ""
+            topFiveTime: ""
 
 		});
 	},
@@ -75,13 +75,13 @@ var UserProfile = React.createClass({
         		this.setState({
         					email: userData.email,
         					fullName: userData.fullName,
-                            interesting: userData.identity.interesting,
-                            contactIf: userData.identity.contactIf,
-                            personality: userData.identity.personality,
-                            skills: userData.identity.skills,
+                            // interesting: userData.identity.interesting,
+                            // personality: userData.identity.personality,
+                            // skills: userData.identity.skills,
                             canOffer: userData.identity.canOffer,
                             wants: userData.identity.wants,
-                            contactIf: userData.identity.contactIf
+                            topFiveTime: userData.identity.topFiveTime
+                            // contactIf: userData.identity.contactIf
                                 
                             
                 });
@@ -95,8 +95,8 @@ var UserProfile = React.createClass({
 
 	render: function () {
 
-		var skillsArray = this.state.skills.join(", ");
-		var personalityArray = this.state.personality.join(", ");
+		// var skillsArray = this.state.skills.join(", ");
+		// var personalityArray = this.state.personality.join(", ");
 		var canOfferArray = this.state.canOffer.join(", ");
 		var wantsArray = this.state.wants.join(", ");
 
@@ -105,12 +105,9 @@ var UserProfile = React.createClass({
 		return(
 			<div>
 				<h3>About {fullName}</h3>
-				<p>Interesting Info: {this.state.interesting}</p>
-				<p>Skills: {skillsArray}</p>
-				<p>Personality: {personalityArray}</p>
+				<p>Spends Time Mostly: {this.state.topFiveTime}</p>
 				<p>Can Offer: {canOfferArray}</p>
 				<p>Wants: {wantsArray}</p>
-				<p>Contact If: {this.state.contactIf}</p>
 
 				<NewMessage url="/api/messages/" fullName={fullName} email={this.state.email} />
 			</div>
@@ -120,5 +117,16 @@ var UserProfile = React.createClass({
 
 });
 
+
 var urlCall = "/api" + window.location.pathname;
 React.render(<UserProfile url={urlCall} />, document.getElementById("gsmUserProfile"));
+
+
+
+/*
+		<p>Interesting Info: {this.state.interesting}</p>
+				<p>Skills: {skillsArray}</p>
+				<p>Personality: {personalityArray}</p>
+				<p>Contact If: {this.state.contactIf}</p>
+
+				*/

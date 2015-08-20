@@ -13,11 +13,11 @@ var userSchema = new mongoose.Schema({
   identity : {
   	skills: [String],
   	personality: [String],
+    topFiveTime: String,
   	contactIf: String,
-  	interesting: String,
     canOffer: [String],
     wants: [String],
-    hobbies: [String],
+    interesting: String,
     reputation: String
     
 
