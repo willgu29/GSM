@@ -1,21 +1,19 @@
-var MessageThreadRow = React.createClass({
+var MessageThreadRow = React.createClass({displayName: "MessageThreadRow",
 
 	render: function() {
 		var fullName = this.props.fullName;
 		var participantNames = this.props.participants;
 		var otherParticipant = participantNames[1];
-		var infoText = this.props.messageCount + " messages in conversation";
-
-		var convoURL = this.props.url + this.props.convoID;
+	
 		return(
-			<li><a href={convoURL}>{otherParticipant}: {infoText}</a></li>
+			React.createElement("li", null, fullName, ": ", otherParticipant)
 
 		);
 	}
 
 })
 
-var MessageThreads = React.createClass({
+var MessageThreads = React.createClass({displayName: "MessageThreads",
 	getInitialState: function() {
 		return({threads:[]});
 	},
@@ -37,21 +35,18 @@ var MessageThreads = React.createClass({
 
 		var arrayOfThreads = this.state.threads;
 		var arrayOfRows = [];
-		for (var i = 0; i < arrayOfThreads.length; i++) {
+		for (var i = 0; i < arrayOfThreads; i++) {
 			var thread = arrayOfThreads[i];
-			arrayOfRows.push(<MessageThreadRow fullName={thread.fullName} 
-												participants={thread.participant_fullNames}
-												messageCount={thread.messageCount} 
-												url="/messages/"
-												convoID={thread._id}/>);
+			arrayOfRows.push(React.createElement(MessageThreadRow, {fullName: thread.fullName, 
+												participants: thread.participants_fullNames}));
 		}
 		return(
-			<ul>
-				{arrayOfRows}
-			</ul>
+			React.createElement("ul", null, 
+				arrayOfRows
+			)
 		);
 	}
 });
 
 
-React.render(<MessageThreads url="/api/messages/" />, document.getElementById("messageThreads"));
+React.render(React.createElement(MessageThreads, {url: "/api/messages/"}), document.getElementById("messageThreads"));

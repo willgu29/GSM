@@ -14,6 +14,7 @@ var express = require('express'),
   Media = require('./Models/Media.js'),
   Comment = require('./Models/Comment.js'),
   MessageThread = require("./Models/MessageThread.js"),
+  Message = require("./Models/Message.js"),
   KnownNetwork = require("./Models/KnownNetwork.js"),
   aws = require('aws-sdk');
 
@@ -299,7 +300,6 @@ app.post("/api/messages/", loggedIn, function (req, res) {
 
       if (thread) {
           return res.json({info: "success", _id: thread._id});
-
       } else {
         //Create it
         var newThread =new MessageThread({ user_id: startEmail, 
@@ -323,6 +323,26 @@ app.post("/api/messages/", loggedIn, function (req, res) {
     }
   });
 });
+
+app.post("/api/messages/:convoID", loggedIn, function (req, res) {
+  console.log("/api/messages/:convoID POST", req.params.convoID);
+
+  var newMessage = new Message({
+                          user_id: req.user.email,
+                          fullName: req.user.fullName,
+                          text: req.body.text,
+                          toMessageThread_id: req.params.convoID});
+
+  newMessage.save(function (err, newMessage) {
+     if (err) {console.error(err); return res.json({info: 
+      "There was an error. Please try again in a minute."});
+      } else { console.log(newThread); return res.json({info:
+       "success", _id: newThread._id});}
+    });
+
+
+});
+
 
 app.post("/api/network/:userID", loggedIn, function (req, res) {
   console.log("/api/network/:userID POST " + req.params.userID);

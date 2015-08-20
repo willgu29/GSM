@@ -1,4 +1,4 @@
-var NewMessage = React.createClass({
+var NewMessage = React.createClass({displayName: "NewMessage",
 	
 
 	createNewMessageThread: function() {
@@ -15,11 +15,10 @@ var NewMessage = React.createClass({
 			success: function(info){
      			if (this.isMounted()){
      				console.log(info);
-  					if (info.info == "success") {
+  					if (info == "success") {
   						//TODO: segue to messages page
   						var url = "/messages/" + info._id;
-  						console.log(url);
-     					window.location.replace(url);
+     					window.location.href(url);
      				} else {
      					alert("There was an error. Please try again in a minute.");
      				}
@@ -41,7 +40,7 @@ var NewMessage = React.createClass({
 	render: function() {
 		
 		return(
-			<button onClick={this.buttonClick}>Send Message</button>
+			React.createElement("button", {onClick: this.buttonClick}, "Send Message")
 
 		);
 	}
@@ -49,7 +48,7 @@ var NewMessage = React.createClass({
 });
 
 
-var UserProfile = React.createClass({
+var UserProfile = React.createClass({displayName: "UserProfile",
 	
 	getInitialState: function() {
 		return ({
@@ -103,17 +102,17 @@ var UserProfile = React.createClass({
 		var fullName = this.state.fullName;
 
 		return(
-			<div>
-				<h3>About {fullName}</h3>
-				<p>Interesting Info: {this.state.interesting}</p>
-				<p>Skills: {skillsArray}</p>
-				<p>Personality: {personalityArray}</p>
-				<p>Can Offer: {canOfferArray}</p>
-				<p>Wants: {wantsArray}</p>
-				<p>Contact If: {this.state.contactIf}</p>
+			React.createElement("div", null, 
+				React.createElement("h3", null, "About ", fullName), 
+				React.createElement("p", null, "Interesting Info: ", this.state.interesting), 
+				React.createElement("p", null, "Skills: ", skillsArray), 
+				React.createElement("p", null, "Personality: ", personalityArray), 
+				React.createElement("p", null, "Can Offer: ", canOfferArray), 
+				React.createElement("p", null, "Wants: ", wantsArray), 
+				React.createElement("p", null, "Contact If: ", this.state.contactIf), 
 
-				<NewMessage url="/api/messages/" fullName={fullName} email={this.state.email} />
-			</div>
+				React.createElement(NewMessage, {url: "/api/messages/", fullName: fullName, email: this.state.email})
+			)
 
 		);
 	}
@@ -121,4 +120,4 @@ var UserProfile = React.createClass({
 });
 
 var urlCall = "/api" + window.location.pathname;
-React.render(<UserProfile url={urlCall} />, document.getElementById("gsmUserProfile"));
+React.render(React.createElement(UserProfile, {url: urlCall}), document.getElementById("gsmUserProfile"));

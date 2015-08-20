@@ -42,10 +42,8 @@ var MessageList = React.createClass({displayName: "MessageList",
 
 
 		return(
-			React.createElement("div", null, 
-				React.createElement("li", null, 
-					messageDisplay
-				), 
+			React.createElement("li", null, 
+				messageDisplay, 
 				React.createElement(MessageSend, {url: this.props.url, convoID: this.props.convoID, handleMessageSubmit: this.refreshMessageList})
 			)
 		);
