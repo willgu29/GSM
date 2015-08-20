@@ -4,7 +4,7 @@ var messageSchema = new mongoose.Schema({
 	user_id: String,
 	fullName: String,
 	text: String,
-	toMessageThread_id: mongoose.Schema.ObjectId,
+	toMessageThread_id: mongoose.Schema.Types.ObjectId,
 	dateCreated: {type: Date, default: Date.now},
 
 });

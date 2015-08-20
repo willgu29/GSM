@@ -14,7 +14,7 @@ var MessageList = React.createClass({displayName: "MessageList",
 	getInitialState: function() {
 		return ({messages: []});
 	},
-	loadMessages: function() {
+	componentDidMount: function() {
 		var urlGet = this.props.url + this.props.convoID;
 		$.ajax({
 			url: urlGet,
@@ -28,11 +28,8 @@ var MessageList = React.createClass({displayName: "MessageList",
       		}.bind(this)
 		});
 	},
-	componentDidMount: function() {
-		this.loadMessages();
-	},
-	refreshMessageList: function() {
-		this.loadMessages();
+	refreshMessageList: function(messages) {
+		this.setState({messages: messages});
 	},
 	render: function (){
 		var messageArray = this.state.messages;
@@ -75,7 +72,7 @@ var MessageSend = React.createClass({displayName: "MessageSend",
     		dataType:"json",
     		data: data,
 			success: function(messages) {
-        		this.props.handleMessageSubmit();
+        		this.props.handleMessageSubmit(messages);
       		}.bind(this),
       		error: function(xhr,status,err){
         		console.log("Error: ", err);

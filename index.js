@@ -72,7 +72,7 @@ app.get("/messages", loggedIn, function (req, res) {
 //---
 
 app.get("/messages/:convoID", loggedIn, function (req, res) {
-  console.log("/messages/:userID GET " + req.params.convoID);
+  console.log("/messages/:convoID GET " + req.params.convoID);
   res.render("messageThread", {layout: "/layouts/main",
                                 convoID: req.params.convoID});
 })
@@ -207,7 +207,7 @@ app.get("/api/users/:searchText", function (req, res) {
 });
 
 app.get("/api/messages/:convoID", loggedIn, function (req, res) {
-  console.log("/api/messages/:userID GET " + req.params.convoID);
+  console.log("/api/messages/:convoID GET " + req.params.convoID);
   var searchID;
   if (req.params.userID == "me") {
     searchID = req.user.email;
@@ -218,8 +218,10 @@ app.get("/api/messages/:convoID", loggedIn, function (req, res) {
 //sort by date created.
 
   Message.find({toMessageThread_id:searchID}, function (err, messageObjects) {
-                if (err) return console.error(err);
-                res.json(messageObjects);
+                if (err) {return console.error(err);}
+                else {
+                  res.json(messageObjects);
+                }
   }).limit(req.body.limit).skip(req.body.skip);
 });
 
@@ -327,18 +329,42 @@ app.post("/api/messages/", loggedIn, function (req, res) {
 app.post("/api/messages/:convoID", loggedIn, function (req, res) {
   console.log("/api/messages/:convoID POST", req.params.convoID);
 
+  var convoID = req.params.convoID;
+    var ObjectId = require('mongoose').Types.ObjectId; 
+    var query = { "_id" : new ObjectId(convoID)};
+    MessageThread.findOne(query, function (err, thread) {
+      if (err){console.log(err);}
+      else {
+          if (thread.messageCount == null){
+            thread.messageCount = 1;
+          } else {
+            thread.messageCount++;
+          }
+          console.log("Message count: ", thread.messageCount);
+        thread.save(function (err, thread) {
+
+        });   
+      }
+     
+    });  
+
+  
+
+
   var newMessage = new Message({
                           user_id: req.user.email,
                           fullName: req.user.fullName,
                           text: req.body.text,
-                          toMessageThread_id: req.params.convoID});
+                          toMessageThread_id: convoID});
 
   newMessage.save(function (err, newMessage) {
      if (err) {console.error(err); return res.json({info: 
       "There was an error. Please try again in a minute."});
-      } else { console.log(newThread); return res.json({info:
-       "success", _id: newThread._id});}
+      } else { console.log(newMessage); return res.json({info:
+       "success", _id: newMessage._id});}
     });
+
+
 
 
 });

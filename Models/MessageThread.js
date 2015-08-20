@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 
 var messageThreadSchema = new mongoose.Schema({
-	messageThread_id: mongoose.Schema.Types.ObjectId,
+	messageThread_id: mongoose.Schema.Types.ObjectId,  //as _id
 	user_id: String, //person who started thread
 	fullName: String,
 	dateCreated: {type: Date, default: Date.now},
