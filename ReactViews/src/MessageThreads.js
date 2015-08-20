@@ -3,12 +3,12 @@ var MessageThreadRow = React.createClass({
 	render: function() {
 		var fullName = this.props.fullName;
 		var participantNames = this.props.participants;
-		var otherParticipant = participantNames[1];
+		var participants = participantNames.join(", ");
 		var infoText = this.props.messageCount + " messages in conversation";
 
 		var convoURL = this.props.url + this.props.convoID;
 		return(
-			<li><a href={convoURL}>{otherParticipant}: {infoText}</a></li>
+			<li><a href={convoURL}>{participants}: {infoText}</a></li>
 
 		);
 	}
@@ -44,6 +44,11 @@ var MessageThreads = React.createClass({
 												messageCount={thread.messageCount} 
 												url="/messages/"
 												convoID={thread._id}/>);
+		}
+
+		if (arrayOfRows.length == 0) {
+			arrayOfRows = (<li>No conversations started yet. Browse members and click more info
+				to send individuals a message!</li>);
 		}
 		return(
 			<ul>

@@ -31,7 +31,6 @@ app.use(session({secret: 'baeMaxLoving'}))
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/style", express.static(__dirname + '/style'));
 app.use("/ReactViews/build", express.static(__dirname + '/ReactViews/build'));
 app.use("/public/", express.static(__dirname + '/public/'));
 
@@ -127,7 +126,7 @@ app.post('/createAccount', function (req, res) {
                 	return res.send("There was an error creating your account. Please try again in a minute.");
                 } else {
                 	console.log(newUser);
-                  var htmlLazyMe = "<p>Account created! Feel free to login and update your user profile!</p>" + "<a href=/login>Back</a>";
+                  var htmlLazyMe = "<p>Account created! Feel free to login and update your user profile!</p>" + "<a href=/>Back</a>";
                 	return res.send(htmlLazyMe);
                 }
         });

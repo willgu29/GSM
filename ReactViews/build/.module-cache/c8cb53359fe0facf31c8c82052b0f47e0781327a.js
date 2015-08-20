@@ -45,11 +45,6 @@ var MessageThreads = React.createClass({displayName: "MessageThreads",
 												url: "/messages/", 
 												convoID: thread._id}));
 		}
-
-		if (arrayOfRows.length == 0) {
-			arrayOfRows = (React.createElement("li", null, "No conversations started yet. Browse members and click more info" + ' ' +
-				"to send individuals a message!"));
-		}
 		return(
 			React.createElement("ul", null, 
 				arrayOfRows
