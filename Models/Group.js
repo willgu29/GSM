@@ -7,6 +7,8 @@ var groupSchema = new mongoose.Schema({
     userIds_inGroup: [String],
     fullNames_inGroup: [String],
     authorFullName: String,
+    rootGroup_id: mongoose.Schema.Types.ObjectId,
+    rootGroup_name: String,
     childrenGroup_ids: [mongoose.Schema.Types.ObjectId],
     childrenGroup_names: [String],
     level: Number //if 1 == root

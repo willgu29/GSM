@@ -19,9 +19,9 @@ var userSchema = new mongoose.Schema({
     wants: [String],
     interesting: String,
     reputation: String
-    
-
   },
+  groupsIn_ids: [mongoose.Schema.Types.ObjectId],
+  groupsIn_names: [String],
   role: String
 
 });

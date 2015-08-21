@@ -11,6 +11,7 @@ var express = require('express'),
 	LocalStrategy = require('passport-local').Strategy,
 	session = require('express-session'),
 	User = require('./Models/User.js'),
+  Group = require('./Models/Group.js'),
   Media = require('./Models/Media.js'),
   Comment = require('./Models/Comment.js'),
   MessageThread = require("./Models/MessageThread.js"),
@@ -67,7 +68,10 @@ app.get("/messages", loggedIn, function (req, res) {
   res.render("messages", {layout: "/layouts/main"});
 }); 
 
-
+app.get("/groups", loggedIn, function (req, res) {
+  console.log("/groups GET");
+  res.render("groups", {layout:"/layouts/main"});
+});
 //---
 
 app.get("/messages/:convoID", loggedIn, function (req, res) {
@@ -217,8 +221,7 @@ app.get("/api/messages/:convoID", loggedIn, function (req, res) {
     searchID = req.params.convoID;
   }
 
-//sort by date created.
-
+  //sort by date created (does this by default)
   Message.find({toMessageThread_id:searchID}, function (err, messageObjects) {
                 if (err) {return console.error(err);}
                 else {
@@ -235,6 +238,16 @@ app.get("/api/messages/", loggedIn, function (req, res) {
   }).limit(req.body.limit).skip(req.body.skip);
 });
 
+
+//?level=# required
+app.get("/api/groups", loggedIn, function (req, res) {
+  console.log("/api/groups GET");
+  var levelQuery = req.query.level;
+  Group.find({userIds_inGroup: req.user.email, level: levelQuery}, function (err, groupObjects) {
+    if (err) return console.error(err);
+    res.json(groupObjects);
+  }).limit(req.body.limit).skip(req.body.skip);
+});
 
 app.get("/api/media/:userID", loggedIn, function (req, res) {
   console.log("/api/media/:userID GET " + req.params.userID);

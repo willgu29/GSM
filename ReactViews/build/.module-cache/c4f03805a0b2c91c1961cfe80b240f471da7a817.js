@@ -1,5 +1,5 @@
 
-var GroupList = React.createClass({
+var GroupList = React.createClass({displayName: "GroupList",
 
 		
 	render: function() {
@@ -10,31 +10,21 @@ var GroupList = React.createClass({
 		//Parse and order groups into lists (by root group level 1)
 		for (var i = 0; i < groupsArray.length; i++) {
 			var group = groupsArray[i];
-			if(group.level == this.props.queryLevel) {
-				groupsDisplay.push(<li>{group.name}</li>);
+			if (group.level == this.props.queryLevel) {
 
-				var childrenGroupItems = [];
-				for (var k = 0; k< group.childrenGroups_ids.length; k++) {
-
-					var childGroupNames = groups.childrenGroups_names;
-					childrenGroupItems.push(<li>{childGroupNames[k]}</li>);
-					if (k == group.childrenGroups_ids.length-1) {
-						groupsDisplay.push(<ul>{childrenGroupItems}</ul>);
-					}
-				}
 			}
 		}	
 
 		return(
-			<ul>
-				{groupsDisplay}
-			</ul>
+			React.createElement("ul", null, 
+				groupsDisplay
+			)
 		);
 	}
 
 });
 
-var GSMGroupView = React.createClass({
+var GSMGroupView = React.createClass({displayName: "GSMGroupView",
 	getInitialState: function() {
 		return ({groups: []});
 	},
@@ -56,10 +46,10 @@ var GSMGroupView = React.createClass({
 	},
 	render: function() {
 		return(
-			<GroupList groups={this.state.groups} queryLevel={this.props.queryLevel} />
+			React.createElement(GroupList, {groups: this.state.groups, queryLevel: this.props.queryLevel})
 		);
 	}
 
 });
 
-React.render(<GSMGroupView url="/api/groups" queryLevel="1" />, document.getElementById("gsmGroupView"));
+React.render(React.createElement(GSMGroupView, {url: "/api/groups", queryLevel: "1"}), document.getElementById("gsmGroupView"));
