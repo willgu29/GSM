@@ -3,6 +3,11 @@ Directions and how things work:
 Step 1:  in command line ->  sudo npm install 
 (this will create the node_modules folder)
 
+Step 2: You'll need to install MongoDB on your mac. There is an installer. Should be easy. 
+
+Step 3: After installing, run in command line -> sudo mongod 
+	-> Keep this terminal open as that initiates the database.
+
 Layout of project:
 
 1. ReactViews act as client rendering. Create new files in src. jsx src build --watch to link into build.
