@@ -72,8 +72,11 @@ app.get("/messages", loggedIn, function (req, res) {
 
 app.get("/messages/:convoID", loggedIn, function (req, res) {
   console.log("/messages/:convoID GET " + req.params.convoID);
+  console.log("query string: " + req.query.convoTitle);
+  var participantsArray = req.query.convoTitle.split(",");
   res.render("messageThread", {layout: "/layouts/main",
-                                convoID: req.params.convoID});
+                                convoID: req.params.convoID,
+                                convoTitle: participantsArray});
 })
 
 app.get("/user/:userID", loggedIn, function (req, res) {

@@ -6,7 +6,7 @@ var MessageThreadRow = React.createClass({
 		var participants = participantNames.join(", ");
 		var infoText = this.props.messageCount + " messages in conversation";
 
-		var convoURL = this.props.url + this.props.convoID;
+		var convoURL = this.props.url + this.props.convoID + "?convoTitle=" + participantNames;
 		return(
 			<li><a href={convoURL}>{participants}: {infoText}</a></li>
 

@@ -162,7 +162,7 @@ var SearchBar = React.createClass({
   },
   handleInfoClick: function() {
     if (this.state.infoText == "") {
-      this.setState({infoText:"Search by keywords (name, skills, personality, etc). Search nothing to see everyone."});
+      this.setState({infoText:"Search by keywords (name, skills, activities, etc). Search nothing to see everyone."});
     } else {
       this.setState({infoText:""});
     }

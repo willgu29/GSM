@@ -1,5 +1,7 @@
 var convoID = document.getElementById("convoID").getAttribute("value");
 
+var convoTitle = document.getElementById("convoTitle").getAttribute("value");
+
 var MessageRow = React.createClass({
 
 	render: function() {
@@ -14,6 +16,7 @@ var MessageList = React.createClass({
 	getInitialState: function() {
 		return ({messages: []});
 	},
+
 	loadMessages: function() {
 		var urlGet = this.props.url + this.props.convoID;
 		$.ajax({
@@ -46,6 +49,7 @@ var MessageList = React.createClass({
 
 		return(
 			<div>
+				<h3>Conversation with {this.props.convoTitle}</h3>
 				<li>
 					{messageDisplay}
 				</li>
@@ -54,6 +58,7 @@ var MessageList = React.createClass({
 		);
 	}
 });
+
 
 var MessageSend = React.createClass({
 	getInitialState: function() {
@@ -98,4 +103,4 @@ var MessageSend = React.createClass({
 });
 
 
-React.render(<MessageList convoID={convoID} url="/api/messages/" />, document.getElementById("message"));
+React.render(<MessageList convoTitle={convoTitle} convoID={convoID} url="/api/messages/" />, document.getElementById("message"));

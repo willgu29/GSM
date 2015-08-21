@@ -1,7 +1,5 @@
 var convoID = document.getElementById("convoID").getAttribute("value");
 
-var convoTitle = document.getElementById("convoTitle").getAttribute("value");
-
 var MessageRow = React.createClass({displayName: "MessageRow",
 
 	render: function() {
@@ -49,7 +47,6 @@ var MessageList = React.createClass({displayName: "MessageList",
 
 		return(
 			React.createElement("div", null, 
-				React.createElement("h3", null, "Conversation with ", this.props.convoTitle), 
 				React.createElement("li", null, 
 					messageDisplay
 				), 
@@ -103,4 +100,4 @@ var MessageSend = React.createClass({displayName: "MessageSend",
 });
 
 
-React.render(React.createElement(MessageList, {convoTitle: convoTitle, convoID: convoID, url: "/api/messages/"}), document.getElementById("message"));
+React.render(React.createElement(MessageList, {convoID: convoID, url: "/api/messages/"}), document.getElementById("message"));
