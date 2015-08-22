@@ -32,15 +32,14 @@ var GSMNavBarItems = React.createClass({displayName: "GSMNavBarItems",
 			React.createElement("ul", {style: ulStyle}, 
 				React.createElement("li", {style: style1}, React.createElement("a", {href: "/"}, "Member List")), 
 				React.createElement("li", {style: style2}, React.createElement("a", {href: "/editAccount"}, "Edit Account")), 
-				React.createElement("li", {style: style3}, React.createElement("a", {href: "/messages"}, "Messages"))
+				React.createElement("li", {style: style3}, React.createElement("a", {href: "/messages"}, "Messages")), 
+				React.createElement("li", {style: style4}, React.createElement("a", {href: "/groups"}, "Groups"))
 
 			)
 		);
 	}
 
 });
-
-//				<li style={style4}><a href="/groups">Groups</a></li>
 
 
 var GSMHeader = React.createClass({displayName: "GSMHeader",

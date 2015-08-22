@@ -80,7 +80,7 @@ app.get("/groups", loggedIn, function (req, res) {
 
 app.get("/groups/:groupID", loggedIn, function (req, res) {
   console.log("/groups/:groupID GET " + req.params.groupID);
-  res.render("groupView", {layout:"/layouts/main"
+  res.render("groupView", {layout:"/layouts/main",
                             groupID: req.params.groupID});
 });
 
@@ -201,9 +201,17 @@ app.get("/api/users/:userID", function (req, res) {
   });
 });
 
+app.get("/api/searchUsers/", function (req, res) {
+  //reset search form
+  User.find({}, function (err, users) {
+                if (err) return console.error(err);
+                res.json(users);
+    }).limit(req.body.limit).skip(req.body.skip);
+});
+
 //Full text search
-app.get("/api/users/:searchText", function (req, res) {
-  console.log("/api/users/:userID GET " +  req.params.searchText);
+app.get("/api/searchUsers/:searchText", function (req, res) {
+  console.log("/api/searchUsers/:searchID GET " +  req.params.searchText);
   var searchText = req.params.searchText;
 
   var query = User.find({});
@@ -334,7 +342,7 @@ app.post("/api/messages/", loggedIn, function (req, res) {
     } else {
 
       if (thread) {
-          return res.json({info: "success", _id: thread._id});
+          return res.json({info: "success", _id: thread._id, convoTitle: [clientOneFullName, clientTwoFullName]});
       } else {
         //Create it
         var newThread =new MessageThread({ user_id: startEmail, 
@@ -350,7 +358,7 @@ app.post("/api/messages/", loggedIn, function (req, res) {
            return res.json({info: "There was an error. Please try again in a minute."});
           } else {
            console.log(newThread);
-           return res.json({info: "success", _id: newThread._id});
+           return res.json({info: "success", _id: newThread._id, convoTitle: [clientOneFullName, clientTwoFullName]});
           }
         });
       }

@@ -260,7 +260,7 @@ var GSMUserTableView = React.createClass({displayName: "GSMUserTableView",
     }
     return(
       React.createElement("div", {id: "tableView"}, 
-      React.createElement(SearchBar, {url: "/api/searchUsers/", handleChange: this.handleChange}), 
+      React.createElement(SearchBar, {url: "/api/users/", handleChange: this.handleChange}), 
       React.createElement("table", {border: "1", style: tableStyle}, 
         React.createElement("tr", null, 
           React.createElement("th", null, "Name"), 

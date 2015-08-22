@@ -66,14 +66,14 @@ var EditAccountForm = React.createClass({
                     
                  	
                     
-                    <input type="submit" value="edit account" id="editAccount" />
+                    <input type="submit" value="save changes" id="save changes" />
                 </form>
             </div> 
 		);
 	} 
 });
 
-React.render(<EditAccountForm url="/api/user/me" />, document.getElementById("editAccountForm"));
+React.render(<EditAccountForm url="/api/users/me" />, document.getElementById("editAccountForm"));
 
 /* Previous form prompts
 

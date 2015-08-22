@@ -66,7 +66,7 @@ var EditAccountForm = React.createClass({displayName: "EditAccountForm",
                     
                  	
                     
-                    React.createElement("input", {type: "submit", value: "save changes", id: "save changes"})
+                    React.createElement("input", {type: "submit", value: "edit account", id: "editAccount"})
                 )
             ) 
 		);

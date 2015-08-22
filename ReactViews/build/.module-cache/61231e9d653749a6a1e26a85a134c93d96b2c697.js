@@ -12,7 +12,7 @@ var liStyleSelected = {
 	backgroundColor: "green"
 }
 
-var GSMNavBarItems = React.createClass({
+var GSMNavBarItems = React.createClass({displayName: "GSMNavBarItems",
 	
 	render: function() {
 		var style1 = liStyle;
@@ -29,12 +29,12 @@ var GSMNavBarItems = React.createClass({
 			style4 = liStyleSelected;
 		}
 		return(
-			<ul style={ulStyle}>
-				<li style={style1}><a href="/">Member List</a></li>
-				<li style={style2}><a href="/editAccount">Edit Account</a></li>
-				<li style={style3}><a href="/messages">Messages</a></li>
+			React.createElement("ul", {style: ulStyle}, 
+				React.createElement("li", {style: style1}, React.createElement("a", {href: "/"}, "Member List")), 
+				React.createElement("li", {style: style2}, React.createElement("a", {href: "/editAccount"}, "Edit Account")), 
+				React.createElement("li", {style: style3}, React.createElement("a", {href: "/messages"}, "Messages"))
 
-			</ul>
+			)
 		);
 	}
 
@@ -42,15 +42,14 @@ var GSMNavBarItems = React.createClass({
 
 //				<li style={style4}><a href="/groups">Groups</a></li>
 
-
-var GSMHeader = React.createClass({
+var GSMHeader = React.createClass({displayName: "GSMHeader",
 
 	render: function() {
 		return(
-			<div id="navBar">
-				<h1>iGrouply</h1>
-				<GSMNavBarItems currentURL={this.props.currentURL} />
-			</div>
+			React.createElement("div", {id: "navBar"}, 
+				React.createElement("h1", null, "iGrouply"), 
+				React.createElement(GSMNavBarItems, {currentURL: this.props.currentURL})
+			)
 		);
 	}
 });
@@ -58,4 +57,4 @@ var GSMHeader = React.createClass({
 
 var pathName = window.location.pathname;
 
-React.render(<GSMHeader currentURL={pathName} />, document.getElementById("gsmHeader"));
+React.render(React.createElement(GSMHeader, {currentURL: pathName}), document.getElementById("gsmHeader"));

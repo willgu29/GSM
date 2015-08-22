@@ -17,7 +17,7 @@ var NewMessage = React.createClass({
      				console.log(info);
   					if (info.info == "success") {
   						//TODO: segue to messages page
-  						var url = "/messages/" + info._id;
+  						var url = "/messages/" + info._id + "?convoTitle=" + info.convoTitle;
   						console.log(url);
      					window.location.replace(url);
      				} else {

@@ -191,7 +191,7 @@ var SearchBar = React.createClass({
       <div>
         <button type="button" onClick={this.handleInfoClick}>Info</button> 
         {helpText}
-        <form onSubmit={this.handleSubmit} className="searchForm" method="get" action="/api/users/">
+        <form onSubmit={this.handleSubmit} className="searchForm" method="get" action="/api/searchUsers/">
          <input type="text" name="searchText" ref="searchText" />
          <input type="submit" value="Search" />
         </form>
@@ -260,7 +260,7 @@ var GSMUserTableView = React.createClass({
     }
     return(
       <div id="tableView">
-      <SearchBar url="/api/users/" handleChange={this.handleChange} />
+      <SearchBar url="/api/searchUsers/" handleChange={this.handleChange} />
       <table border="1" style={tableStyle} >
         <tr>
           <th>Name</th>
