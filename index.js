@@ -83,8 +83,8 @@ app.get("/messages/:convoID", loggedIn, function (req, res) {
                                 convoTitle: participantsArray});
 })
 
-app.get("/user/:userID", loggedIn, function (req, res) {
-  console.log("/user/:userID GET " + req.params.userID);
+app.get("/users/:userID", loggedIn, function (req, res) {
+  console.log("/users/:userID GET " + req.params.userID);
   res.render("userPage", {layout: "/layouts/main"});
 });
 
@@ -175,7 +175,7 @@ app.get("/api/users", loggedIn, function (req, res) { ///limit, skip, user
 });
 
 //Email find one
-app.get("/api/user/:userID", function (req, res) {
+app.get("/api/users/:userID", function (req, res) {
   var searchEmail;
   if (req.params.userID == "me") {
     searchEmail = req.user.email;
