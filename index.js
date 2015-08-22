@@ -16,6 +16,7 @@ var express = require('express'),
   Comment = require('./Models/Comment.js'),
   MessageThread = require("./Models/MessageThread.js"),
   Message = require("./Models/Message.js"),
+  Group = require("./Models/Group.js"),
   KnownNetwork = require("./Models/KnownNetwork.js"),
   aws = require('aws-sdk');
 
@@ -38,7 +39,10 @@ app.use("/public/", express.static(__dirname + '/public/'));
 
 
 //**********************************
-
+app.get("/gsm", ensureAdmin, function(req, res) {
+  console.log("/gsm GET");
+  res.sendFile(__dirname + "/public/adminPanel.html");
+});
 
 //ROUTING
 
@@ -73,6 +77,12 @@ app.get("/groups", loggedIn, function (req, res) {
   res.render("groups", {layout:"/layouts/main"});
 });
 //---
+
+app.get("/groups/:groupID", loggedIn, function (req, res) {
+  console.log("/groups/:groupID GET " + req.params.groupID);
+  res.render("groupView", {layout:"/layouts/main"
+                            groupID: req.params.groupID});
+});
 
 app.get("/messages/:convoID", loggedIn, function (req, res) {
   console.log("/messages/:convoID GET " + req.params.convoID);
@@ -249,6 +259,14 @@ app.get("/api/groups", loggedIn, function (req, res) {
   }).limit(req.body.limit).skip(req.body.skip);
 });
 
+app.get("/api/groups/:groupID", loggedIn, function (req, res) {
+  console.log("/api/groups/:groupID GET " + req.params.groupID);
+  Group.findOne({_id:req.params.groupID}, function (err, group) {
+    if (err) return console.error(err);
+    res.json(group);
+  });
+});
+
 app.get("/api/media/:userID", loggedIn, function (req, res) {
   console.log("/api/media/:userID GET " + req.params.userID);
   var searchEmail;
@@ -383,6 +401,31 @@ app.post("/api/messages/:convoID", loggedIn, function (req, res) {
 
 
 });
+
+app.post("/api/groups/" , loggedIn, function (req, res){
+  console.log("/api/groups POST");
+
+
+  var newGroup = new Group({
+                    name: req.body.groupName,
+                    description: req.body.description,
+                    userIds_inGroup: [req.user.email],
+                    fullNames_inGroup: [req.user.fullName],
+                    adminIds: [req.user.email],
+                    adminFullNames: [req.user.fullName], 
+                    rootGroup_id: req.body.parentGroupID,
+                    rootGroup_name: req.body.parentGroupName,
+                    level: req.body.level
+  });
+
+  newGroup.save(function (err, newGroup) {
+    if (err) {console.error(err); return res.json({info: 
+      "There was an error. Please try again in a minute."});
+      } else { console.log(newGroup); return res.json({info:
+       "success", _id: newGroup._id});}
+    });
+});
+
 
 
 app.post("/api/network/:userID", loggedIn, function (req, res) {
@@ -609,7 +652,7 @@ var mandrill = require('mandrill-api/mandrill');
 var mandrill_client = new mandrill.Mandrill(process.env.MANDRILL_KEY);
 
 app.get("/admin/sendMail", ensureAdmin, function (req,res) {
-  res.sendFile(__dirname + "/public/sendMail.html");
+  res.sendFile(__dirname + "/public/adminPanel.html");
 });
 
 app.post("/admin/sendMail", ensureAdmin, function (req,res){

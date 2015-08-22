@@ -16,7 +16,7 @@ var SendMailForm = React.createClass({
     //preserve_recipients NO, merge_language Handlebars, 
 	render: function() {
 		return(
-			<form method="post" method_action="/admin/sendMail">
+			<form method="post" action="/admin/sendMail">
 				Subject: <input type="text" id="subject" name="subject" /> <br />
 				HTML Text: <textarea id="html" name="html" onChange={this.handleChange.bind(this, "html")} 
 				cols="60" row="10" ></textarea> <br />

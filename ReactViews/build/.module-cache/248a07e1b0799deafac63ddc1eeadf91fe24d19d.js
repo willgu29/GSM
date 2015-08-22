@@ -6,30 +6,25 @@ var GroupList = React.createClass({displayName: "GroupList",
 
 		var groupsArray = this.props.groups;
 		var groupsDisplay = [];
-		console.log(groupsArray);
+
 		//Parse and order groups into lists (by root group level 1)
 		for (var i = 0; i < groupsArray.length; i++) {
 			var group = groupsArray[i];
 			if(group.level == this.props.queryLevel) {
-				var groupURL = this.props.url + "/" + group._id;
-				groupsDisplay.push(React.createElement("li", null, React.createElement("a", {href: groupURL}, group.name)));
+				groupsDisplay.push(React.createElement("li", null, group.name));
 
 				var childrenGroupItems = [];
-				if (group.childrenGroups_ids) {
-					for (var k = 0; k< group.childrenGroups_ids.length; k++) {
+				for (var k = 0; k< group.childrenGroups_ids.length; k++) {
 
-						var childGroupNames = groups.childrenGroups_names;
-						var childenGroupURL = this.props.url + "/" + group.childrenGroups_ids[k];
-						childrenGroupItems.push(React.createElement("li", null, React.createElement("a", {href: childenGroupURL}, childGroupNames[k])));
-						if (k == group.childrenGroups_ids.length-1) {
-							groupsDisplay.push(React.createElement("ul", null, childrenGroupItems));
-						}
-					}	
+					var childGroupNames = groups.childrenGroups_names;
+					childrenGroupItems.push(React.createElement("li", null, childGroupNames[k]));
+					if (k == group.childrenGroups_ids.length-1) {
+						groupsDisplay.push(React.createElement("ul", null, childrenGroupItems));
+					}
 				}
-				
 			}
 		}	
-		console.log(groupsDisplay);
+
 		return(
 			React.createElement("ul", null, 
 				groupsDisplay
@@ -64,9 +59,7 @@ var GSMGroupView = React.createClass({displayName: "GSMGroupView",
 	},
 	render: function() {
 		return(
-			React.createElement("div", null, 
-				React.createElement(GroupList, {groups: this.state.groups, queryLevel: this.props.queryLevel})
-			)
+			React.createElement(GroupList, {groups: this.state.groups, queryLevel: this.props.queryLevel})
 		);
 	}
 

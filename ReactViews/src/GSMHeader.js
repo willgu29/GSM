@@ -26,7 +26,7 @@ var GSMNavBarItems = React.createClass({
 		} else if (this.props.currentURL == "/messages") {
 			style3 = liStyleSelected;
 		} else if (this.props.currentURL == "/groups") {
-			stlye4 = liStyleSelected;
+			style4 = liStyleSelected;
 		}
 		return(
 			<ul style={ulStyle}>
