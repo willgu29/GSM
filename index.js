@@ -178,10 +178,15 @@ app.get('/logout', function (req, res){
 //GET CONTENT
 
 app.get("/api/users", loggedIn, function (req, res) { ///limit, skip, user
-	User.find({}, function (err, users) {
-                if (err) return console.error(err);
-                res.json(users);
-    }).limit(req.body.limit).skip(req.body.skip);
+
+  var query = User.find({}).limit(req.body.limit).skip(req.body.skip);
+  query.select('-password -phoneNumber');
+  query.exec(function (err, users) {
+    if (err) { console.log(err);} 
+    else { res.json(users);}
+  });
+
+
 });
 
 //Email find one
@@ -192,21 +197,28 @@ app.get("/api/users/:userID", function (req, res) {
   } else {
     searchEmail = req.params.userID;
   }
-  User.findOne({email:searchEmail}, function (err, user) {
-    if (err) { 
-      console.log(err);
-    } else {
-      res.json(user);
-    }
+
+  var query = User.findOne({email:searchEmail}).limit(req.body.limit).skip(req.body.skip);
+  query.select('-password -phoneNumber');
+  query.exec(function (err, user) {
+    if (err) { console.log(err);} 
+    else { res.json(user);}
   });
+
+
 });
 
 app.get("/api/searchUsers/", function (req, res) {
   //reset search form
-  User.find({}, function (err, users) {
-                if (err) return console.error(err);
-                res.json(users);
-    }).limit(req.body.limit).skip(req.body.skip);
+
+  var query = User.find({}).limit(req.body.limit).skip(req.body.skip);
+  query.select('-password -phoneNumber');
+  query.exec(function (err, users) {
+    if (err) { console.log(err);} 
+    else { res.json(users);}
+  });
+
+ 
 });
 
 //Full text search
@@ -214,17 +226,14 @@ app.get("/api/searchUsers/:searchText", function (req, res) {
   console.log("/api/searchUsers/:searchID GET " +  req.params.searchText);
   var searchText = req.params.searchText;
 
-  var query = User.find({});
+  var query = User.find({}).limit(req.body.limit).skip(req.body.skip);
   query.where({$text : {$search : searchText}});
   //             { score : {$meta: "textScore"}});
   // query.sort({score : {$meta : "textScore"}});
-
+  query.select('-password -phoneNumber');
   query.exec(function (err, users) {
-    if (err) { 
-      console.log(err);
-    } else {
-      res.json(users);
-    }
+    if (err) { console.log(err);} 
+    else { res.json(users);}
   });
   
 
