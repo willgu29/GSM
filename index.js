@@ -80,8 +80,10 @@ app.get("/groups", loggedIn, function (req, res) {
 
 app.get("/groups/:groupID", loggedIn, function (req, res) {
   console.log("/groups/:groupID GET " + req.params.groupID);
+  console.log("/query string: " + req.query.groupName);
   res.render("groupView", {layout:"/layouts/main",
-                            groupID: req.params.groupID});
+                            groupID: req.params.groupID,
+                            groupName: req.query.groupName});
 });
 
 app.get("/messages/:convoID", loggedIn, function (req, res) {
@@ -440,6 +442,45 @@ app.post("/api/groups/" , loggedIn, function (req, res){
       "There was an error. Please try again in a minute."});
       } else { console.log(newGroup); return res.json({info:
        "success", _id: newGroup._id});}
+    });
+});
+
+app.post("/api/groups/:rootGroupID" , loggedIn, function (req, res){
+  console.log("/api/groups/:rootGroupID POST " + req.params.rootGroupID);
+
+
+  Group.findOne({_id:req.params.rootGroupID}, function (err, rootGroup) {
+    if (err) {console.error(err); return res.json({info: 
+      "There was an error. Please try again in a minute."});
+      } else { 
+        console.log("Root group: " + rootGroup);
+        var newLevel = rootGroup.level + 1;
+        var newGroup = new Group({
+                          name: req.body.groupName,
+                          description: req.body.description,
+                          userIds_inGroup: [req.user.email],
+                          fullNames_inGroup: [req.user.fullName],
+                          adminIds: [req.user.email],
+                          adminFullNames: [req.user.fullName],
+                          rootGroup_id: rootGroup._id,
+                          rootGroup_name: rootGroup.name,
+                          level: newLevel });
+
+        newGroup.save(function (err, newGroup) {
+            if (err) {console.error(err); return res.json({info: 
+              "There was an error. Please try again in a minute."});
+              } else { 
+                rootGroup.childrenGroup_ids.push(newGroup._id);
+                rootGroup.childrenGroup_names.push(newGroup.name);
+                rootGroup.save(function (err, updatedGroup) {
+                  if (err) {console.error(err); return res.json({info: 
+                    "There was an error. Please try again in a minute."});
+                    } else { console.log("Updated Group: " + updatedGroup); return res.json({info:
+                    "success", _id:newGroup._id, updatedGroup_id: updatedGroup._id});}
+                });
+              }
+        });
+      }
     });
 });
 

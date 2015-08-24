@@ -11,17 +11,16 @@ var GroupList = React.createClass({
 		for (var i = 0; i < groupsArray.length; i++) {
 			var group = groupsArray[i];
 			if(group.level == this.props.queryLevel) {
-				var groupURL = this.props.url + "/" + group._id;
+				var groupURL = this.props.url + "/" + group._id + "?groupName=" + group.name;
 				groupsDisplay.push(<li><a href={groupURL}>{group.name}</a></li>);
-
 				var childrenGroupItems = [];
-				if (group.childrenGroups_ids) {
-					for (var k = 0; k< group.childrenGroups_ids.length; k++) {
-
-						var childGroupNames = groups.childrenGroups_names;
-						var childenGroupURL = this.props.url + "/" + group.childrenGroups_ids[k];
+				if (group.childrenGroup_ids) {
+					for (var k = 0; k< group.childrenGroup_ids.length; k++) {
+						var childGroupNames = group.childrenGroup_names;
+						var childenGroupURL = this.props.url + "/" + group.childrenGroup_ids[k]
+												+ "?groupName=" + group.childrenGroup_names[k];
 						childrenGroupItems.push(<li><a href={childenGroupURL}>{childGroupNames[k]}</a></li>);
-						if (k == group.childrenGroups_ids.length-1) {
+						if (k == group.childrenGroup_ids.length-1) {
 							groupsDisplay.push(<ul>{childrenGroupItems}</ul>);
 						}
 					}	
@@ -65,7 +64,7 @@ var GSMGroupView = React.createClass({
 	render: function() {
 		return(
 			<div>
-				<GroupList groups={this.state.groups} queryLevel={this.props.queryLevel} />
+				<GroupList url="/groups" groups={this.state.groups} queryLevel={this.props.queryLevel} />
 			</div>
 		);
 	}

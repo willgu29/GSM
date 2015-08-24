@@ -12,6 +12,7 @@ var liStyleSelected = {
 	backgroundColor: "green"
 }
 
+
 var GSMNavBarItems = React.createClass({
 	
 	render: function() {
@@ -33,6 +34,8 @@ var GSMNavBarItems = React.createClass({
 				<li style={style1}><a href="/">Member List</a></li>
 				<li style={style2}><a href="/editAccount">Edit Account</a></li>
 				<li style={style3}><a href="/messages">Messages</a></li>
+				<li style={style4}><a href="/groups">Groups</a></li>
+
 
 			</ul>
 		);
@@ -40,7 +43,6 @@ var GSMNavBarItems = React.createClass({
 
 });
 
-//				<li style={style4}><a href="/groups">Groups</a></li>
 
 
 var GSMHeader = React.createClass({
