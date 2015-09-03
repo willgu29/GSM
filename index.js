@@ -454,7 +454,7 @@ app.post("/api/groups/:rootGroupID" , loggedIn, function (req, res){
       "There was an error. Please try again in a minute."});
       } else { 
         console.log("Root group: " + rootGroup);
-        var newLevel = rootGroup.level + 1;
+        var newLevel = rootGroup.level++; //?
         var newGroup = new Group({
                           name: req.body.groupName,
                           description: req.body.description,
@@ -500,6 +500,13 @@ app.post("/api/users/:userID", loggedIn, function (req, res) {
     var canOfferArray = req.body.canOffer.split(',');
     var wantsArray = req.body.wants.split(',');
 
+    if (JSON.stringify(canOfferArray) == JSON.stringify([""])) {
+      canOfferArray = [];
+    }
+    if (JSON.stringify(wantsArray) == JSON.stringify([""])) {
+      wantsArray = [];
+    }
+
     var query = {'email':req.user.email};
 
     var newData = {
@@ -516,7 +523,7 @@ app.post("/api/users/:userID", loggedIn, function (req, res) {
     User.findOneAndUpdate(query, newData, {upsert:false}, function(err, doc){
       if (err) return res.send(500, { error: err });
 
-      var htmlLazyMe = "<p>Successfully saved</p>" + "<a href=/editAccount>Back</a>";
+      var htmlLazyMe = "<p>Successfully saved</p>" + "<a href=/>Back</a>";
 
       return res.send(htmlLazyMe);
     });

@@ -10,7 +10,7 @@ var liStyle = {
 
 var liStyleSelected = {
 	display: "inline",
-	backgroundColor: "yellow",
+	backgroundColor: "purple",
 	marginRight: "20"
 }
 

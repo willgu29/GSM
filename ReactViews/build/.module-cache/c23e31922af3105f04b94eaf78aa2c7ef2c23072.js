@@ -5,13 +5,13 @@ var ulStyle = {
 }
 var liStyle = {
     display: "inline",
-    marginRight: "20"
+    padding: "20 0 20 0"
 }
 
 var liStyleSelected = {
 	display: "inline",
-	backgroundColor: "yellow",
-	marginRight: "20"
+	backgroundColor: "green",
+	padding: "20 0 20 0"
 }
 
 
