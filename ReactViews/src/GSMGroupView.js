@@ -62,9 +62,14 @@ var GSMGroupView = React.createClass({
 		this.loadInitialGroups();
 	},
 	render: function() {
+		var noGroups;
+		if (this.state.groups == "") {
+			noGroups = <p>No groups joined yet.</p>
+		}
 		return(
 			<div>
 				<GroupList url="/groups" groups={this.state.groups} queryLevel={this.props.queryLevel} />
+				{noGroups}
 			</div>
 		);
 	}

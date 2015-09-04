@@ -33,15 +33,12 @@ var ProfileCompletion = React.createClass({
 
 
 		if (this.state.wants != ""){
-			console.log("FM");
 			profileCompletionPercent++;
 		} 
 		if (this.state.canOffer != ""){
-			console.log("Feel");
 			profileCompletionPercent++;
 		}
 		if (this.state.topFiveTime != undefined && this.state.topFiveTime != ""){
-			console.log("sicl");
 			profileCompletionPercent++;
 		}
 		

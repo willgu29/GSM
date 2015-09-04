@@ -63,7 +63,7 @@ var GSMGroupView = React.createClass({displayName: "GSMGroupView",
 	},
 	render: function() {
 		var noGroups;
-		if (this.state.groups == "") {
+		if (this.state.groups == []) {
 			noGroups = React.createElement("p", null, "No groups joined yet.")
 		}
 		return(
