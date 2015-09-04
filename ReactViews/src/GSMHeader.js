@@ -22,21 +22,25 @@ var GSMNavBarItems = React.createClass({
 		var style2 = liStyle;
 		var style3 = liStyle;
 		var style4 = liStyle;
+		var style5 = liStyle;
 		if (this.props.currentURL == "/") {
 			style1 = liStyleSelected;
 		} else if (this.props.currentURL == "/messages") {
 			style2 = liStyleSelected;
 		} else if (this.props.currentURL == "/groups") {
 			style3 = liStyleSelected;
-		} else if (this.props.currentURL == "/editAccount") {
+		} else if (this.props.currentURL == "/events") {
 			style4 = liStyleSelected;
-		}
+		} else if (this.props.currentURL == "/editAccount") {
+			style5 = liStyleSelected;
+		} 
 		return(
 			<ul style={ulStyle}>
 				<li style={style1}><a href="/">Member List</a></li>
 				<li style={style2}><a href="/messages">Messages</a></li>
 				<li style={style3}><a href="/groups">Groups</a></li>
-				<li style={style4}><a href="/editAccount">Edit Profile</a></li>
+				<li style={style4}><a href="/events">Events</a></li>
+				<li style={style5}><a href="/editAccount">Edit Profile</a></li>
 
 
 			</ul>

@@ -17,6 +17,7 @@ var express = require('express'),
   MessageThread = require("./Models/MessageThread.js"),
   Message = require("./Models/Message.js"),
   Group = require("./Models/Group.js"),
+  Event = require("./Models/Event.js"),
   KnownNetwork = require("./Models/KnownNetwork.js"),
   aws = require('aws-sdk');
 
@@ -41,7 +42,8 @@ app.use("/public/", express.static(__dirname + '/public/'));
 //**********************************
 app.get("/gsm", ensureAdmin, function(req, res) {
   console.log("/gsm GET");
-  res.sendFile(__dirname + "/public/adminPanel.html");
+  //res.sendFile(__dirname + "/public/adminPanel.html");
+  res.render("adminPanel", {layout: "/layouts/main"});
 });
 
 //ROUTING
@@ -75,6 +77,11 @@ app.get("/messages", loggedIn, function (req, res) {
 app.get("/groups", loggedIn, function (req, res) {
   console.log("/groups GET");
   res.render("groups", {layout:"/layouts/main"});
+});
+
+app.get("/events", loggedIn, function (req, res) {
+  console.log("/events GET");
+  res.render("events", {layout:"/layouts/main"});
 });
 //---
 
@@ -193,14 +200,14 @@ app.get("/api/users", loggedIn, function (req, res) { ///limit, skip, user
 
 //Email find one
 app.get("/api/users/:userID", function (req, res) {
-  var searchEmail;
+  var searchID;
   if (req.params.userID == "me") {
-    searchEmail = req.user.email;
+    searchID = req.user._id;
   } else {
-    searchEmail = req.params.userID;
+    searchID = req.params.userID;
   }
 
-  var query = User.findOne({email:searchEmail}).limit(req.body.limit).skip(req.body.skip);
+  var query = User.findOne({_id:searchID}).limit(req.body.limit).skip(req.body.skip);
   query.select('-password -phoneNumber');
   query.exec(function (err, user) {
     if (err) { console.log(err);} 
@@ -245,7 +252,7 @@ app.get("/api/messages/:convoID", loggedIn, function (req, res) {
   console.log("/api/messages/:convoID GET " + req.params.convoID);
   var searchID;
   if (req.params.userID == "me") {
-    searchID = req.user.email;
+    searchID = req.user._id;
   } else {
     searchID = req.params.convoID;
   }
@@ -261,7 +268,7 @@ app.get("/api/messages/:convoID", loggedIn, function (req, res) {
 
 app.get("/api/messages/", loggedIn, function (req, res) {
   console.log("/api/messages/ GET");
-  MessageThread.find({participant_ids:req.user.email}, function (err, threadObjects) {
+  MessageThread.find({participant_ids:req.user._id}, function (err, threadObjects) {
                 if (err) return console.error(err);
                 res.json(threadObjects);
   }).limit(req.body.limit).skip(req.body.skip);
@@ -272,7 +279,7 @@ app.get("/api/messages/", loggedIn, function (req, res) {
 app.get("/api/groups", loggedIn, function (req, res) {
   console.log("/api/groups GET");
   var levelQuery = req.query.level;
-  Group.find({userIds_inGroup: req.user.email, level: levelQuery}, function (err, groupObjects) {
+  Group.find({userIds_inGroup: req.user._id, level: levelQuery}, function (err, groupObjects) {
     if (err) return console.error(err);
     res.json(groupObjects);
   }).limit(req.body.limit).skip(req.body.skip);
@@ -286,15 +293,20 @@ app.get("/api/groups/:groupID", loggedIn, function (req, res) {
   });
 });
 
+app.get("/api/events", loggedIn, function (req, res) {
+  console.log("/api/events GET");
+
+});
+
 app.get("/api/media/:userID", loggedIn, function (req, res) {
   console.log("/api/media/:userID GET " + req.params.userID);
-  var searchEmail;
+  var searchID;
   if (req.params.userID == "me") {
-    searchEmail = req.user.email;
+    searchID = req.user._id;
   } else {
-    searchEmail = req.params.userID;
+    searchID = req.params.userID;
   }
-  Media.find({user_id:searchEmail}, function (err, mediaObjects) {
+  Media.find({user_id:searchID}, function (err, mediaObjects) {
                 if (err) return console.error(err);
                 res.json(mediaObjects);
     }).limit(req.body.limit).skip(req.body.skip);
@@ -302,13 +314,13 @@ app.get("/api/media/:userID", loggedIn, function (req, res) {
 
 app.get("/api/comments/:userID", loggedIn, function (req, res) {
   console.log("/api/comments/:userID GET " + req.params.userID);
-  var searchEmail;
+  var searchID;
   if (req.params.userID == "me") {
-    searchEmail = req.user.email;
+    searchID = req.user._id;
   } else {
-    searchEmail = req.params.userID;
+    searchID = req.params.userID;
   }
-  Comment.find({user_id:searchEmail}, function (err, commentObjects) {
+  Comment.find({user_id:searchID}, function (err, commentObjects) {
                 if (err) return console.error(err);
                 res.json(commentObjects);
     }).limit(req.body.limit).skip(req.body.skip);
@@ -316,13 +328,13 @@ app.get("/api/comments/:userID", loggedIn, function (req, res) {
 
 app.get("/api/network/:userID", loggedIn, function (req, res) {
   console.log("/api/network/:userID GET " + req.params.userID);
-  var searchEmail;
+  var searchID;
   if (req.params.userID == "me") {
-    searchEmail = req.user.email;
+    searchID = req.user._id;
   } else {
-    searchEmail = req.params.userID;
+    searchID = req.params.userID;
   }
-  KnownNetwork.findOne({user_id:searchEmail}, function (err, knownNetwork) {
+  KnownNetwork.findOne({user_id:searchID}, function (err, knownNetwork) {
                 if (err) return console.error(err);
                 res.json(knownNetwork);
     }).limit(req.body.limit).skip(req.body.skip);
@@ -335,13 +347,13 @@ app.get("/api/network/:userID", loggedIn, function (req, res) {
 app.post("/api/messages/", loggedIn, function (req, res) {
   console.log("/api/messages/ POST ");
 
-    var startEmail = req.user.email;
+    var startID = req.user._id;
     var clientOneFullName = req.user.fullName;
-    var participantEmail = req.body.email;
+    var participantID = req.body._id;
     var clientTwoFullName = req.body.fullName;
-    var participant_ids = [startEmail, participantEmail];
+    var participant_ids = [startID, participantID];
 
-    var query = {'user_id':startEmail,
+    var query = {'user_id':startID,
                   "participant_ids": participant_ids};
 
     
@@ -356,7 +368,7 @@ app.post("/api/messages/", loggedIn, function (req, res) {
           return res.json({info: "success", _id: thread._id, convoTitle: [clientOneFullName, clientTwoFullName]});
       } else {
         //Create it
-        var newThread =new MessageThread({ user_id: startEmail, 
+        var newThread =new MessageThread({ user_id: startID, 
                               fullName: clientOneFullName,
                               participant_ids: participant_ids,
                               participant_fullNames: [clientOneFullName, clientTwoFullName],
@@ -404,7 +416,7 @@ app.post("/api/messages/:convoID", loggedIn, function (req, res) {
 
 
   var newMessage = new Message({
-                          user_id: req.user.email,
+                          user_id: req.user._id,
                           fullName: req.user.fullName,
                           text: req.body.text,
                           toMessageThread_id: convoID});
@@ -428,9 +440,9 @@ app.post("/api/groups/" , loggedIn, function (req, res){
   var newGroup = new Group({
                     name: req.body.groupName,
                     description: req.body.description,
-                    userIds_inGroup: [req.user.email],
+                    userIds_inGroup: [req.user._id],
                     fullNames_inGroup: [req.user.fullName],
-                    adminIds: [req.user.email],
+                    adminIds: [req.user._id],
                     adminFullNames: [req.user.fullName], 
                     rootGroup_id: req.body.parentGroupID,
                     rootGroup_name: req.body.parentGroupName,
@@ -454,13 +466,13 @@ app.post("/api/groups/:rootGroupID" , loggedIn, function (req, res){
       "There was an error. Please try again in a minute."});
       } else { 
         console.log("Root group: " + rootGroup);
-        var newLevel = rootGroup.level++; //?
+        var newLevel = rootGroup.level + 1; //?
         var newGroup = new Group({
                           name: req.body.groupName,
                           description: req.body.description,
-                          userIds_inGroup: [req.user.email],
+                          userIds_inGroup: [req.user._id],
                           fullNames_inGroup: [req.user.fullName],
-                          adminIds: [req.user.email],
+                          adminIds: [req.user._id],
                           adminFullNames: [req.user.fullName],
                           rootGroup_id: rootGroup._id,
                           rootGroup_name: rootGroup.name,
@@ -492,6 +504,38 @@ app.post("/api/network/:userID", loggedIn, function (req, res) {
   //TODO: Add acquaintance / update KnownNetwork model of person
 
 });
+
+app.post("/api/events/", loggedIn, function (req, res) {
+  console.log("/api/events/ POST ");
+
+  //Get people in groupID
+  var peopleInGroup_ids = [];
+  var peopleInGroup_fullNames = [];
+  Group.findOne({_id:req.body.groupID}, function (err, group) {
+    peopleInGroup = group.userIds_inGroup;
+    peopleInGroup_fullNames = group.fullNames_inGroup;
+
+  });
+
+  var newEvent = new Event({
+                            name: req.body.name,
+                            description: req.body.description,
+                            startTime: req.body.startTime,
+                            endTime: req.body.endTime,
+                            peopleInvited_fullNames: peopleInGroup_fullNames,
+                            peopleInvited_ids: peopleInGroup_ids
+  });
+
+  newEvent.save(function (err, newEvent) {
+                if (err) {
+                  console.error(err);
+                  return res.send("There was an error in creating the event. Please try again in a minute.");
+                } else {
+                  return res.json(newEvent);
+                }
+    });
+});
+
 app.post("/api/users/:userID", loggedIn, function (req, res) {
   console.log("/api/users/:userID POST " + req.params.userID);
 
@@ -507,7 +551,7 @@ app.post("/api/users/:userID", loggedIn, function (req, res) {
       wantsArray = [];
     }
 
-    var query = {'email':req.user.email};
+    var query = {'_id':req.user._id};
 
     var newData = {
       identity: {
@@ -533,7 +577,7 @@ app.post("/api/comments/:userID", loggedIn, function (req, res) {
     console.log("/api/comments/:userID POST " + req.params.userID);
 
     var commentTo = req.params.userID;
-    var byUser_id = req.user.email;
+    var byUser_id = req.user._id;
     var authorFullName = req.user.fullName;
     
 
@@ -581,7 +625,7 @@ app.get('/sign_s3', function(req, res){
     console.log("Query: ", req.query.file_name, req.query.file_type, S3_BUCKET);
     aws.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
     var s3 = new aws.S3();
-    var urlKey = req.user.email+'/'+req.query.file_name;
+    var urlKey = req.user._id+'/'+req.query.file_name;
     var s3_params = {
         Bucket: S3_BUCKET,
         Key: urlKey,
@@ -597,7 +641,7 @@ app.get('/sign_s3', function(req, res){
                 console.log("PUT OBJECT");
             var return_data = {
                 signed_request: data,
-                url: 'https://'+S3_BUCKET+'.s3.amazonaws.com/'+req.user.email+'/'+req.query.file_name
+                url: 'https://'+S3_BUCKET+'.s3.amazonaws.com/'+req.user._id+'/'+req.query.file_name
             };
             res.write(JSON.stringify(return_data));
             res.end();
@@ -609,11 +653,11 @@ app.get('/sign_s3', function(req, res){
 app.post('/api/media/:userID', function(req, res){
     console.log("/api/media/:userID POST " + req.params.userID);
 
-    var userEmail;
+    var userID;
     if (req.params.userID == "me") {
-      userEmail = req.user.email;
+      userID = req.user._id;
     } else {
-      userEmail = req.params.userID;
+      userID = req.params.userID;
     }
 
     var parts = req.body.mediaLink.split('.');
@@ -628,7 +672,7 @@ app.post('/api/media/:userID', function(req, res){
       mediaType = "UNDETERMINED";
     }
 
-    var newMedia =new Media({ user_id: userEmail, 
+    var newMedia =new Media({ user_id: userID, 
                               mediaType: mediaType,
                               mediaLink: req.body.mediaLink,
                               extensionType: extension,

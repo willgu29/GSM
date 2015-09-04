@@ -3,7 +3,7 @@ var NewMessage = React.createClass({
 
 	createNewMessageThread: function() {
 		var data = {
-			email: this.props.email,
+			_id: this.props._id,
 			fullName: this.props.fullName
 		};
 
@@ -73,7 +73,7 @@ var UserProfile = React.createClass({
       		success: function(userData){
       		if (this.isMounted()){
         		this.setState({
-        					email: userData.email,
+        					_id: userData._id,
         					fullName: userData.fullName,
                             // interesting: userData.identity.interesting,
                             // personality: userData.identity.personality,
@@ -109,7 +109,7 @@ var UserProfile = React.createClass({
 				<p>Can Offer: {canOfferArray}</p>
 				<p>Wants: {wantsArray}</p>
 
-				<NewMessage url="/api/messages/" fullName={fullName} email={this.state.email} />
+				<NewMessage url="/api/messages/" fullName={fullName} _id={this.state._id} />
 			</div>
 
 		);

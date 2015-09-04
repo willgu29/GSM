@@ -211,7 +211,7 @@ var UserRow = React.createClass({displayName: "UserRow",
         React.createElement("td", null, React.createElement(UserImg, {fullName: this.props.fullName})), 
         React.createElement("td", null, React.createElement(WantsColumn, {wants: this.props.wants})), 
         React.createElement("td", null, React.createElement(CanOfferColumn, {canOffer: this.props.canOffer})), 
-        React.createElement("td", null, React.createElement(MoreInfoColumn, {_id: this.props._id}))
+        React.createElement("td", null, React.createElement(MoreInfoColumn, {email: this.props._id}))
       )
     );
   }

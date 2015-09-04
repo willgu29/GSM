@@ -77,7 +77,7 @@ var InterestingColumn = React.createClass({
 var MoreInfoColumn = React.createClass({
   render: function() {
 
-    var profileLink = "/users/" + this.props.email;
+    var profileLink = "/users/" + this.props._id;
 
     return(
       <a href={profileLink}>More Info</a>
@@ -211,7 +211,7 @@ var UserRow = React.createClass({
         <td><UserImg fullName={this.props.fullName} /></td>
         <td><WantsColumn wants={this.props.wants} /></td>
         <td><CanOfferColumn canOffer={this.props.canOffer} /></td>
-        <td><MoreInfoColumn email={this.props.email}  /></td>
+        <td><MoreInfoColumn _id={this.props._id}  /></td>
       </tr>
     );
   }
@@ -256,7 +256,7 @@ var GSMUserTableView = React.createClass({
                                     topFiveTime={user.identity.topFiveTime}
                                     wants={user.identity.wants}
                                     canOffer={user.identity.canOffer}
-                                    email={user.email} />);
+                                    _id={user._id} />);
     }
     return(
       <div id="tableView">

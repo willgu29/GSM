@@ -5,7 +5,7 @@ var groupSchema = new mongoose.Schema({
 	dateCreated: {type: Date, default: Date.now},
 	name: String,
 	description: String,
-    userIds_inGroup: [String],
+    userIds_inGroup: [mongoose.Schema.Types.ObjectId],
     fullNames_inGroup: [String],
     adminIds: [String],
     adminFullNames: [String],
