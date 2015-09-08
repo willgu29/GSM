@@ -5,8 +5,9 @@ var eventSchema = new mongoose.Schema({
 	dateCreated: {type: Date, default: Date.now},
 	name: String,
 	description: String,
-    startTime: Date,
-    endTime: Date,
+    startTime: String, //to be changed to Date later...
+    endTime: String,
+    status: String, //PRE, IN PROGRESS, ENDED
     peopleInvited_fullNames: [String],
     peopleInvited_ids: [mongoose.Schema.Types.ObjectId],
     peopleAttending_fullNames: [String],

@@ -293,9 +293,24 @@ app.get("/api/groups/:groupID", loggedIn, function (req, res) {
   });
 });
 
+app.get("/api/events/all", loggedIn, function (req, res) {
+  console.log("/api/events/all GET");
+
+  //TODO: Only get events from date xx and further
+  Event.find({}, function (err, eventObjects) {
+    if (err) return console.error(err);
+    res.json(eventObjects);
+  }).limit(req.body.limit).skip(req.body.skip);
+});
+
 app.get("/api/events", loggedIn, function (req, res) {
   console.log("/api/events GET");
 
+  //TODO: Only get events from date xx and further
+  Event.find({peopleInvited_ids: req.user._id, status: "PRE"}, function (err, eventObjects) {
+    if (err) return console.error(err);
+    res.json(eventObjects);
+  }).limit(req.body.limit).skip(req.body.skip);
 });
 
 app.get("/api/media/:userID", loggedIn, function (req, res) {
@@ -512,28 +527,35 @@ app.post("/api/events/", loggedIn, function (req, res) {
   var peopleInGroup_ids = [];
   var peopleInGroup_fullNames = [];
   Group.findOne({_id:req.body.groupID}, function (err, group) {
-    peopleInGroup = group.userIds_inGroup;
-    peopleInGroup_fullNames = group.fullNames_inGroup;
+    if (group) {
+      console.log(group);
+      peopleInGroup_ids = group.userIds_inGroup;
+      peopleInGroup_fullNames = group.fullNames_inGroup;
 
-  });
-
-  var newEvent = new Event({
+      var newEvent = new Event({
                             name: req.body.name,
                             description: req.body.description,
                             startTime: req.body.startTime,
                             endTime: req.body.endTime,
+                            status: "PRE",
                             peopleInvited_fullNames: peopleInGroup_fullNames,
                             peopleInvited_ids: peopleInGroup_ids
-  });
+      });
 
-  newEvent.save(function (err, newEvent) {
+      newEvent.save(function (err, newEvent) {
                 if (err) {
                   console.error(err);
                   return res.send("There was an error in creating the event. Please try again in a minute.");
                 } else {
                   return res.json(newEvent);
                 }
-    });
+      });
+    }
+  
+
+  });
+
+  
 });
 
 app.post("/api/users/:userID", loggedIn, function (req, res) {

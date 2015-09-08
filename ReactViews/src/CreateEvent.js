@@ -7,7 +7,7 @@ var CreateEvent = React.createClass({
 			<div>
 				<h3>Create Event</h3>
 				<form method="post" action={this.props.url}>
-					Event Name: <input type="text" id="eventName" name="eventName" /> <br />
+					Event Name: <input type="text" id="name" name="name" /> <br />
 					Description: <input type="text" id="description" name="description" /> <br />
 					Start Time: <input type="datetime-local" id="startTime" name="startTime" /> <br />
 					End Time: <input type="datetime-local" id="endTime" name="endTime" /> <br />
