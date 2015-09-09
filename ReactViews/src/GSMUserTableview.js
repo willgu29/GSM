@@ -234,7 +234,7 @@ var GSMUserTableView = React.createClass({
       cache: false,
       success: function(arrayOfUsers){
       if (this.isMounted()){
-        this.setState({users:arrayOfUsers.users});
+        this.setState({users:arrayOfUsers});
       }
       }.bind(this),
       error: function(xhr,status,err){
