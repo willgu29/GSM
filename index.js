@@ -201,7 +201,7 @@ app.get("/api/users", loggedIn, function (req, res) { ///limit, skip, user
   query.select('-password -phoneNumber');
   query.exec(function (err, users) {
     if (err) { console.log(err);} 
-    else { res.json({users:users});}
+    else { res.json(users);}
   });
 
 
