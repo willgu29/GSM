@@ -40,7 +40,10 @@ var GSMNavBarItems = React.createClass({displayName: "GSMNavBarItems",
 				React.createElement("li", {style: style2}, React.createElement("a", {href: "/messages"}, "Messages")), 
 				React.createElement("li", {style: style3}, React.createElement("a", {href: "/groups"}, "Groups")), 
 				React.createElement("li", {style: style4}, React.createElement("a", {href: "/events"}, "Events")), 
-				React.createElement("li", {style: style5}, React.createElement("a", {href: "/editAccount"}, "Edit Profile"))
+				React.createElement("li", {style: style5}, React.createElement("a", {href: "/editAccount"}, "Edit Profile")), 
+					React.createElement("li", {style: style5}, React.createElement("a", {href: "/editAccount"}, "Hi"))
+
+
 
 			)
 		);

@@ -136,6 +136,15 @@ app.get("/suggestions/:userID", loggedIn, function (req, res) {
 
 	//API Calls
 
+app.get("/api/appLoginStatus", function (req, res) {
+  if (!req.user) {
+    res.json({_id:"0"});
+  } else {
+    res.json({_id:req.user._id});
+  }
+
+});
+
 //Authentication and Login
 app.post('/createAccount', function (req, res) {
         console.log("/createAccount POST");
@@ -528,7 +537,6 @@ app.post("/api/events/", loggedIn, function (req, res) {
   var peopleInGroup_fullNames = [];
   Group.findOne({_id:req.body.groupID}, function (err, group) {
     if (group) {
-      console.log(group);
       peopleInGroup_ids = group.userIds_inGroup;
       peopleInGroup_fullNames = group.fullNames_inGroup;
 

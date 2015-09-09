@@ -1,22 +1,17 @@
-pStyleIndent = {
-
-	textIndent: "25"
-};
-
-var EventRow = React.createClass({
+var EventRow = React.createClass({displayName: "EventRow",
 
 	render: function(){
 		return(
-			<li>
-				<h3>{this.props.name}: {this.props.startTime} - {this.props.endTime}</h3>
-				<p style={pStyleIndent}>{this.props.description}</p>
-			</li>
+			React.createElement("div", null, 
+				React.createElement("h3", null, this.props.name, ": ", this.props.startTime, " - ", this.props.endTime), 
+				React.createElement("p", null, this.props.description)
+			)
 			
 		);
 	}
 });
 
-var GSMEventView = React.createClass({
+var GSMEventView = React.createClass({displayName: "GSMEventView",
 	getInitialState: function(){
 		return({events:[]});
 	},
@@ -45,11 +40,11 @@ var GSMEventView = React.createClass({
 		var eventDisplay = [];
 		for (var i = 0; i < arrayOfEvents.length; i++){
 			var event = arrayOfEvents[i];
-			var eventRow = (<EventRow _id={event._id}
-										name={event.name} 
-										description={event.description} 
-										startTime={event.startTime}
-										endTime={event.endTime} />);
+			var eventRow = (React.createElement(EventRow, {_id: event._id, 
+										name: event.name, 
+										description: event.description, 
+										startTime: event.startTime, 
+										endTime: event.endTime}));
 			
 			eventDisplay.push(eventRow);
 		}
@@ -58,11 +53,11 @@ var GSMEventView = React.createClass({
 		}
 
 		return(
-			<ul>
-				{eventDisplay}
-			</ul>
+			React.createElement("ul", null, 
+				eventDisplay
+			)
 		);
 	}
 });
 
-React.render(<GSMEventView url="/api/events" />, document.getElementById("gsmEventView"));
+React.render(React.createElement(GSMEventView, {url: "/api/events"}), document.getElementById("gsmEventView"));

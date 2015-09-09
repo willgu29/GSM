@@ -42,7 +42,6 @@ var GSMNavBarItems = React.createClass({
 				<li style={style4}><a href="/events">Events</a></li>
 				<li style={style5}><a href="/editAccount">Edit Profile</a></li>
 
-
 			</ul>
 		);
 	}
