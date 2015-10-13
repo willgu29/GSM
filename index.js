@@ -108,26 +108,6 @@ app.get("/users/:userID", loggedIn, function (req, res) {
 });
 
 
-
-
-//Other
-
-app.get("/individuals", loggedIn, function (req, res) {
-  console.log('/individuals GET');
-  res.sendFile(__dirname + "/public/browseIndividuals.html");
-});
-
-app.get("/login" ,function (req, res) {
-  console.log("/login GET");
-
-  res.sendFile(__dirname + "/public/login.html");
-});
-
-app.get("/suggestions/:userID", loggedIn, function (req, res) {
-  res.sendFile(__dirname + "/public/suggestionsPage.html");
-}); 
-
-
 //---
 
 
@@ -457,6 +437,53 @@ app.post("/api/messages/:convoID", loggedIn, function (req, res) {
 
 });
 
+app.post("/api/joinGroup/:groupID", loggedIn, function (req, res) {
+  console.log("/api/joinGroup/:groupID " + req.params.groupID);
+
+  var groupID;
+  if (req.params.groupID = "none"){
+    groupID = req.body.groupID;
+  } else {
+    groupID = req.params.groupID;
+  }
+
+
+  Group.findOne({_id:groupID}, function (err, group) {
+    if (err) {console.error(err); return res.json({info: 
+      "There was an error. Please try again in a minute."});
+      } else { 
+          group.userIds_inGroup.push(req.user._id);
+          group.fullNames_inGroup.push(req.user.fullName);
+          group.save(function (err, group) {
+            if (err) {console.error(err); return res.json({info: 
+              "There was an error. Please try again in a minute."});
+            } else {
+              //Continue
+            }
+          });
+
+          User.findOne({_id:req.user._id}, function (err, user) {
+            if (err) {console.error(err); return res.json({info: 
+              "There was an error. Please try again in a minute."});
+            } else { 
+              user.groupsIn_ids.push(group._id);
+              user.groupsIn_names.push(group.name);
+              user.save(function (err, user) {
+                if (err) {console.error(err); return res.json({info: 
+                  "There was an error. Please try again in a minute."});
+                } else { console.log(group); return res.json({info:
+                "success", _id: user._id});}
+              });
+            }
+  });
+      }
+  });
+
+  
+
+});
+
+
 app.post("/api/groups/" , loggedIn, function (req, res){
   console.log("/api/groups POST");
 
@@ -577,7 +604,12 @@ app.post("/api/users/:userID", loggedIn, function (req, res) {
     if (JSON.stringify(canOfferArray) == JSON.stringify([""])) {
       canOfferArray = [];
     }
-    if (JSON.stringify(wantsArray) == JSON.stringify([""])) {
+    if 
+
+
+
+
+      (JSON.stringify(wantsArray) == JSON.stringify([""])) {
       wantsArray = [];
     }
 
