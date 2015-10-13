@@ -57,7 +57,14 @@ app.get("/", function (req, res) {
   if (!req.user) {
     res.render('landingPage', {layout: "/layouts/main"});
   } else {
-    res.render('index', {layout: "/layouts/main"});
+    var isFirst;
+    if (!req.user.lastLoginDate) {
+      isFirst = true;
+    } else {
+      isFirst = false;
+    }
+    res.render('index', {layout: "/layouts/main", isFirstTimeLogin: isFirst});
+
   }
 });
 
@@ -346,6 +353,14 @@ app.get("/api/network/:userID", loggedIn, function (req, res) {
 
 ///
   //Database Edits
+
+app.post("/api/updateLoginDate", loggedIn, function (req, res) {
+  req.user.lastLoginDate = Date.now();
+  req.user.save(function (err, user) {
+    if (err) return console.error(err);
+    res.json({timeUpdated:user.lastLoginDate});
+  });
+});
 
 //Create new message thread
 app.post("/api/messages/", loggedIn, function (req, res) {
