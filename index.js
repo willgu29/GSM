@@ -795,6 +795,25 @@ app.post('/api/media/:userID', function(req, res){
 });
 
 
+app.delete("/api/user/:userID", function (req, res) {
+    Group.update({userIds_inGroup:{$in : req.user._id}}, { $pull: {
+      userIds_inGroup: req.user._id,
+      fullNames_inGroup: req.user.fullName
+    }}, {multi: true}, function (err, result) {
+      console.log(result);
+      console.log(err);
+    });
+
+    User.remove({_id:req.user._id}, function (err) {
+      if (err) {
+        console.log(err); return res.json(err);
+      } else {
+        return res.json({info: "succesfully deleted"});
+      }
+    });
+
+});
+
 
 /// MONGOOOSE Database Linking ****
 
