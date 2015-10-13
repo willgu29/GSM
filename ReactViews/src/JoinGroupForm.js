@@ -9,7 +9,8 @@ var JoinGroupForm = React.createClass({
 
                 <br />
                 <input type="submit" value="join group" id="joinGroup" />
-            </form>
+              </form>
+
             </div>
              
 		);

@@ -456,8 +456,16 @@ app.post("/api/joinGroup/:groupID", loggedIn, function (req, res) {
   console.log("/api/joinGroup/:groupID " + req.params.groupID);
 
   var groupID;
-  if (req.params.groupID = "none"){
+  if (req.params.groupID == "none"){
     groupID = req.body.groupID;
+  } else if (req.params.groupID == "code") {
+    if (req.user.initialGroupID == "BABRocks") {
+      groupID = "561d544c88a62145626b5223";
+    } else if (req.user.initialGroupID == "InDe") {
+      groupID = "561d5df41c5d33a063429f58";
+    } else {
+      return res.json({info:"Invalid User, GroupID incorrect"});
+    }
   } else {
     groupID = req.params.groupID;
   }
@@ -518,8 +526,19 @@ app.post("/api/groups/" , loggedIn, function (req, res){
   newGroup.save(function (err, newGroup) {
     if (err) {console.error(err); return res.json({info: 
       "There was an error. Please try again in a minute."});
-      } else { console.log(newGroup); return res.json({info:
-       "success", _id: newGroup._id});}
+      } else { 
+        console.log(newGroup); 
+        req.user.groupsIn_ids.push(newGroup._id);
+        req.user.groupsIn_names.push(newGroup.name);
+        req.user.save(function (err, user) {
+          if (err) {
+
+          } else {
+            return res.json({info:"success", newGroup_id: newGroup._id});
+          }
+        });
+
+      }
     });
 });
 

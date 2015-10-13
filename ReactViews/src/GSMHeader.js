@@ -38,8 +38,7 @@ var GSMNavBarItems = React.createClass({
 			<ul style={ulStyle}>
 				<li style={style1}><a href="/">Member List</a></li>
 				<li style={style2}><a href="/messages">Messages</a></li>
-				<li style={style3}><a href="/groups">Groups</a></li>
-				<li style={style4}><a href="/events">Events</a></li>
+				
 				<li style={style5}><a href="/editAccount">Edit Profile</a></li>
 
 			</ul>
@@ -48,6 +47,8 @@ var GSMNavBarItems = React.createClass({
 
 });
 
+//<li style={style3}><a href="/groups">Groups</a></li>
+	//			<li style={style4}><a href="/events">Events</a></li>
 
 
 var GSMHeader = React.createClass({
