@@ -23,8 +23,8 @@ var userSchema = new mongoose.Schema({
   },
   groupsIn_ids: [mongoose.Schema.Types.ObjectId],
   groupsIn_names: [String],
-  role: String
-
+  role: String,
+  initialGroupID: String
 });
 userSchema.index({"$**": "text" });
 
