@@ -24,7 +24,7 @@ var userSchema = new mongoose.Schema({
   groupsIn_ids: [mongoose.Schema.Types.ObjectId],
   groupsIn_names: [String],
   role: String,
-  initialGroupID: String,
+  initialGroupCode: String,
   lastLoginDate: Date //if nil/NaN/undefined, etc , never logged in, else date
 });
 userSchema.index({"$**": "text" });

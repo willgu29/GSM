@@ -4,7 +4,9 @@ var LoginUpdate = React.createClass({
 
 	componentDidMount: function() {
 		//TODO: Update timestamp
+		console.log("Mount");
 		if (firstTimeLogin) {
+			console.log("LOG 1");
 			//TOOD: Join group via API and group ID code
 			$.ajax({
 				type: "POST",
@@ -12,7 +14,7 @@ var LoginUpdate = React.createClass({
     			dataType: 'json',
       			cache: false,
       			success: function(response){
-      			
+      				console.log(response);
       			}.bind(this),
       			error: function(xhr,status,err){
         			console.error(status, err.toString());
@@ -25,7 +27,7 @@ var LoginUpdate = React.createClass({
     			dataType: 'json',
       			cache: false,
       			success: function(response){
-      			
+      				console.log(response);
       			}.bind(this),
       			error: function(xhr,status,err){
         			console.error(status, err.toString());

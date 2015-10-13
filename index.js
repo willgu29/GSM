@@ -140,7 +140,8 @@ app.post('/createAccount', function (req, res) {
                                 password: req.body.password,
                                 firstName: req.body.firstName,
                                 lastName: req.body.lastName,
-                                fullName: req.body.firstName+' '+req.body.lastName});
+                                fullName: req.body.firstName+' '+req.body.lastName,
+                                initialGroupCode: req.body.initialGroupCode});
         
         newUser.save(function (err, newUser) {
                 if (err) {
@@ -459,9 +460,9 @@ app.post("/api/joinGroup/:groupID", loggedIn, function (req, res) {
   if (req.params.groupID == "none"){
     groupID = req.body.groupID;
   } else if (req.params.groupID == "code") {
-    if (req.user.initialGroupID == "BABRocks") {
+    if (req.user.initialGroupCode == "BABRocks") {
       groupID = "561d544c88a62145626b5223";
-    } else if (req.user.initialGroupID == "InDe") {
+    } else if (req.user.initialGroupCode == "InDe") {
       groupID = "561d5df41c5d33a063429f58";
     } else {
       return res.json({info:"Invalid User, GroupID incorrect"});
@@ -470,11 +471,15 @@ app.post("/api/joinGroup/:groupID", loggedIn, function (req, res) {
     groupID = req.params.groupID;
   }
 
+  console.log("Group ID: " + groupID);
 
   Group.findOne({_id:groupID}, function (err, group) {
     if (err) {console.error(err); return res.json({info: 
       "There was an error. Please try again in a minute."});
       } else { 
+        if (!group) {
+          return res.json({info:"No initial group found."});
+        }
           group.userIds_inGroup.push(req.user._id);
           group.fullNames_inGroup.push(req.user.fullName);
           group.save(function (err, group) {

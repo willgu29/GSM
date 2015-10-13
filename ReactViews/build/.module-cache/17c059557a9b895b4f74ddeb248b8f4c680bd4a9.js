@@ -4,9 +4,7 @@ var LoginUpdate = React.createClass({displayName: "LoginUpdate",
 
 	componentDidMount: function() {
 		//TODO: Update timestamp
-		console.log("Mount");
 		if (firstTimeLogin) {
-			console.log("LOG 1");
 			//TOOD: Join group via API and group ID code
 			$.ajax({
 				type: "POST",
