@@ -3,11 +3,8 @@ var firstTimeLogin = document.getElementById("isFirstTimeLogin").getAttribute("v
 var LoginUpdate = React.createClass({
 
 	componentDidMount: function() {
-		//TODO: Update timestamp
-		console.log("Mount");
 		if (firstTimeLogin) {
-			console.log("LOG 1");
-			//TOOD: Join group via API and group ID code
+			//Join group based on code
 			$.ajax({
 				type: "POST",
 				url: "/api/joinGroup/code",
@@ -21,6 +18,7 @@ var LoginUpdate = React.createClass({
       			}.bind(this)
 
 			});
+			//update time stamp last login
 			$.ajax({
 				type: "POST",
 				url: "/api/updateLoginDate",

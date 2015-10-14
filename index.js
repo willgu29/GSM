@@ -796,15 +796,23 @@ app.post('/api/media/:userID', function(req, res){
 
 
 app.delete("/api/user/:userID", function (req, res) {
-    Group.update({userIds_inGroup:{$in : req.user._id}}, { $pull: {
-      userIds_inGroup: req.user._id,
+
+    var userID;
+    if (req.params.userID == "none") {
+      userID = req.body.userID;
+    } else {
+      userID = req.params.userID;
+    }
+
+    Group.update({userIds_inGroup:{$in : [userID]}}, { $pull: {
+      userIds_inGroup: userID,
       fullNames_inGroup: req.user.fullName
     }}, {multi: true}, function (err, result) {
       console.log(result);
       console.log(err);
     });
 
-    User.remove({_id:req.user._id}, function (err) {
+    User.remove({_id:userID}, function (err) {
       if (err) {
         console.log(err); return res.json(err);
       } else {
