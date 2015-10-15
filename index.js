@@ -49,8 +49,13 @@ app.get("/gsm", ensureAdmin, function(req, res) {
 //ROUTING
 
 	//VIEWS 
+app.get("/fixShit", function (req, res) {
+  Group.findOne({"name" : "Bruin App Builders"}, function (err, group) {
+    User.find({}, function (err, users) {
 
-
+    });
+  });
+});
 
 app.get("/", function (req, res) {
 	console.log('/ GET');
@@ -529,27 +534,23 @@ app.post("/api/joinGroup/:groupID", loggedIn, function (req, res) {
     groupID = req.params.groupID;
   }
 
+  var userID;
+  if (! req.body.userID) {
+    userID = req.user._id;
+  } else {
+    userID = req.body.userID;
+  }
   console.log("Group ID: " + groupID);
 
   Group.findOne({_id:groupID}, function (err, group) {
     if (err) {console.error(err); return res.json({info: 
       "There was an error. Please try again in a minute."});
-      } else { 
+      } else {
+
         if (!group) {
           return res.json({info:"No initial group found."});
-        }
-          group.userIds_inGroup.push(req.user._id);
-          group.fullNames_inGroup.push(req.user.fullName);
-          group.emails_inGroup.push(req.user.email);
-          group.save(function (err, group) {
-            if (err) {console.error(err); return res.json({info: 
-              "There was an error. Please try again in a minute."});
-            } else {
-              //Continue
-            }
-          });
-
-          User.findOne({_id:req.user._id}, function (err, user) {
+        } else {
+          User.findOne({_id:userID}, function (err, user) {
             if (err) {console.error(err); return res.json({info: 
               "There was an error. Please try again in a minute."});
             } else { 
@@ -558,11 +559,22 @@ app.post("/api/joinGroup/:groupID", loggedIn, function (req, res) {
               user.save(function (err, user) {
                 if (err) {console.error(err); return res.json({info: 
                   "There was an error. Please try again in a minute."});
-                } else { console.log(group); return res.json({info:
-                "success", _id: user._id});}
+                } else { 
+                  group.userIds_inGroup.push(user._id);
+                  group.fullNames_inGroup.push(user.fullName);
+                  group.emails_inGroup.push(user.email);
+                  group.save(function (err, group) {
+                  if (err) {console.error(err); return res.json({info: 
+                    "There was an error. Please try again in a minute."});
+                  } else {
+                    return res.json({info: "success", _id: group._id})
+                  }
+                  });
+                }
               });
             }
-  });
+          });
+        } 
       }
   });
 
@@ -864,24 +876,35 @@ app.delete("/api/user/:userID", function (req, res) {
     } else {
       userID = req.params.userID;
     }
+    User.findOne({_id:userID}, function (err, user) {
+      Group.find({userIds_inGroup: userID}, function (err, groups) {
+        for (var i = 0; i < groups.length; i++) {
+          var group = groups[i];
 
-    Group.update({userIds_inGroup:{$in : [userID]}}, { $pull: {
-      userIds_inGroup: userID,
-      fullNames_inGroup: req.user.fullName,
-      emails_inGroup: req.user.email
-    }}, {multi: true}, function (err, result) {
-      console.log(result);
-      console.log(err);
+          var indexEmail = group.emails_inGroup.indexOf(user.email);
+          group.emails_inGroup.splice(indexEmail, 1);
+
+          var indexID = group.userIds_inGroup.indexOf(user._id);
+          group.userIds_inGroup.splice(indexID, 1);
+
+          var indexName = group.fullNames_inGroup.indexOf(user.fullName);
+          group.fullNames_inGroup.splice(indexName, 1);
+
+          group.save(function (err, group) {
+            if (err) {return console.err(err);}
+            else {return res.json({"info": "success", "groupID": group._id});}
+          });
+
+        }
+      });
+      User.remove({_id:userID}, function (err) {
+        if (err) {
+          console.log(err); return res.json(err);
+        } else {
+          return res.json({info: "succesfully deleted"});
+        }
+      });
     });
-
-    User.remove({_id:userID}, function (err) {
-      if (err) {
-        console.log(err); return res.json(err);
-      } else {
-        return res.json({info: "succesfully deleted"});
-      }
-    });
-
 });
 
 

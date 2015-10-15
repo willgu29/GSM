@@ -3,6 +3,10 @@ var helpTextStyle = {
   display: "inline"
 }
 
+var userRowStyle = {
+      
+}
+
 
 //Tabular Data Columns
 
