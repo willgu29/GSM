@@ -49,13 +49,7 @@ app.get("/gsm", ensureAdmin, function(req, res) {
 //ROUTING
 
 	//VIEWS 
-app.get("/fixShit", function (req, res) {
-  Group.findOne({"name" : "Bruin App Builders"}, function (err, group) {
-    User.find({}, function (err, users) {
 
-    });
-  });
-});
 
 app.get("/", function (req, res) {
 	console.log('/ GET');
