@@ -1,21 +1,26 @@
 var iGrouplyHeaderStyle = {
 	fontFamily: "Avenir Medium",
-	fontSize: "30px",
+	fontSize: "40px",
 	fontStyle: "oblique",
 	color: "white",
 	display: "inline",
-	marginLeft: "10",
+
+}
+var navBarStyle = {
+	display: "inline",
+	backgroundColor: "hsl(281, 100%, 29%)"
+
 }
 
 var ulStyle = {
 	display: "inline",
 	float: "right",
     listStyleType: "none",
-    marginTop: "14",
+    marginTop: "30",
     padding: "0"
 }
 var liStyle = {
-	color: "hsl(0, 0%, 85%)",
+	color: "hsl(0, 100%, 85%)",
     display: "inline",
     marginRight: "20"
 }
@@ -72,7 +77,7 @@ var GSMHeader = React.createClass({displayName: "GSMHeader",
 
 	render: function() {
 		return(
-			React.createElement("div", {id: "navBar"}, 
+			React.createElement("div", {id: "navBar", style: navBarStyle}, 
 				React.createElement("h1", {style: iGrouplyHeaderStyle}, "iGrouply"), 
 				React.createElement(GSMNavBarItems, {currentURL: this.props.currentURL})
 			)

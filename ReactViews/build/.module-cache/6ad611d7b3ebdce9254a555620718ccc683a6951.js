@@ -1,34 +1,23 @@
 var iGrouplyHeaderStyle = {
-	fontFamily: "Avenir Medium",
-	fontSize: "30px",
-	fontStyle: "oblique",
-	color: "white",
-	display: "inline",
-	marginLeft: "10",
+	fontFamily: "Avenir Medium Oblique",
+	fontSize: "40px"
 }
 
+
 var ulStyle = {
-	display: "inline",
-	float: "right",
     listStyleType: "none",
-    marginTop: "14",
+    margin: "0",
     padding: "0"
 }
 var liStyle = {
-	color: "hsl(0, 0%, 85%)",
     display: "inline",
     marginRight: "20"
 }
 
 var liStyleSelected = {
-	color: "white",
 	display: "inline",
+	backgroundColor: "yellow",
 	marginRight: "20"
-}
-
-var aStyle = {
-	color: "inherit",
-	textDecoration: "none"
 }
 
 
@@ -53,10 +42,10 @@ var GSMNavBarItems = React.createClass({displayName: "GSMNavBarItems",
 		} 
 		return(
 			React.createElement("ul", {style: ulStyle}, 
-				React.createElement("li", {style: style1}, React.createElement("a", {style: aStyle, href: "/"}, "Member List")), 
-				React.createElement("li", {style: style2}, React.createElement("a", {style: aStyle, href: "/messages"}, "Messages")), 
+				React.createElement("li", {style: style1}, React.createElement("a", {href: "/"}, "Member List")), 
+				React.createElement("li", {style: style2}, React.createElement("a", {href: "/messages"}, "Messages")), 
 				
-				React.createElement("li", {style: style5}, React.createElement("a", {style: aStyle, href: "/editAccount"}, "Edit Profile"))
+				React.createElement("li", {style: style5}, React.createElement("a", {href: "/editAccount"}, "Edit Profile"))
 
 			)
 		);

@@ -1,17 +1,18 @@
 var iGrouplyHeaderStyle = {
 	fontFamily: "Avenir Medium",
-	fontSize: "30px",
+	fontSize: "34px",
 	fontStyle: "oblique",
 	color: "white",
 	display: "inline",
-	marginLeft: "10",
+	marginLeft: "10px",
+	marginTop: "300px"
 }
 
 var ulStyle = {
 	display: "inline",
 	float: "right",
     listStyleType: "none",
-    marginTop: "14",
+    marginTop: "20",
     padding: "0"
 }
 var liStyle = {

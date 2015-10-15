@@ -1,6 +1,6 @@
 var iGrouplyHeaderStyle = {
 	fontFamily: "Avenir Medium",
-	fontSize: "30px",
+	fontSize: "34px",
 	fontStyle: "oblique",
 	color: "white",
 	display: "inline",

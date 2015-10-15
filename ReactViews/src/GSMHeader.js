@@ -1,17 +1,34 @@
+var iGrouplyHeaderStyle = {
+	fontFamily: "Avenir Medium",
+	fontSize: "30px",
+	fontStyle: "oblique",
+	color: "white",
+	display: "inline",
+	marginLeft: "10",
+}
+
 var ulStyle = {
+	display: "inline",
+	float: "right",
     listStyleType: "none",
-    margin: "0",
+    marginTop: "14",
     padding: "0"
 }
 var liStyle = {
+	color: "hsl(0, 0%, 85%)",
     display: "inline",
     marginRight: "20"
 }
 
 var liStyleSelected = {
+	color: "white",
 	display: "inline",
-	backgroundColor: "yellow",
 	marginRight: "20"
+}
+
+var aStyle = {
+	color: "inherit",
+	textDecoration: "none"
 }
 
 
@@ -36,10 +53,10 @@ var GSMNavBarItems = React.createClass({
 		} 
 		return(
 			<ul style={ulStyle}>
-				<li style={style1}><a href="/">Member List</a></li>
-				<li style={style2}><a href="/messages">Messages</a></li>
+				<li style={style1}><a style={aStyle} href="/">Member List</a></li>
+				<li style={style2}><a style={aStyle} href="/messages">Messages</a></li>
 				
-				<li style={style5}><a href="/editAccount">Edit Profile</a></li>
+				<li style={style5}><a style={aStyle} href="/editAccount">Edit Profile</a></li>
 
 			</ul>
 		);
@@ -56,7 +73,7 @@ var GSMHeader = React.createClass({
 	render: function() {
 		return(
 			<div id="navBar">
-				<h1>iGrouply</h1>
+				<h1 style={iGrouplyHeaderStyle}>iGrouply</h1>
 				<GSMNavBarItems currentURL={this.props.currentURL} />
 			</div>
 		);

@@ -11,7 +11,7 @@ var ulStyle = {
 	display: "inline",
 	float: "right",
     listStyleType: "none",
-    marginTop: "14",
+    marginTop: "16",
     padding: "0"
 }
 var liStyle = {
