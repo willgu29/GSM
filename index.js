@@ -271,6 +271,14 @@ app.get("/api/messages/", loggedIn, function (req, res) {
   }).limit(req.body.limit).skip(req.body.skip);
 });
 
+app.get("/api/messageThread/:threadID", loggedIn, function (req, res) {
+  console.log("/api/messageThread/:threadID" + req.params.threadID);
+  MessageThread.findOne({_id:req.params.threadID}, function (err, threadObject) {
+    if (err) return console.error(err);
+    res.json(threadObject);
+  });
+});
+
 
 //?level=# required
 app.get("/api/groups", loggedIn, function (req, res) {
@@ -372,6 +380,7 @@ app.post("/api/messages/", loggedIn, function (req, res) {
     var participantID = req.body._id;
     var clientTwoFullName = req.body.fullName;
     var participant_ids = [startID, participantID];
+    var participant_emails = [req.user.email, req.body.email];
 
     var query = {'user_id':startID,
                   "participant_ids": participant_ids};
@@ -392,6 +401,7 @@ app.post("/api/messages/", loggedIn, function (req, res) {
                               fullName: clientOneFullName,
                               participant_ids: participant_ids,
                               participant_fullNames: [clientOneFullName, clientTwoFullName],
+                              participant_emails: participant_emails,
                               messageCount: 0,
                               unseenMessagesCount: 0});
 
@@ -451,6 +461,54 @@ app.post("/api/messages/:convoID", loggedIn, function (req, res) {
 
 
 
+});
+
+app.post("/api/sendMailTo/", loggedIn, function (req, res) {
+  console.log("POST /api/sendMailTo/");
+  var emails = req.body.emails;
+  var message = req.body.text;
+  var sentFrom = req.user.fullName;
+
+  for (var i = 0; i < emails.length; i++) {
+    var email = emails[i];
+    if (email == req.user.email) {
+      //do nothing
+    } else {
+      console.log(email);
+      //Send email notification
+      var format = {
+      "email": email,
+      "type": "to"
+      };
+      var htmlHeader = "<h4>You've received a new message from " + sentFrom + " on iGrouply.</h4>";
+      var htmlBody = "<p>" + sentFrom +": "+ message + "</p>";
+      var htmlFooter = "<p>Login to www.igrouply.com to respond.</p>";
+      var message = {
+        "key": process.env.MANDRILL_MESSAGE_KEY,
+        "html": htmlHeader + htmlBody + htmlFooter,
+        "subject": "New Message on iGrouply",
+        "from_email": "hi@igrouply.com",
+        "from_name": "iGrouply",
+        "to": [format],
+        "track_opens": true,
+        "track_clicks": true,
+        "auto_text": true,
+        "preserve_recipients": false,  //display recipients
+        "tags": ["messageNotification"]
+
+        };
+
+        mandrill_client.messages.send({"message": message}, function(result) {
+        console.log(result);
+        res.json(result);
+        }, function(e) {
+        // Mandrill returns the error as an object with name and message keys
+        res.json(e.message);
+        console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
+        // A mandrill error occurred: Unknown_Subaccount - No subaccount exists with the id 'customer-123'
+        });
+    }
+  }
 });
 
 app.post("/api/joinGroup/:groupID", loggedIn, function (req, res) {
@@ -888,9 +946,6 @@ passport.deserializeUser(function(id, done) {
 var mandrill = require('mandrill-api/mandrill');
 var mandrill_client = new mandrill.Mandrill(process.env.MANDRILL_KEY);
 
-app.get("/admin/sendMail", ensureAdmin, function (req,res) {
-  res.sendFile(__dirname + "/public/adminPanel.html");
-});
 
 app.post("/admin/sendMail", ensureAdmin, function (req,res){
 

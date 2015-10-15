@@ -9,6 +9,7 @@ var messageThreadSchema = new mongoose.Schema({
 	dateLastUpdated: Date, //last message sent
     participant_ids: [mongoose.Schema.Types.ObjectId], //add user_id as well (person who started)
     participant_fullNames: [String],
+    participant_emails: [String],
     messageCount: Number,
     unseenMessagesCount: Number,
 

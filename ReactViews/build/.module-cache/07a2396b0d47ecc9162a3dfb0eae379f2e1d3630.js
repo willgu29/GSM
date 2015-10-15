@@ -2,17 +2,17 @@ var convoID = document.getElementById("convoID").getAttribute("value");
 
 var convoTitle = document.getElementById("convoTitle").getAttribute("value");
 
-var MessageRow = React.createClass({
+var MessageRow = React.createClass({displayName: "MessageRow",
 
 	render: function() {
 		return(
-			<ul>{this.props.fullName}: {this.props.text}</ul>
+			React.createElement("ul", null, this.props.fullName, ": ", this.props.text)
 		);
 	}
 
 });
 
-var MessageList = React.createClass({
+var MessageList = React.createClass({displayName: "MessageList",
 	getInitialState: function() {
 		return ({messages: []});
 	},
@@ -42,25 +42,25 @@ var MessageList = React.createClass({
 		var messageDisplay = [];
 		for (var i = 0; i < messageArray.length; i++) {
 			var message = messageArray[i];
-			var messageRow = (<MessageRow fullName={message.fullName} text={message.text} />);
+			var messageRow = (React.createElement(MessageRow, {fullName: message.fullName, text: message.text}));
 			messageDisplay.push(messageRow);
 		}
 
 
 		return(
-			<div>
-				<h3>Conversation with {this.props.convoTitle}</h3>
-				<li>
-					{messageDisplay}
-				</li>
-				<MessageSend url={this.props.url} convoID={this.props.convoID} handleMessageSubmit={this.refreshMessageList} />
-			</div>
+			React.createElement("div", null, 
+				React.createElement("h3", null, "Conversation with ", this.props.convoTitle), 
+				React.createElement("li", null, 
+					messageDisplay
+				), 
+				React.createElement(MessageSend, {url: this.props.url, convoID: this.props.convoID, handleMessageSubmit: this.refreshMessageList})
+			)
 		);
 	}
 });
 
 
-var MessageSend = React.createClass({
+var MessageSend = React.createClass({displayName: "MessageSend",
 	getInitialState: function() {
     	return {text: '',
     			emails: []};
@@ -102,10 +102,10 @@ var MessageSend = React.createClass({
       		}.bind(this)
     	});
 
-    	
+    	var nextText = '';
+    	this.setState({text: nextText});
     	var emailData = {
-    		emails: this.state.emails,
-    		text: this.state.text
+    		emails: this.state.emails
     	};
     	//
     	console.log(emailData);
@@ -122,20 +122,18 @@ var MessageSend = React.createClass({
       		}.bind(this)
     	});
     	
-    	var nextText = '';
-    	this.setState({text: nextText});
   	},
 	render: function () {
 		return(
-			<div id="sendMessage">
-				<form onSubmit={this.handleSubmit}>
-					<input onChange={this.onChange} value={this.state.text} />
-				</form>
+			React.createElement("div", {id: "sendMessage"}, 
+				React.createElement("form", {onSubmit: this.handleSubmit}, 
+					React.createElement("input", {onChange: this.onChange, value: this.state.text})
+				)
 
-			</div>
+			)
 		);
 	}
 });
 
 
-React.render(<MessageList convoTitle={convoTitle} convoID={convoID} url="/api/messages/" />, document.getElementById("message"));
+React.render(React.createElement(MessageList, {convoTitle: convoTitle, convoID: convoID, url: "/api/messages/"}), document.getElementById("message"));

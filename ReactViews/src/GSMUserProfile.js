@@ -4,7 +4,8 @@ var NewMessage = React.createClass({
 	createNewMessageThread: function() {
 		var data = {
 			_id: this.props._id,
-			fullName: this.props.fullName
+			fullName: this.props.fullName,
+			email: this.props.email
 		};
 
 		$.ajax({
@@ -75,6 +76,7 @@ var UserProfile = React.createClass({
         		this.setState({
         					_id: userData._id,
         					fullName: userData.fullName,
+        					email: userData.email,
                             // interesting: userData.identity.interesting,
                             // personality: userData.identity.personality,
                             // skills: userData.identity.skills,
@@ -109,7 +111,7 @@ var UserProfile = React.createClass({
 				<p>Can Offer: {canOfferArray}</p>
 				<p>Wants: {wantsArray}</p>
 
-				<NewMessage url="/api/messages/" fullName={fullName} _id={this.state._id} />
+				<NewMessage url="/api/messages/" fullName={fullName} _id={this.state._id} email={this.state.email} />
 			</div>
 
 		);
