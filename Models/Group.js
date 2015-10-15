@@ -7,6 +7,7 @@ var groupSchema = new mongoose.Schema({
 	description: String,
     userIds_inGroup: [mongoose.Schema.Types.ObjectId],
     fullNames_inGroup: [String],
+    emails_inGroup: [String],
     adminIds: [String],
     adminFullNames: [String],
     rootGroup_id: mongoose.Schema.Types.ObjectId,

@@ -540,6 +540,7 @@ app.post("/api/joinGroup/:groupID", loggedIn, function (req, res) {
         }
           group.userIds_inGroup.push(req.user._id);
           group.fullNames_inGroup.push(req.user.fullName);
+          group.emails_inGroup.push(req.user.email);
           group.save(function (err, group) {
             if (err) {console.error(err); return res.json({info: 
               "There was an error. Please try again in a minute."});
@@ -579,6 +580,7 @@ app.post("/api/groups/" , loggedIn, function (req, res){
                     description: req.body.description,
                     userIds_inGroup: [req.user._id],
                     fullNames_inGroup: [req.user.fullName],
+                    emails_inGroup: [req.user.email],
                     adminIds: [req.user._id],
                     adminFullNames: [req.user.fullName], 
                     rootGroup_id: req.body.parentGroupID,
@@ -620,6 +622,7 @@ app.post("/api/groups/:rootGroupID" , loggedIn, function (req, res){
                           description: req.body.description,
                           userIds_inGroup: [req.user._id],
                           fullNames_inGroup: [req.user.fullName],
+                          emails_inGroup: [req.user.email],
                           adminIds: [req.user._id],
                           adminFullNames: [req.user.fullName],
                           rootGroup_id: rootGroup._id,
@@ -864,7 +867,8 @@ app.delete("/api/user/:userID", function (req, res) {
 
     Group.update({userIds_inGroup:{$in : [userID]}}, { $pull: {
       userIds_inGroup: userID,
-      fullNames_inGroup: req.user.fullName
+      fullNames_inGroup: req.user.fullName,
+      emails_inGroup: req.user.email
     }}, {multi: true}, function (err, result) {
       console.log(result);
       console.log(err);
