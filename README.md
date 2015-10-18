@@ -12,7 +12,6 @@ Layout of project:
 
 1. ReactViews act as client rendering. Create new files in src ->
 babel ReactViews/src/ --watch --out-dir ReactViews/build/
-
 (old: jsx src build --watch to link into build.)
 
 

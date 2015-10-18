@@ -28,8 +28,10 @@ var infoButton = {
 var cardStyle = {
   width: "90%",
   marginLeft: "25px",
-  height: "300px",
-  boxShadow: "2px 2px 2px #999999",
+  minHeight: "300px",
+  /*height: "auto",*/
+  overflow: "auto",
+  boxShadow: "0px 0px 2px #999999",
   /*border: "1px solid black",*/
   marginBottom: "25px",
   background: "white"
@@ -42,20 +44,27 @@ var cardText = {
   fontFamily: "Avenir, sans-serif",
   fontSize: "16px",
   /*fontWeight: "bold",*/
-  width: "200px",
+  width: "80%",
   clear: "both",
   marginBottom: "10px"
 
 };
 
+var moreInfoStyle = {
+  float: "right",
+  lineHeight: "50",
+  marginBottom: "25"
+};
+
 var cardHeader = {
   /*  background: "#eee",*/
-  height: "50px",
+  /*height: "50px",*/
+  display: "inline",
   lineHeight: "50px",
   /*marginLeft: "10px",*/
-  marginBottom: "20px",
-  marginTop: "20px",
-  paddingTop: "15",
+
+  marginTop: "10px",
+  /*paddingTop: "15",*/
   fontFamily: "Avenir"
 
 };
@@ -66,8 +75,8 @@ var cardHeaderText = {
   fontWeight: "200",
   lineHeight: "50px",
   fontFamily: "Avenir Book",
-  color: "hsl(281, 100%, 29%)",
-  marginTop: "20px"
+  color: "hsl(281, 100%, 29%)"
+  /*marginTop: "20px"*/
 
 };
 
@@ -81,7 +90,8 @@ var profStyle = {
 };
 
 var searchStyle = {
-  marginLeft: "25px"
+  marginLeft: "25px",
+  marginBottom: "25px"
 };
 
 //Tabular Data Columns
@@ -312,7 +322,7 @@ var SearchBar = React.createClass({
       { style: helpTextStyle },
       this.state.infoText
     );
-
+    var results = '';
     return React.createElement(
       "div",
       null,
@@ -322,7 +332,8 @@ var SearchBar = React.createClass({
         React.createElement("input", { type: "text", name: "searchText", ref: "searchText", cols: "100", placeholder: " Search by name, wants, skills..." }),
         React.createElement("input", { style: infoButton, type: "submit", value: "Search" }),
         React.createElement("br", null)
-      )
+      ),
+      { results: results }
     );
   }
 
@@ -343,19 +354,16 @@ var UserRow = React.createClass({
         React.createElement(
           "h3",
           { style: cardHeaderText },
-          this.props.fullName
+          this.props.fullName,
+          React.createElement(MoreInfoColumn, { _id: this.props._id, style: moreInfoStyle })
         )
       ),
-      React.createElement(MoreInfoColumn, { _id: this.props._id }),
-      React.createElement("br", null),
       React.createElement(
         "p",
         { style: cardText },
         "Wants: ",
         this.props.wants
       ),
-      React.createElement("br", null),
-      React.createElement("hr", null),
       React.createElement("br", null),
       React.createElement("br", null),
       React.createElement(
