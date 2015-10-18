@@ -57,13 +57,28 @@
 
 	var GSMNavBar = __webpack_require__(49);
 	var Hello = __webpack_require__(50);
-
+	var Message = __webpack_require__(51);
+	var EditAccount = __webpack_require__(52);
 	var pathName = window.location.pathname;
 
 	var App = _react2['default'].createClass({
 		displayName: 'App',
 
+		getInitialState: function getInitialState() {
+			return {
+				isLoggedIn: false
+
+			};
+		},
 		render: function render() {
+
+			if (isLoggedIn) {
+				//Display tableview and shit
+			} else {
+					//landing page
+
+				}
+
 			return _react2['default'].createElement(
 				'div',
 				null,
@@ -88,13 +103,23 @@
 							{ to: '/editAccount' },
 							'My Profile'
 						)
+					),
+					_react2['default'].createElement(
+						'li',
+						null,
+						_react2['default'].createElement(
+							_reactRouter.Link,
+							{ to: '/groups' },
+							'Groups'
+						)
 					)
 				),
 				_react2['default'].createElement(
 					'p',
 					null,
 					'Hello world!'
-				)
+				),
+				this.props.children
 			);
 		}
 	});
@@ -102,8 +127,13 @@
 	_react2['default'].render(_react2['default'].createElement(
 		_reactRouter.Router,
 		null,
-		_react2['default'].createElement(_reactRouter.Route, { path: '/', component: App }),
-		_react2['default'].createElement(_reactRouter.Route, { path: '/editAccount', component: Hello })
+		_react2['default'].createElement(
+			_reactRouter.Route,
+			{ path: '/', component: App },
+			_react2['default'].createElement(_reactRouter.Route, { path: '/editAccount', componen: EditAccount }),
+			_react2['default'].createElement(_reactRouter.Route, { path: '/groups', component: Hello }),
+			_react2['default'].createElement(_reactRouter.Route, { path: '/messages', component: Message })
+		)
 	), document.getElementById("content"));
 
 /***/ },
@@ -4709,6 +4739,285 @@
 	        );
 	    }
 	});
+
+/***/ },
+/* 51 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	// var convoID = document.getElementById("convoID").getAttribute("value");
+
+	// var convoTitle = document.getElementById("convoTitle").getAttribute("value");
+
+	var MessageRow = _react2['default'].createClass({
+	  displayName: 'MessageRow',
+
+	  render: function render() {
+	    return _react2['default'].createElement(
+	      'ul',
+	      null,
+	      this.props.fullName,
+	      ': ',
+	      this.props.text
+	    );
+	  }
+
+	});
+
+	module.exports = _react2['default'].createClass({
+	  displayName: 'exports',
+
+	  getInitialState: function getInitialState() {
+	    return { messages: [] };
+	  },
+
+	  loadMessages: function loadMessages() {
+	    var urlGet = this.props.url + this.props.convoID;
+	    $.ajax({
+	      url: urlGet,
+	      type: "GET",
+	      dataType: "json",
+	      success: (function (messages) {
+	        this.setState({ messages: messages });
+	      }).bind(this),
+	      error: (function (xhr, status, err) {
+	        console.log("Error: ", err);
+	      }).bind(this)
+	    });
+	  },
+	  componentDidMount: function componentDidMount() {
+	    this.loadMessages();
+	  },
+	  refreshMessageList: function refreshMessageList() {
+	    this.loadMessages();
+	  },
+	  render: function render() {
+	    var messageArray = this.state.messages;
+	    var messageDisplay = [];
+	    for (var i = 0; i < messageArray.length; i++) {
+	      var message = messageArray[i];
+	      var messageRow = _react2['default'].createElement(MessageRow, { fullName: message.fullName, text: message.text });
+	      messageDisplay.push(messageRow);
+	    }
+
+	    return _react2['default'].createElement(
+	      'div',
+	      null,
+	      _react2['default'].createElement(
+	        'h3',
+	        null,
+	        'Conversation with ',
+	        this.props.convoTitle
+	      ),
+	      _react2['default'].createElement(
+	        'li',
+	        null,
+	        messageDisplay
+	      ),
+	      _react2['default'].createElement(MessageSend, { url: this.props.url, convoID: this.props.convoID, handleMessageSubmit: this.refreshMessageList })
+	    );
+	  }
+	});
+
+	var MessageSend = _react2['default'].createClass({
+	  displayName: 'MessageSend',
+
+	  getInitialState: function getInitialState() {
+	    return { text: '',
+	      emails: [] };
+	  },
+	  onChange: function onChange(e) {
+	    this.setState({ text: e.target.value });
+	  },
+	  componentDidMount: function componentDidMount() {
+	    $.ajax({
+	      url: "/api/messageThread/" + this.props.convoID,
+	      type: "GET",
+	      dataType: "json",
+	      success: (function (messageThread) {
+	        this.setState({ emails: messageThread.participant_emails });
+	      }).bind(this),
+	      error: (function (xhr, status, err) {
+	        console.log("Error: ", err);
+	      }).bind(this)
+	    });
+	  },
+	  handleSubmit: function handleSubmit(e) {
+	    e.preventDefault();
+
+	    var data = {
+	      text: this.state.text
+	    };
+	    //create message
+	    var urlPost = this.props.url + this.props.convoID;
+	    $.ajax({
+	      url: urlPost,
+	      type: "POST",
+	      dataType: "json",
+	      data: data,
+	      success: (function (messages) {
+	        this.props.handleMessageSubmit();
+	      }).bind(this),
+	      error: (function (xhr, status, err) {
+	        console.log("Error: ", err);
+	      }).bind(this)
+	    });
+
+	    var emailData = {
+	      emails: this.state.emails,
+	      text: this.state.text
+	    };
+	    //
+	    console.log(emailData);
+	    $.ajax({
+	      url: "/api/sendMailTo/",
+	      type: "POST",
+	      dataType: "json",
+	      data: emailData,
+	      success: (function (response) {}).bind(this),
+	      error: (function (xhr, status, err) {
+	        console.log("Error: ", err);
+	      }).bind(this)
+	    });
+
+	    var nextText = '';
+	    this.setState({ text: nextText });
+	  },
+	  render: function render() {
+	    return _react2['default'].createElement(
+	      'div',
+	      { id: 'sendMessage' },
+	      _react2['default'].createElement(
+	        'form',
+	        { onSubmit: this.handleSubmit },
+	        _react2['default'].createElement('input', { onChange: this.onChange, value: this.state.text })
+	      )
+	    );
+	  }
+	});
+
+	// React.render(<MessageList convoTitle={convoTitle} convoID={convoID} url="/api/messages/" />, document.getElementById("message"));
+
+/***/ },
+/* 52 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	module.exports = _react2['default'].createClass({
+	    displayName: 'exports',
+
+	    getInitialState: function getInitialState() {
+	        return {
+
+	            interesting: "",
+	            topFiveTime: "",
+	            personality: [],
+	            skills: [],
+	            wants: [],
+	            canOffer: []
+
+	        };
+	    },
+	    componentDidMount: function componentDidMount() {
+	        $.ajax({
+	            url: "localhost:3000/api/users/me",
+	            dataType: 'json',
+	            cache: false,
+	            success: (function (userData) {
+	                if (this.isMounted()) {
+	                    this.setState({
+	                        interesting: userData.identity.interesting,
+	                        topFiveTime: userData.identity.topFiveTime,
+	                        personality: userData.identity.personality,
+	                        skills: userData.identity.skills,
+	                        canOffer: userData.identity.canOffer,
+	                        wants: userData.identity.wants
+
+	                    });
+	                }
+	            }).bind(this),
+	            error: (function (xhr, status, err) {
+	                console.error(status, err.toString());
+	            }).bind(this)
+	        });
+	    },
+	    handleChange: function handleChange(name, event) {
+	        var change = {};
+	        change[name] = event.target.value;
+	        this.setState(change);
+	    },
+	    render: function render() {
+
+	        return _react2['default'].createElement(
+	            'div',
+	            null,
+	            _react2['default'].createElement(
+	                'h3',
+	                null,
+	                'Edit Account'
+	            ),
+	            _react2['default'].createElement(
+	                'p',
+	                null,
+	                'Be sure to click edit account below to save your profile.'
+	            ),
+	            _react2['default'].createElement(
+	                'form',
+	                { className: 'editAccountForm', method: 'post', action: 'api/users/me' },
+	                'Top 5 things you spend your time on: (be specific) ',
+	                _react2['default'].createElement('br', null),
+	                _react2['default'].createElement('textarea', { id: 'topFiveTime', name: 'topFiveTime', value: this.state.topFiveTime, onChange: this.handleChange.bind(this, "topFiveTime"), cols: '60', row: '10' }),
+	                ' ',
+	                _react2['default'].createElement('br', null),
+	                _react2['default'].createElement('br', null),
+	                _react2['default'].createElement('br', null),
+	                'What do you want that others can help with? (separate with commas only (no spaces)) ',
+	                _react2['default'].createElement('br', null),
+	                _react2['default'].createElement('input', { id: 'wants', size: '60', type: 'text', name: 'wants', value: this.state.wants, onChange: this.handleChange.bind(this, "wants") }),
+	                ' ',
+	                _react2['default'].createElement('br', null),
+	                _react2['default'].createElement('br', null),
+	                'What can you offer people? (separate with commas only (no spaces)) ',
+	                _react2['default'].createElement('br', null),
+	                _react2['default'].createElement('input', { id: 'canOffer', size: '60', type: 'text', name: 'canOffer', value: this.state.canOffer, onChange: this.handleChange.bind(this, "canOffer") }),
+	                ' ',
+	                _react2['default'].createElement('br', null),
+	                _react2['default'].createElement('br', null),
+	                _react2['default'].createElement('input', { type: 'submit', value: 'save changes', id: 'save changes' })
+	            )
+	        );
+	    }
+	});
+
+	// React.render(<EditAccountForm url="/api/users/me" />, document.getElementById("editAccountForm"));
+
+	/* Previous form prompts
+
+	Add skills: (separate with commas only (no spaces)) <br /> 
+	                    <input id="skills" size="60" type="text" name="skills" value={this.state.skills} onChange={this.handleChange.bind(this, "skills")} /> <br />
+	                    <br />
+	                    Add personality traits: (separate with commas only (no spaces))  <br /> 
+	                    <input id="personality" size="60" type="text" name="personality" value={this.state.personality} onChange={this.handleChange.bind(this, "personality")} /> <br />
+	                    <br />
+	                    Tell us something interesting about yourself: <br /> 
+	                    <textarea id="interesting" name="interesting" value={this.state.interesting} onChange={this.handleChange.bind(this, "interesting")} cols="60" row="10" ></textarea> <br />
+	                    <br />
+
+	                    */
 
 /***/ }
 /******/ ]);

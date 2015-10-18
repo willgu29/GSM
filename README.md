@@ -1,3 +1,26 @@
+NEWWW:
+
+*****
+
+GO to client folder and
+
+webpack --watch
+then
+npm run start.
+
+Visit localhost:8090 to see app.
+(this is route router combined with webpack)
+
+You'll need to run the backend server normally via node index.js
+
+
+
+***
+
+
+
+
+
 Directions and how things work:
 
 Step 1:  in command line ->  sudo npm install 

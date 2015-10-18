@@ -1,4 +1,7 @@
-var EditAccountForm = React.createClass({
+'use strict'
+import React from 'react'
+
+module.exports = React.createClass({
     getInitialState: function() {
         return ({
             
@@ -15,7 +18,7 @@ var EditAccountForm = React.createClass({
     },
     componentDidMount: function() {
         $.ajax({
-            url: this.props.url,
+            url: "localhost:3000/api/users/me",
             dataType: 'json',
             cache: false,
             success: function(userData){
@@ -73,7 +76,7 @@ var EditAccountForm = React.createClass({
 	} 
 });
 
-React.render(<EditAccountForm url="/api/users/me" />, document.getElementById("editAccountForm"));
+// React.render(<EditAccountForm url="/api/users/me" />, document.getElementById("editAccountForm"));
 
 /* Previous form prompts
 

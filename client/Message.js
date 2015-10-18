@@ -1,6 +1,9 @@
-var convoID = document.getElementById("convoID").getAttribute("value");
+'use strict'
+import React from 'react'
 
-var convoTitle = document.getElementById("convoTitle").getAttribute("value");
+// var convoID = document.getElementById("convoID").getAttribute("value");
+
+// var convoTitle = document.getElementById("convoTitle").getAttribute("value");
 
 var MessageRow = React.createClass({
 
@@ -12,7 +15,7 @@ var MessageRow = React.createClass({
 
 });
 
-var MessageList = React.createClass({
+module.exports = React.createClass({
 	getInitialState: function() {
 		return ({messages: []});
 	},
@@ -138,4 +141,4 @@ var MessageSend = React.createClass({
 });
 
 
-React.render(<MessageList convoTitle={convoTitle} convoID={convoID} url="/api/messages/" />, document.getElementById("message"));
+// React.render(<MessageList convoTitle={convoTitle} convoID={convoID} url="/api/messages/" />, document.getElementById("message"));
