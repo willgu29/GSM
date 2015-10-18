@@ -27,7 +27,7 @@ var infoButton = {
 var cardStyle = {
   width: "90%",
   marginLeft: "25px",
-  minHeight: "225px",
+  minHeight: "300px",
   /*height: "auto",*/
   overflow: "auto",
   boxShadow: "0px 0px 2px #999999",
@@ -96,17 +96,17 @@ var searchStyle = {
 
 //Tabular Data Columns
 
-var UserImg = React.createClass({
+var UserImg = React.createClass({displayName: "UserImg",
   render: function() {
 
     return (
 
-      <p>{this.props.fullName}</p>
+      React.createElement("p", null, this.props.fullName)
     );
   }
 });
 
-var SkillsColumn = React.createClass({
+var SkillsColumn = React.createClass({displayName: "SkillsColumn",
 
 
   render: function() {
@@ -114,13 +114,13 @@ var SkillsColumn = React.createClass({
     var skillsArray = this.props.skills;
     var displaySkills = skillsArray.join(", ");
     return (
-        <p>{displaySkills}</p>
+        React.createElement("p", null, displaySkills)
     );
   }
 
 });
 
-var PersonalityColumn = React.createClass({
+var PersonalityColumn = React.createClass({displayName: "PersonalityColumn",
   render: function() {
 
     var personalityArray = this.props.personality;
@@ -129,66 +129,66 @@ var PersonalityColumn = React.createClass({
     var displayPersonality = personalityArray.join(", ");
 
     return (
-        <p>{displayPersonality}</p>
+        React.createElement("p", null, displayPersonality)
     );
   }
 
 });
 
-var TopFiveTimeColumn = React.createClass({
+var TopFiveTimeColumn = React.createClass({displayName: "TopFiveTimeColumn",
 
   render: function() {
     return(
-      <p>{this.props.topFiveTime}</p>
+      React.createElement("p", null, this.props.topFiveTime)
     );
   }
 });
 
-var ContactIfColumn = React.createClass({
+var ContactIfColumn = React.createClass({displayName: "ContactIfColumn",
   render: function() {
 
     return(
-      <p>{this.props.contactIf}</p>
+      React.createElement("p", null, this.props.contactIf)
     );
   }
 
 });
 
-var InterestingColumn = React.createClass({
+var InterestingColumn = React.createClass({displayName: "InterestingColumn",
   render: function() {
 
     return(
-      <p>{this.props.interesting}</p>
+      React.createElement("p", null, this.props.interesting)
     );
   }
 
 });
 
-var MoreInfoColumn = React.createClass({
+var MoreInfoColumn = React.createClass({displayName: "MoreInfoColumn",
   render: function() {
 
     var profileLink = "/users/" + this.props._id;
 
     return(
-      <a href={profileLink} style={profStyle}>More Info</a>
+      React.createElement("a", {href: profileLink, style: profStyle}, "More Info")
     );
   }
 });
 
-var CanOfferColumn = React.createClass({
+var CanOfferColumn = React.createClass({displayName: "CanOfferColumn",
   render: function() {
 
     var canOfferArray = this.props.canOffer;
 
     var displayCanOffer = canOfferArray.join(", ");
     return (
-        <p>{displayCanOffer}</p>
+        React.createElement("p", null, displayCanOffer)
     );
   }
 
 });
 
-var WantsColumn = React.createClass({
+var WantsColumn = React.createClass({displayName: "WantsColumn",
   render: function() {
 
     var wantsArray = this.props.wants;
@@ -196,16 +196,16 @@ var WantsColumn = React.createClass({
     var displayWants = wantsArray.join(", ");
   
     return (
-        <p>{displayWants}</p>
+        React.createElement("p", null, displayWants)
     );
   }
 
 });
  
-var ReputationColumn = React.createClass({
+var ReputationColumn = React.createClass({displayName: "ReputationColumn",
   render: function() {
     return(
-      <a href={nameNoSpace}>Click</a>
+      React.createElement("a", {href: nameNoSpace}, "Click")
     );
   }
 
@@ -213,21 +213,21 @@ var ReputationColumn = React.createClass({
 
 /////
 
-var StarImg = React.createClass({
+var StarImg = React.createClass({displayName: "StarImg",
   
   render: function() {
     var items = [];
       for (var i = 1; i <= this.props.max; i++) {
           var clickHandler = this.props.onRatingSelected && this.props.onRatingSelected.bind(null, i);
-          items.push(<li className={i <= this.props.value && 'filled'} onClick={clickHandler}>{'\u2605'}</li>);
+          items.push(React.createElement("li", {className: i <= this.props.value && 'filled', onClick: clickHandler}, '\u2605'));
       }
-      return <ul className="rating">{items}</ul>;
+      return React.createElement("ul", {className: "rating"}, items);
     
   }
 
 });
 
-var RatingStars = React.createClass({
+var RatingStars = React.createClass({displayName: "RatingStars",
   getInitialState: function() {
     return {rating: 0};
   },
@@ -237,7 +237,7 @@ var RatingStars = React.createClass({
   render: function() {
     return(
      
-      <StarImg value={this.state.rating} max="5" onRatingSelected={this.handleRatingSelected} />
+      React.createElement(StarImg, {value: this.state.rating, max: "5", onRatingSelected: this.handleRatingSelected})
 
     );
   }
@@ -248,7 +248,7 @@ var RatingStars = React.createClass({
 
 
 
-var SearchBar = React.createClass({
+var SearchBar = React.createClass({displayName: "SearchBar",
   getInitialState: function() {
     return ({infoText:""});
   },
@@ -280,19 +280,19 @@ var SearchBar = React.createClass({
 
   render: function() {
 
-    var helpText = <p style={helpTextStyle} >{this.state.infoText}</p>
+    var helpText = React.createElement("p", {style: helpTextStyle}, this.state.infoText)
     var results = '';
     return(
-      <div>
+      React.createElement("div", null, 
         
         
-        <form onSubmit={this.handleSubmit} className="searchForm"  style={searchStyle} method="get" action="/api/searchUsers/" >
-         <input type="text" name="searchText" ref="searchText" cols="100" placeholder=" Search by name, wants, skills..."/>
-         <input style={infoButton} type="submit" value="Search" />
-         <br/>
-        </form>
-        {{results}}
-        </div>
+        React.createElement("form", {onSubmit: this.handleSubmit, className: "searchForm", style: searchStyle, method: "get", action: "/api/searchUsers/"}, 
+         React.createElement("input", {type: "text", name: "searchText", ref: "searchText", cols: "100", placeholder: " Search by name, wants, skills..."}), 
+         React.createElement("input", {style: infoButton, type: "submit", value: "Search"}), 
+         React.createElement("br", null)
+        ), 
+        {results}
+        )
     );
   }
 
@@ -301,23 +301,19 @@ var SearchBar = React.createClass({
 ///****************
 
 
-var UserRow = React.createClass({
+var UserRow = React.createClass({displayName: "UserRow",
   
   render: function() {
-
-    var arrayWants = this.props.wants.join(", ");
-    var arrayCanOffer = this.props.canOffer.join(", ");
-
     return(
-      <div style={cardStyle}>
-        <div style={cardHeader}><h3 style={cardHeaderText}>{this.props.fullName}<MoreInfoColumn _id={this.props._id} style={moreInfoStyle} /></h3></div>
+      React.createElement("div", {style: cardStyle}, 
+        React.createElement("div", {style: cardHeader}, React.createElement("h3", {style: cardHeaderText}, this.props.fullName, React.createElement(MoreInfoColumn, {_id: this.props._id, style: moreInfoStyle}))), 
       
-        <p style={cardText}>Wants: {arrayWants}</p>
-        <br/><br/>
-        <p style={cardText}>Can Offer: {arrayCanOffer}</p>
+        React.createElement("p", {style: cardText}, "Wants: ", this.props.wants), 
+        React.createElement("br", null), React.createElement("br", null), 
+        React.createElement("p", {style: cardText}, "Can Offer: ", this.props.canOffer)
         
         
-      </div>
+      )
      
     );
   }
@@ -332,7 +328,7 @@ var UserRow = React.createClass({
     <td><MoreInfoColumn _id={this.props._id}  /></td>
   </tr>
   */
-var GSMUserTableView = React.createClass({
+var GSMUserTableView = React.createClass({displayName: "GSMUserTableView",
   getInitialState:  function() {
     return ({users:[]});
   },
@@ -361,17 +357,17 @@ var GSMUserTableView = React.createClass({
     for (var i = 0 ; i < arrayOfUsers.length; i++) {
       var user = arrayOfUsers[i];
  
-      arrayOfUserRows.push(<UserRow fullName={user.fullName} 
-                                    topFiveTime={user.identity.topFiveTime}
-                                    wants={user.identity.wants}
-                                    canOffer={user.identity.canOffer}
-                                    _id={user._id} />);
+      arrayOfUserRows.push(React.createElement(UserRow, {fullName: user.fullName, 
+                                    topFiveTime: user.identity.topFiveTime, 
+                                    wants: user.identity.wants, 
+                                    canOffer: user.identity.canOffer, 
+                                    _id: user._id}));
     }
     return(
-      <div>
-      <SearchBar url="/api/searchUsers/" handleChange={this.handleChange} /> 
-      {arrayOfUserRows}
-      </div>
+      React.createElement("div", null, 
+      React.createElement(SearchBar, {url: "/api/searchUsers/", handleChange: this.handleChange}), 
+      arrayOfUserRows
+      )
 
     );
 
@@ -400,4 +396,4 @@ return(
 
 */
 
-React.render(<GSMUserTableView url="/api/users/" />, document.getElementById("gsmUserTableView"));
+React.render(React.createElement(GSMUserTableView, {url: "/api/users/"}), document.getElementById("gsmUserTableView"));

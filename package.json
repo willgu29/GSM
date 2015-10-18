@@ -47,7 +47,7 @@
     "webpack-dev-server": "^1.12.0"
   },
   "devDependencies": {
-    "http-server": "^0.8.5"
+    "http-server": "^0.8.5",
     "style-loader": "^0.12.4"
   }
 }

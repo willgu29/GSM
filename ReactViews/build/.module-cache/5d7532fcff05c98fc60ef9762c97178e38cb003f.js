@@ -15,7 +15,7 @@ var CreateAccountForm = React.createClass({displayName: "CreateAccountForm",
         this.setState({help: !this.state.help});
     },
 	render: function() {
-        var helptext = this.state.help ? 'iGrouply is still in Alpha testing. To join, enter a valid group code if you\'re in a group. If you would like to start a group, email hi@igrouply.com' : '';
+        var helptext = this.state.help ? 'iGrouply is still in Alpha testing. To join, enter a valid group code if you\'re in a group. If you would like to start a group email hi@igrouply.com' : '';
 		return(	
 			React.createElement("div", null, 
 			React.createElement("h4", null, "New to iGrouply? Sign Up."), 

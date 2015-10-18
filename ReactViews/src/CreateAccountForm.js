@@ -15,7 +15,7 @@ var CreateAccountForm = React.createClass({
         this.setState({help: !this.state.help});
     },
 	render: function() {
-        var helptext = this.state.help ? 'Ask your Group Admin' : '';
+        var helptext = this.state.help ? 'iGrouply is still in Alpha testing. To join, enter a valid group code if you\'re in a group. If you would like to start a group, email hi@igrouply.com' : '';
 		return(	
 			<div>
 			<h4>New to iGrouply? Sign Up.</h4>
@@ -24,7 +24,7 @@ var CreateAccountForm = React.createClass({
                 password: <input type="password" name="password" /> <br />
              	first name: <input type="text" name="firstName" /> <br />
                 last name: <input type="text" name="lastName" /> <br />
-                phone: <input type="tel" name="phoneNumber" /> <br />
+                phone number: <input type="tel" name="phoneNumber" /> <br />
                 group code:&nbsp;&nbsp; 
                 
                 <img src='/public/imgs/InfoButtonBlack.png' style={groupStyle} onClick={this.handleClick}/>

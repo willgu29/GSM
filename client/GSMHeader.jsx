@@ -1,3 +1,6 @@
+'use strict'
+import React from 'react'
+
 var iGrouplyHeaderStyle = {
 	fontFamily: "Avenir Medium",
 	fontSize: "30px",
@@ -68,7 +71,7 @@ var GSMNavBarItems = React.createClass({
 	//			<li style={style4}><a href="/events">Events</a></li>
 
 
-var GSMHeader = React.createClass({
+module.exports  = React.createClass({
 
 	render: function() {
 		return(
@@ -81,6 +84,6 @@ var GSMHeader = React.createClass({
 });
 
 
-var pathName = window.location.pathname;
+// var pathName = window.location.pathname;
 
-React.render(<GSMHeader currentURL={pathName} />, document.getElementById("gsmHeader"));
+// React.render(<GSMHeader currentURL={pathName} />, document.getElementById("gsmHeader"));

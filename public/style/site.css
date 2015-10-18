@@ -35,10 +35,19 @@ div#gsmHeader {
 }
 
 .header-content {
+	width: 1000px;
 	color: #fff;
 	clear: both;
 	font-size: 18px;
 	font-family: 'Avenir', sans-serif;
+}
+
+ul#valueProp {
+	color: #fff;
+	clear: both;
+	font-size: 18px;
+	font-family: 'Avenir', sans-serif;
+
 }
 
 .login {
