@@ -39,13 +39,15 @@
     "mongoose": "^4.0.6",
     "passport": "^0.2.2",
     "passport-local": "^1.0.0",
+    "rc-tooltip": "^3.0.1",
     "react": "^0.13.3",
     "react-router": "^1.0.0-rc3",
-    "style-loader": "^0.12.4",
+
     "webpack": "^1.12.2",
     "webpack-dev-server": "^1.12.0"
   },
   "devDependencies": {
     "http-server": "^0.8.5"
+    "style-loader": "^0.12.4"
   }
 }
