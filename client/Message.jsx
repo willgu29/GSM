@@ -16,6 +16,13 @@ var MessageRow = React.createClass({
 });
 
 module.exports = React.createClass({
+  getInitialProps: function() {
+    return( {
+      url: "/api/messages",
+      convoID: this.props.params.id,
+      convoTitle: this.props.location.query.convoTitle
+    });
+  },
 	getInitialState: function() {
 		return ({messages: []});
 	},

@@ -1,3 +1,6 @@
+'use strict'
+import React from 'react'
+
 var helpTextStyle = {
   fontSize: "14px",
   display: "inline"
@@ -281,7 +284,6 @@ var SearchBar = React.createClass({
   render: function() {
 
     var helpText = <p style={helpTextStyle} >{this.state.infoText}</p>
-    var results = '';
     return(
       <div>
         
@@ -291,7 +293,6 @@ var SearchBar = React.createClass({
          <input style={infoButton} type="submit" value="Search" />
          <br/>
         </form>
-        {{results}}
         </div>
     );
   }
@@ -332,13 +333,13 @@ var UserRow = React.createClass({
     <td><MoreInfoColumn _id={this.props._id}  /></td>
   </tr>
   */
-var GSMUserTableView = React.createClass({
+module.exports = React.createClass({
   getInitialState:  function() {
     return ({users:[]});
   },
   componentDidMount: function() {
     $.ajax({
-      url: this.props.url,
+      url: "localhost:3000"+"/api/users",
       dataType: 'json',
       cache: false,
       success: function(arrayOfUsers){
@@ -400,4 +401,4 @@ return(
 
 */
 
-React.render(<GSMUserTableView url="/api/users/" />, document.getElementById("gsmUserTableView"));
+// React.render(<GSMUserTableView url="/api/users/" />, document.getElementById("gsmUserTableView"));

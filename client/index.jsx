@@ -3,7 +3,10 @@
 import React from 'react'
 import { Router, Route, Link } from 'react-router'
 
+var LandingPage = require("./LandingPage/LandingPage");
+
 var GSMNavBar = require('./Mixins/GSMHeader');
+var GSMUserTableView = require("./GSMUserTableView");
 var Hello = require('./Hello');
 var Message = require('./Message');
 var EditAccount = require('./EditAccountForm');
@@ -19,23 +22,21 @@ const App = React.createClass({
 	},
 	render: function() {
 
+		var content = [];
+
 		if (this.state.isLoggedIn) {
 			//Display tableview and shit
+						//<GSMNavBar currentURL={pathName} />
+
+			content.push(<GSMUserTableView />);
 		} else {
 			//landing page
-
+			content.push(<LandingPage />);
 		}
 
 		return(
 			<div>
-			<GSMNavBar currentURL={pathName} />
-			<ul>
-          		<li><Link to="/">Home</Link></li>
-          		<li><Link to="/editAccount">My Profile</Link></li>
-          		<li><Link to="/groups">Groups</Link></li>
-
-        	</ul>
-				<p>Hello world!</p>
+				{content}
 				{this.props.children}
 			</div>
 		);
@@ -51,5 +52,13 @@ React.render((<Router>
 			</Router>
 			), document.getElementById("content"));
 
+/*
+<ul>
+          		<li><Link to="/">Home</Link></li>
+          		<li><Link to="/editAccount">My Profile</Link></li>
+          		<li><Link to="/groups">Groups</Link></li>
 
+
+        	</ul>
+        	*/
 

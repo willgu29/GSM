@@ -55,10 +55,13 @@
 
 	var _reactRouter = __webpack_require__(2);
 
-	var GSMNavBar = __webpack_require__(49);
-	var Hello = __webpack_require__(50);
-	var Message = __webpack_require__(51);
-	var EditAccount = __webpack_require__(52);
+	var LandingPage = __webpack_require__(49);
+
+	var GSMNavBar = __webpack_require__(50);
+	var GSMUserTableView = __webpack_require__(51);
+	var Hello = __webpack_require__(52);
+	var Message = __webpack_require__(53);
+	var EditAccount = __webpack_require__(54);
 	var pathName = window.location.pathname;
 
 	var App = _react2['default'].createClass({
@@ -72,53 +75,22 @@
 		},
 		render: function render() {
 
+			var content = [];
+
 			if (this.state.isLoggedIn) {
 				//Display tableview and shit
-			} else {
-					//landing page
+				//<GSMNavBar currentURL={pathName} />
 
-				}
+				content.push(_react2['default'].createElement(GSMUserTableView, null));
+			} else {
+				//landing page
+				content.push(_react2['default'].createElement(LandingPage, null));
+			}
 
 			return _react2['default'].createElement(
 				'div',
 				null,
-				_react2['default'].createElement(GSMNavBar, { currentURL: pathName }),
-				_react2['default'].createElement(
-					'ul',
-					null,
-					_react2['default'].createElement(
-						'li',
-						null,
-						_react2['default'].createElement(
-							_reactRouter.Link,
-							{ to: '/' },
-							'Home'
-						)
-					),
-					_react2['default'].createElement(
-						'li',
-						null,
-						_react2['default'].createElement(
-							_reactRouter.Link,
-							{ to: '/editAccount' },
-							'My Profile'
-						)
-					),
-					_react2['default'].createElement(
-						'li',
-						null,
-						_react2['default'].createElement(
-							_reactRouter.Link,
-							{ to: '/groups' },
-							'Groups'
-						)
-					)
-				),
-				_react2['default'].createElement(
-					'p',
-					null,
-					'Hello world!'
-				),
+				content,
 				this.props.children
 			);
 		}
@@ -135,6 +107,16 @@
 			_react2['default'].createElement(_reactRouter.Route, { path: '/messages', component: Message })
 		)
 	), document.getElementById("content"));
+
+	/*
+	<ul>
+	          		<li><Link to="/">Home</Link></li>
+	          		<li><Link to="/editAccount">My Profile</Link></li>
+	          		<li><Link to="/groups">Groups</Link></li>
+
+
+	        	</ul>
+	        	*/
 
 /***/ },
 /* 1 */
@@ -4596,6 +4578,240 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var errorStyle = {
+
+		color: "red"
+	};
+
+	var LoginForm = _react2['default'].createClass({
+		displayName: 'LoginForm',
+
+		getInitialState: function getInitialState() {
+			return { loginStatus: "" };
+		},
+		handleSubmit: function handleSubmit(e) {
+			e.preventDefault();
+
+			var email = _react2['default'].findDOMNode(this.refs.email).value.trim();
+			var password = _react2['default'].findDOMNode(this.refs.password).value.trim();
+			var data = {
+				email: email,
+				password: password
+			};
+
+			$.ajax({
+				url: this.props.url,
+				dataType: 'json',
+				data: data,
+				type: "POST",
+				success: (function (info) {
+					if (this.isMounted()) {
+						console.log(info);
+						if (info == '/') {
+							window.location.reload();
+						} else {
+							this.setState({ loginStatus: info.message });
+						}
+					}
+				}).bind(this),
+				error: (function (xhr, status, err) {
+					console.log(err);
+				}).bind(this)
+			});
+		},
+
+		render: function render() {
+			var errorMessage;
+			if (this.state.loginStatus == "") {
+				errorMessage = "";
+			} else {
+				errorMessage = _react2['default'].createElement(
+					'p',
+					{ style: errorStyle },
+					this.state.loginStatus
+				);
+			}
+			return _react2['default'].createElement(
+				'div',
+				null,
+				_react2['default'].createElement(
+					'h4',
+					null,
+					'Login '
+				),
+				errorMessage,
+				_react2['default'].createElement(
+					'form',
+					{ onSubmit: this.handleSubmit, className: 'loginForm', method: 'post', action: 'login' },
+					'email: ',
+					_react2['default'].createElement('input', { type: 'email', name: 'email', ref: 'email' }),
+					' ',
+					_react2['default'].createElement('br', null),
+					'password: ',
+					_react2['default'].createElement('input', { type: 'password', name: 'password', ref: 'password' }),
+					' ',
+					_react2['default'].createElement('br', null),
+					_react2['default'].createElement('br', null),
+					_react2['default'].createElement('input', { type: 'submit', value: 'login', id: 'login' })
+				)
+			);
+		}
+	});
+
+	var groupStyle = {
+
+		cursor: "pointer",
+		width: "10%",
+		height: "auto"
+	};
+
+	var CreateAccountForm = _react2['default'].createClass({
+		displayName: 'CreateAccountForm',
+
+		getInitialState: function getInitialState() {
+			return { help: false };
+		},
+		handleClick: function handleClick(event) {
+			this.setState({ help: !this.state.help });
+		},
+		render: function render() {
+			var helptext = this.state.help ? 'iGrouply is still in Alpha testing. To join, enter a valid group code if you\'re in a group. If you would like to start a group, email hi@igrouply.com' : '';
+			return _react2['default'].createElement(
+				'div',
+				null,
+				_react2['default'].createElement(
+					'h4',
+					null,
+					'New to iGrouply? Sign Up.'
+				),
+				_react2['default'].createElement(
+					'form',
+					{ className: 'createAccountForm', method: 'post', action: 'createAccount' },
+					'email: ',
+					_react2['default'].createElement('input', { type: 'email', name: 'email' }),
+					' ',
+					_react2['default'].createElement('br', null),
+					'password: ',
+					_react2['default'].createElement('input', { type: 'password', name: 'password' }),
+					' ',
+					_react2['default'].createElement('br', null),
+					'first name: ',
+					_react2['default'].createElement('input', { type: 'text', name: 'firstName' }),
+					' ',
+					_react2['default'].createElement('br', null),
+					'last name: ',
+					_react2['default'].createElement('input', { type: 'text', name: 'lastName' }),
+					' ',
+					_react2['default'].createElement('br', null),
+					'phone number: ',
+					_react2['default'].createElement('input', { type: 'tel', name: 'phoneNumber' }),
+					' ',
+					_react2['default'].createElement('br', null),
+					'group code:  ',
+					_react2['default'].createElement('img', { src: '/public/imgs/InfoButtonBlack.png', style: groupStyle, onClick: this.handleClick }),
+					_react2['default'].createElement('br', null),
+					_react2['default'].createElement(
+						'i',
+						null,
+						' ',
+						helptext
+					),
+					_react2['default'].createElement('br', null),
+					_react2['default'].createElement('input', { type: 'text', name: 'initialGroupCode' }),
+					' ',
+					_react2['default'].createElement('br', null),
+					_react2['default'].createElement('br', null),
+					_react2['default'].createElement('input', { type: 'submit', value: 'create account', id: 'createAccount' })
+				)
+			);
+		}
+	});
+
+	module.exports = _react2['default'].createClass({
+		displayName: 'exports',
+
+		render: function render() {
+			return _react2['default'].createElement(
+				'div',
+				{ id: 'landingPage' },
+				_react2['default'].createElement(
+					'div',
+					{ 'class': 'container-fluid top' },
+					_react2['default'].createElement(
+						'div',
+						{ 'class': 'row' },
+						_react2['default'].createElement('div', { 'class': 'col-md-1' }),
+						_react2['default'].createElement(
+							'div',
+							{ 'class': 'col-md-2' },
+							_react2['default'].createElement(
+								'div',
+								{ 'class': 'header' },
+								_react2['default'].createElement(
+									'div',
+									{ 'class': 'header-logo' },
+									'iGrouply'
+								),
+								_react2['default'].createElement('br', null),
+								_react2['default'].createElement('p', null),
+								_react2['default'].createElement(
+									'p',
+									{ 'class': 'header-content' },
+									_react2['default'].createElement('br', null),
+									'Discover your network.',
+									_react2['default'].createElement(
+										'ul',
+										{ id: 'valueProp' },
+										_react2['default'].createElement(
+											'li',
+											null,
+											'Find people who can help you with your projects and goals'
+										),
+										_react2['default'].createElement(
+											'li',
+											null,
+											'Offer your skills and help other people'
+										),
+										_react2['default'].createElement(
+											'li',
+											null,
+											'Message and meet interesting people'
+										),
+										_react2['default'].createElement(
+											'li',
+											null,
+											'UCLA (and BAB) Exclusive'
+										)
+									)
+								)
+							)
+						),
+						_react2['default'].createElement(
+							'div',
+							{ 'class': 'col-md-2 login' },
+							_react2['default'].createElement(LoginForm, null),
+							_react2['default'].createElement('hr', null),
+							_react2['default'].createElement(CreateAccountForm, null)
+						)
+					)
+				)
+			);
+		}
+
+	});
+
+/***/ },
+/* 50 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
 	var iGrouplyHeaderStyle = {
 		fontFamily: "Avenir Medium",
 		fontSize: "30px",
@@ -4718,7 +4934,476 @@
 	// React.render(<GSMHeader currentURL={pathName} />, document.getElementById("gsmHeader"));
 
 /***/ },
-/* 50 */
+/* 51 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var helpTextStyle = {
+	  fontSize: "14px",
+	  display: "inline"
+	};
+	var infoButton = {
+	  display: "inline",
+	  padding: "6px 12px",
+	  marginBottom: "0",
+	  fontSize: "14px",
+	  fontWeight: "normal",
+	  lineHeight: "1.42857143",
+	  textAlign: "center",
+	  whiteSpace: "nowrap",
+	  verticalAlign: "middle",
+	  cursor: "pointer",
+	  backgroundImage: "none",
+	  border: "1px solid transparent",
+	  borderRadius: "4px",
+	  color: "#fff",
+	  background: "green",
+	  borderColor: "#46b8da",
+	  marginLeft: "10"
+
+	};
+
+	var cardStyle = {
+	  width: "90%",
+	  marginLeft: "25px",
+	  minHeight: "225px",
+	  /*height: "auto",*/
+	  overflow: "auto",
+	  boxShadow: "0px 0px 2px #999999",
+	  /*border: "1px solid black",*/
+	  marginBottom: "25px",
+	  background: "white"
+	};
+
+	/*borderRadius: "25px"*/
+	var cardText = {
+	  float: "left",
+	  marginLeft: "20px",
+	  fontFamily: "Avenir, sans-serif",
+	  fontSize: "16px",
+	  /*fontWeight: "bold",*/
+	  width: "80%",
+	  clear: "both",
+	  marginBottom: "10px"
+
+	};
+
+	var moreInfoStyle = {
+	  float: "right",
+	  lineHeight: "50",
+	  marginBottom: "25"
+	};
+
+	var cardHeader = {
+	  /*  background: "#eee",*/
+	  /*height: "50px",*/
+	  display: "inline",
+	  lineHeight: "50px",
+	  /*marginLeft: "10px",*/
+
+	  marginTop: "10px",
+	  /*paddingTop: "15",*/
+	  fontFamily: "Avenir"
+
+	};
+
+	var cardHeaderText = {
+	  marginLeft: "15px",
+	  fontSize: "32px",
+	  fontWeight: "200",
+	  lineHeight: "50px",
+	  fontFamily: "Avenir Book",
+	  color: "hsl(281, 100%, 29%)"
+	  /*marginTop: "20px"*/
+
+	};
+
+	var profStyle = {
+	  clear: "both",
+	  float: "right",
+	  fontSize: "16px",
+	  marginTop: "20px",
+	  marginRight: "20px"
+
+	};
+
+	var searchStyle = {
+	  marginLeft: "25px",
+	  marginBottom: "25px"
+	};
+
+	//Tabular Data Columns
+
+	var UserImg = _react2['default'].createClass({
+	  displayName: 'UserImg',
+
+	  render: function render() {
+
+	    return _react2['default'].createElement(
+	      'p',
+	      null,
+	      this.props.fullName
+	    );
+	  }
+	});
+
+	var SkillsColumn = _react2['default'].createClass({
+	  displayName: 'SkillsColumn',
+
+	  render: function render() {
+
+	    var skillsArray = this.props.skills;
+	    var displaySkills = skillsArray.join(", ");
+	    return _react2['default'].createElement(
+	      'p',
+	      null,
+	      displaySkills
+	    );
+	  }
+
+	});
+
+	var PersonalityColumn = _react2['default'].createClass({
+	  displayName: 'PersonalityColumn',
+
+	  render: function render() {
+
+	    var personalityArray = this.props.personality;
+
+	    var displayPersonality = personalityArray.join(", ");
+
+	    return _react2['default'].createElement(
+	      'p',
+	      null,
+	      displayPersonality
+	    );
+	  }
+
+	});
+
+	var TopFiveTimeColumn = _react2['default'].createClass({
+	  displayName: 'TopFiveTimeColumn',
+
+	  render: function render() {
+	    return _react2['default'].createElement(
+	      'p',
+	      null,
+	      this.props.topFiveTime
+	    );
+	  }
+	});
+
+	var ContactIfColumn = _react2['default'].createClass({
+	  displayName: 'ContactIfColumn',
+
+	  render: function render() {
+
+	    return _react2['default'].createElement(
+	      'p',
+	      null,
+	      this.props.contactIf
+	    );
+	  }
+
+	});
+
+	var InterestingColumn = _react2['default'].createClass({
+	  displayName: 'InterestingColumn',
+
+	  render: function render() {
+
+	    return _react2['default'].createElement(
+	      'p',
+	      null,
+	      this.props.interesting
+	    );
+	  }
+
+	});
+
+	var MoreInfoColumn = _react2['default'].createClass({
+	  displayName: 'MoreInfoColumn',
+
+	  render: function render() {
+
+	    var profileLink = "/users/" + this.props._id;
+
+	    return _react2['default'].createElement(
+	      'a',
+	      { href: profileLink, style: profStyle },
+	      'More Info'
+	    );
+	  }
+	});
+
+	var CanOfferColumn = _react2['default'].createClass({
+	  displayName: 'CanOfferColumn',
+
+	  render: function render() {
+
+	    var canOfferArray = this.props.canOffer;
+
+	    var displayCanOffer = canOfferArray.join(", ");
+	    return _react2['default'].createElement(
+	      'p',
+	      null,
+	      displayCanOffer
+	    );
+	  }
+
+	});
+
+	var WantsColumn = _react2['default'].createClass({
+	  displayName: 'WantsColumn',
+
+	  render: function render() {
+
+	    var wantsArray = this.props.wants;
+
+	    var displayWants = wantsArray.join(", ");
+
+	    return _react2['default'].createElement(
+	      'p',
+	      null,
+	      displayWants
+	    );
+	  }
+
+	});
+
+	var ReputationColumn = _react2['default'].createClass({
+	  displayName: 'ReputationColumn',
+
+	  render: function render() {
+	    return _react2['default'].createElement(
+	      'a',
+	      { href: nameNoSpace },
+	      'Click'
+	    );
+	  }
+
+	});
+
+	/////
+
+	var StarImg = _react2['default'].createClass({
+	  displayName: 'StarImg',
+
+	  render: function render() {
+	    var items = [];
+	    for (var i = 1; i <= this.props.max; i++) {
+	      var clickHandler = this.props.onRatingSelected && this.props.onRatingSelected.bind(null, i);
+	      items.push(_react2['default'].createElement(
+	        'li',
+	        { className: i <= this.props.value && 'filled', onClick: clickHandler },
+	        '★'
+	      ));
+	    }
+	    return _react2['default'].createElement(
+	      'ul',
+	      { className: 'rating' },
+	      items
+	    );
+	  }
+
+	});
+
+	var RatingStars = _react2['default'].createClass({
+	  displayName: 'RatingStars',
+
+	  getInitialState: function getInitialState() {
+	    return { rating: 0 };
+	  },
+	  handleRatingSelected: function handleRatingSelected(rating) {
+	    this.setState({ rating: rating });
+	  },
+	  render: function render() {
+	    return _react2['default'].createElement(StarImg, { value: this.state.rating, max: '5', onRatingSelected: this.handleRatingSelected });
+	  }
+
+	});
+
+	var SearchBar = _react2['default'].createClass({
+	  displayName: 'SearchBar',
+
+	  getInitialState: function getInitialState() {
+	    return { infoText: "" };
+	  },
+	  handleInfoClick: function handleInfoClick() {
+	    if (this.state.infoText == "") {
+	      this.setState({ infoText: " Search by keywords (name, skills, activities, etc). Search nothing to see everyone." });
+	    } else {
+	      this.setState({ infoText: "" });
+	    }
+	  },
+	  handleSubmit: function handleSubmit(e) {
+	    e.preventDefault();
+
+	    var searchTerm = _react2['default'].findDOMNode(this.refs.searchText).value.trim();
+	    var searchURL = this.props.url + searchTerm;
+	    $.ajax({
+	      url: searchURL,
+	      dataType: 'json',
+	      success: (function (data) {
+	        this.props.handleChange(data);
+	      }).bind(this),
+	      error: (function (xhr, status, err) {
+	        console.log("Error: ", err);
+	      }).bind(this)
+	    });
+	  },
+
+	  render: function render() {
+
+	    var helpText = _react2['default'].createElement(
+	      'p',
+	      { style: helpTextStyle },
+	      this.state.infoText
+	    );
+	    return _react2['default'].createElement(
+	      'div',
+	      null,
+	      _react2['default'].createElement(
+	        'form',
+	        { onSubmit: this.handleSubmit, className: 'searchForm', style: searchStyle, method: 'get', action: '/api/searchUsers/' },
+	        _react2['default'].createElement('input', { type: 'text', name: 'searchText', ref: 'searchText', cols: '100', placeholder: ' Search by name, wants, skills...' }),
+	        _react2['default'].createElement('input', { style: infoButton, type: 'submit', value: 'Search' }),
+	        _react2['default'].createElement('br', null)
+	      )
+	    );
+	  }
+
+	});
+	//<button type="button" style={infoButton} onClick={this.handleInfoClick}>Info</button>
+	///****************
+
+	var UserRow = _react2['default'].createClass({
+	  displayName: 'UserRow',
+
+	  render: function render() {
+
+	    var arrayWants = this.props.wants.join(", ");
+	    var arrayCanOffer = this.props.canOffer.join(", ");
+
+	    return _react2['default'].createElement(
+	      'div',
+	      { style: cardStyle },
+	      _react2['default'].createElement(
+	        'div',
+	        { style: cardHeader },
+	        _react2['default'].createElement(
+	          'h3',
+	          { style: cardHeaderText },
+	          this.props.fullName,
+	          _react2['default'].createElement(MoreInfoColumn, { _id: this.props._id, style: moreInfoStyle })
+	        )
+	      ),
+	      _react2['default'].createElement(
+	        'p',
+	        { style: cardText },
+	        'Wants: ',
+	        arrayWants
+	      ),
+	      _react2['default'].createElement('br', null),
+	      _react2['default'].createElement('br', null),
+	      _react2['default'].createElement(
+	        'p',
+	        { style: cardText },
+	        'Can Offer: ',
+	        arrayCanOffer
+	      )
+	    );
+	  }
+
+	});
+	/*<a href="#" class="card-link">Another link</a>*/
+	/*
+	 <tr>
+	   <td><UserImg fullName={this.props.fullName} /></td>
+	   <td><WantsColumn wants={this.props.wants} /></td>
+	   <td><CanOfferColumn canOffer={this.props.canOffer} /></td>
+	   <td><MoreInfoColumn _id={this.props._id}  /></td>
+	 </tr>
+	 */
+	module.exports = _react2['default'].createClass({
+	  displayName: 'exports',
+
+	  getInitialState: function getInitialState() {
+	    return { users: [] };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    $.ajax({
+	      url: "localhost:3000" + "/api/users",
+	      dataType: 'json',
+	      cache: false,
+	      success: (function (arrayOfUsers) {
+	        if (this.isMounted()) {
+	          this.setState({ users: arrayOfUsers });
+	        }
+	      }).bind(this),
+	      error: (function (xhr, status, err) {
+	        console.error(status, err.toString());
+	      }).bind(this)
+	    });
+	  },
+	  handleChange: function handleChange(users) {
+	    this.setState({ users: users });
+	  },
+
+	  render: function render() {
+	    var arrayOfUsers = this.state.users;
+	    var arrayOfUserRows = [];
+	    for (var i = 0; i < arrayOfUsers.length; i++) {
+	      var user = arrayOfUsers[i];
+
+	      arrayOfUserRows.push(_react2['default'].createElement(UserRow, { fullName: user.fullName,
+	        topFiveTime: user.identity.topFiveTime,
+	        wants: user.identity.wants,
+	        canOffer: user.identity.canOffer,
+	        _id: user._id }));
+	    }
+	    return _react2['default'].createElement(
+	      'div',
+	      null,
+	      _react2['default'].createElement(SearchBar, { url: '/api/searchUsers/', handleChange: this.handleChange }),
+	      arrayOfUserRows
+	    );
+	  }
+	});
+	/* old
+
+	return(
+	      <div id="tableView">
+	      <SearchBar url="/api/searchUsers/" handleChange={this.handleChange} />
+	      /*
+	      <table border="1" className="table table-striped" >
+	        <tr>
+	          <th>Name</th>
+	          <th>Wants</th>
+	          <th>Can Offer</th>
+	          <th>More Info</th>
+	        </tr>
+	        
+	        {arrayOfUserRows}
+	        
+	     
+
+	      </table>
+	      </div>
+
+	*/
+
+	// React.render(<GSMUserTableView url="/api/users/" />, document.getElementById("gsmUserTableView"));
+
+/***/ },
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4741,7 +5426,7 @@
 	});
 
 /***/ },
-/* 51 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4774,6 +5459,13 @@
 	module.exports = _react2['default'].createClass({
 	  displayName: 'exports',
 
+	  getInitialProps: function getInitialProps() {
+	    return {
+	      url: "/api/messages",
+	      convoID: this.props.params.id,
+	      convoTitle: this.props.location.query.convoTitle
+	    };
+	  },
 	  getInitialState: function getInitialState() {
 	    return { messages: [] };
 	  },
@@ -4906,7 +5598,7 @@
 	// React.render(<MessageList convoTitle={convoTitle} convoID={convoID} url="/api/messages/" />, document.getElementById("message"));
 
 /***/ },
-/* 52 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
