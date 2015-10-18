@@ -4,29 +4,54 @@
     <!-- THIS REFERENCES THE FILE BELOW AND MAKES IT -->
     <!-- This page will hold the main user page. (TODO list style adding people, rating, going to friends, and searching) -->
 
-
-
-    <div id="gsmHeader"></div>
-    <script type="text/jsx" src="../ReactViews/build/GSMHeader.js"></script>
-     
-    <div id="profileCompletion"></div>
-    <script type="text/jsx" src="../ReactViews/build/ProfileCompletion.js"></script>
-    
-    <h3>BAB Member List</h3>
-    <p>Tip of the Week: You're awake for 16 hours in a day. Do something.</p>
-    
-
-
-    <div id="gsmUserTableView"></div>
-    <script type="text/jsx" src="../ReactViews/build/GSMUserTableview.js"></script>
-    <br />
-    <a href="/logout">Logout</a>
-
     <!-- Add a className= to divs inside React files to style them appropriately using a style sheet! Include all data needed within React files. -->
+    <link rel="stylesheet" type="text/css" href="../../../public/style/boot.css">
+    <!-- <script src='public/bundle.js'></script> -->
+    <div id="gsmHeader"></div>
 
-    <input id="isFirstTimeLogin" type="hidden" value="{{isFirstTimeLogin}}" />
+    <div class='container-fluid'>
+        <div class='row'>
+        <div id="profileCompletion"></div>
+            <script type="text/jsx" src="../ReactViews/build/ProfileCompletion.js"></script>
 
-    <div id="loginUpdate"></div>
-    <script type="text/jsx" src="../ReactViews/build/LoginUpdate.js"></script>
+           
+    <!-- no need to modify -->
+        <div class='col-md-8'>
+        
+            <script type="text/jsx" src="../ReactViews/build/GSMHeader.js"></script>
+            
+            <!-- This needs to be a variable -->
+            <h1 class='group-header'>Your Organization List<img src='public/imgs/downTriangle.png'/></h1>
+            <!--
+            <h4>Dashboard</h4>
+            <p>Tip of the Week: You're awake for 16 hours in a day. Do something.</p>
+            -->
+              <!-- no need to modify -->
+
+            
+
+        
+
+            <div id="gsmUserTableView"></div>
+            <script type="text/jsx" src="../ReactViews/build/GSMUserTableview.js"></script>
+            <br />
+            
+            <input id="isFirstTimeLogin" type="hidden" value="{{isFirstTimeLogin}}" />
+
+            <div id="loginUpdate"></div>
+            <script type="text/jsx" src="../ReactViews/build/LoginUpdate.js"></script>
+        </div>
+        <!-- <div class='col-md-1'></div> -->
+        <div class='col-md-2 sidebar'>
+
+            
+            <div id="sideBarView"></div>
+            <script type="text/jsx" src="../ReactViews/build/SideBarView.js"></script>
+        </div>
+
+        </div>
+        </div>
+    </div>
+
 
 </div>

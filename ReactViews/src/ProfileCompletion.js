@@ -1,3 +1,13 @@
+var profileComp = {
+	float: "right",
+	display: "inline",
+	marginTop: "10px",
+	
+	fontWeight: "bold",
+	fontSize: "16px"
+}
+
+
 var ProfileCompletion = React.createClass({
 	getInitialState: function() {
 		return({wants:[],
@@ -48,7 +58,7 @@ var ProfileCompletion = React.createClass({
 		var profileCompletion = Math.floor(profileCompletionString) + "%";
 
 		return(
-			<p>Profile {profileCompletion} Complete</p>
+			<div style={profileComp}>Profile {profileCompletion} Complete</div>
 		);
 	}
 

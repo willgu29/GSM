@@ -1,52 +1,74 @@
+'use strict';
 
+var UserRow = React.createClass({
+  displayName: 'UserRow',
 
-var UserRow = React.createClass({displayName: "UserRow",
+  render: function render() {
 
-  render: function() {
-
-    return(
-      React.createElement("div", null, 
-        React.createElement("p", null, "This Works!"), 
-        React.createElement("li", {key: this.props.index + this.props.itemText}, this.props.itemText)
+    return React.createElement(
+      'div',
+      null,
+      React.createElement(
+        'p',
+        null,
+        'This Works!'
+      ),
+      React.createElement(
+        'li',
+        { key: this.props.index + this.props.itemText },
+        this.props.itemText
       )
     );
   }
 });
 
-var ToDoList = React.createClass({displayName: "ToDoList",
+var ToDoList = React.createClass({
+  displayName: 'ToDoList',
 
-  render: function() {
-    var createItem = function(itemText, index) {
-      return React.createElement(UserRow, {index: index, itemText: itemText})
+  render: function render() {
+    var createItem = function createItem(itemText, index) {
+      return React.createElement(UserRow, { index: index, itemText: itemText });
     };
-    return React.createElement("ul", null, this.props.items.map(createItem));
+    return React.createElement(
+      'ul',
+      null,
+      this.props.items.map(createItem)
+    );
   }
 });
 
-var ToDoApp = React.createClass({displayName: "ToDoApp",
-  getInitialState: function() {
-    return {items: [], text: ''};
+var ToDoApp = React.createClass({
+  displayName: 'ToDoApp',
+
+  getInitialState: function getInitialState() {
+    return { items: [], text: '' };
   },
-  onChange: function(e) {
-    this.setState({text: e.target.value});
+  onChange: function onChange(e) {
+    this.setState({ text: e.target.value });
   },
-  handleSubmit: function(e) {
+  handleSubmit: function handleSubmit(e) {
     e.preventDefault();
     var nextItems = this.state.items.concat([this.state.text]);
     var nextText = '';
-    this.setState({items: nextItems, text: nextText});
+    this.setState({ items: nextItems, text: nextText });
   },
-  render: function() {
-    return(
-      React.createElement("div", null, 
-        React.createElement("form", {onSubmit: this.handleSubmit}, 
-          React.createElement("input", {onChange: this.onChange, value: this.state.text}), 
-          React.createElement("button", null, "Add Acquaintance")
-        ), 
-        React.createElement(ToDoList, {items: this.state.items})
-      )
+  render: function render() {
+    return React.createElement(
+      'div',
+      null,
+      React.createElement(
+        'form',
+        { onSubmit: this.handleSubmit },
+        React.createElement('input', { onChange: this.onChange, value: this.state.text }),
+        React.createElement(
+          'button',
+          null,
+          'Add Acquaintance'
+        )
+      ),
+      React.createElement(ToDoList, { items: this.state.items })
     );
   }
-})
+});
 
 React.render(React.createElement(ToDoApp, null), document.body);

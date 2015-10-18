@@ -10,7 +10,11 @@ Step 3: After installing, run in command line -> sudo mongod
 
 Layout of project:
 
-1. ReactViews act as client rendering. Create new files in src. jsx src build --watch to link into build.
+1. ReactViews act as client rendering. Create new files in src ->
+babel ReactViews/src/ --watch --out-dir ReactViews/build/
+
+(old: jsx src build --watch to link into build.)
+
 
 2. Models include all mongoose models that will be used in index.js
 

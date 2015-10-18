@@ -2,11 +2,87 @@ var helpTextStyle = {
   fontSize: "14px",
   display: "inline"
 }
+var infoButton = {
+  display: "inline",
+  padding: "6px 12px",
+  marginBottom: "0",
+  fontSize: "14px",
+  fontWeight: "normal",
+  lineHeight: "1.42857143",
+  textAlign: "center",
+  whiteSpace: "nowrap",
+  verticalAlign: "middle",
+  cursor: "pointer",
+  backgroundImage: "none",
+  border: "1px solid transparent",
+  borderRadius: "4px",
+   color: "#fff",
+  background: "green",
+  borderColor: "#46b8da",
+  marginLeft: "10"
 
-var userRowStyle = {
-      
+};
+
+
+var cardStyle = {
+  width: "90%",
+  marginLeft: "25px",
+  height: "300px",
+  boxShadow: "2px 2px 2px #999999",
+  /*border: "1px solid black",*/
+  marginBottom: "25px",
+  background: "white",
+  /*borderRadius: "25px"*/
 }
 
+var cardText = {
+  float: "left",
+  marginLeft: "20px",
+  fontFamily: "Avenir, sans-serif",
+  fontSize: "16px",
+  /*fontWeight: "bold",*/
+  width: "200px",
+  clear: "both",
+  marginBottom: "10px"
+  
+}
+
+var cardHeader = {
+/*  background: "#eee",*/
+  height: "50px",
+  lineHeight: "50px",
+  /*marginLeft: "10px",*/
+  marginBottom: "20px",
+  marginTop: "20px",
+  paddingTop: "15",
+  fontFamily: "Avenir"
+
+}
+
+var cardHeaderText = {
+  marginLeft: "15px",
+  fontSize: "32px",
+  fontWeight: "200",
+  lineHeight: "50px",
+  fontFamily: "Avenir Book",
+  color: "hsl(281, 100%, 29%)",
+  marginTop: "20px"
+
+}
+
+var profStyle = {
+  clear: "both",
+  float: "right",
+  fontSize: "16px",
+  marginTop: "20px",
+  marginRight: "20px"
+
+
+}
+
+var searchStyle = {
+  marginLeft: "25px"
+}
 
 //Tabular Data Columns
 
@@ -84,7 +160,7 @@ var MoreInfoColumn = React.createClass({
     var profileLink = "/users/" + this.props._id;
 
     return(
-      <a href={profileLink}>More Info</a>
+      <a href={profileLink} style={profStyle}>More Info</a>
     );
   }
 });
@@ -115,7 +191,7 @@ var WantsColumn = React.createClass({
   }
 
 });
-
+ 
 var ReputationColumn = React.createClass({
   render: function() {
     return(
@@ -160,13 +236,15 @@ var RatingStars = React.createClass({
 
 
 
+
+
 var SearchBar = React.createClass({
   getInitialState: function() {
     return ({infoText:""});
   },
   handleInfoClick: function() {
     if (this.state.infoText == "") {
-      this.setState({infoText:"Search by keywords (name, skills, activities, etc). Search nothing to see everyone."});
+      this.setState({infoText:" Search by keywords (name, skills, activities, etc). Search nothing to see everyone."});
     } else {
       this.setState({infoText:""});
     }
@@ -187,46 +265,58 @@ var SearchBar = React.createClass({
       }.bind(this)
     });
   },
+
+  
+
   render: function() {
 
     var helpText = <p style={helpTextStyle} >{this.state.infoText}</p>
 
     return(
       <div>
-        <button type="button" onClick={this.handleInfoClick}>Info</button> 
-        {helpText}
-        <form onSubmit={this.handleSubmit} className="searchForm" method="get" action="/api/searchUsers/">
-         <input type="text" name="searchText" ref="searchText" />
-         <input type="submit" value="Search" />
+        
+        
+        <form onSubmit={this.handleSubmit} className="searchForm"  style={searchStyle} method="get" action="/api/searchUsers/" >
+         <input type="text" name="searchText" ref="searchText" cols="100" placeholder=" Search by name, wants, skills..."/>
+         <input style={infoButton} type="submit" value="Search" />
+         <br/>
         </form>
-      </div>
+        </div>
     );
   }
 
 });
-
+//<button type="button" style={infoButton} onClick={this.handleInfoClick}>Info</button> 
 ///****************
+
 
 var UserRow = React.createClass({
   
   render: function() {
     return(
-      <tr>
-        <td><UserImg fullName={this.props.fullName} /></td>
-        <td><WantsColumn wants={this.props.wants} /></td>
-        <td><CanOfferColumn canOffer={this.props.canOffer} /></td>
-        <td><MoreInfoColumn _id={this.props._id}  /></td>
-      </tr>
+      <div style={cardStyle}>
+        <div style={cardHeader}><h3 style={cardHeaderText}>{this.props.fullName}</h3></div>
+        <MoreInfoColumn _id={this.props._id}  /><br/>
+        <p style={cardText}>Wants: {this.props.wants}</p>
+        <br/><hr/><br/><br/>
+        <p style={cardText}>Can Offer: {this.props.canOffer}</p>
+        
+        
+      </div>
+     
     );
   }
 
 });
-
-var tableStyle = {
-
-  width: "100%"
-}
-
+/*<a href="#" class="card-link">Another link</a>*/
+ /*
+  <tr>
+    <td><UserImg fullName={this.props.fullName} /></td>
+    <td><WantsColumn wants={this.props.wants} /></td>
+    <td><CanOfferColumn canOffer={this.props.canOffer} /></td>
+    <td><MoreInfoColumn _id={this.props._id}  /></td>
+  </tr>
+  */
 var GSMUserTableView = React.createClass({
   getInitialState:  function() {
     return ({users:[]});
@@ -263,15 +353,29 @@ var GSMUserTableView = React.createClass({
                                     _id={user._id} />);
     }
     return(
+      <div>
+      <SearchBar url="/api/searchUsers/" handleChange={this.handleChange} /> 
+      {arrayOfUserRows}
+      </div>
+
+    );
+
+  }
+});
+/* old
+
+return(
       <div id="tableView">
       <SearchBar url="/api/searchUsers/" handleChange={this.handleChange} />
-      <table border="1" style={tableStyle} >
+      /*
+      <table border="1" className="table table-striped" >
         <tr>
           <th>Name</th>
           <th>Wants</th>
           <th>Can Offer</th>
           <th>More Info</th>
         </tr>
+        
         {arrayOfUserRows}
         
      
@@ -279,10 +383,6 @@ var GSMUserTableView = React.createClass({
       </table>
       </div>
 
-    );
-
-  }
-});
-
+*/
 
 React.render(<GSMUserTableView url="/api/users/" />, document.getElementById("gsmUserTableView"));

@@ -57,7 +57,7 @@ var GSMNavBarItems = React.createClass({
 				<li style={style2}><a style={aStyle} href="/messages">Messages</a></li>
 				
 				<li style={style5}><a style={aStyle} href="/editAccount">Edit Profile</a></li>
-
+				<li style={style5}><a style={aStyle} href="/logout">Logout</a></li>
 			</ul>
 		);
 	}
