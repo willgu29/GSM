@@ -37,7 +37,7 @@ app.use(passport.session());
 
 app.use("/ReactViews/build", express.static(__dirname + '/ReactViews/build'));
 app.use("/public/", express.static(__dirname + '/public/'));
-
+app.use("/client/", express.static(__dirname + '/client/'));
 
 
 //**********************************
@@ -52,7 +52,7 @@ app.get("/gsm", ensureAdmin, function(req, res) {
 	//VIEWS 
 
 app.get("/", function (req, res){
-  res.sendFile(__dirname + "/public/index.html");
+  res.sendFile(__dirname + "/client/index.html");
 });
 
 // app.get("/", function (req, res) {
