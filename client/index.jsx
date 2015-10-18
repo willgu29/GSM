@@ -13,17 +13,17 @@ var pathName = window.location.pathname;
 const App = React.createClass({
 	getInitialState: function() {
 		return({
-			isLoggedIn: false,
+			isLoggedIn: false
 
 		})
 	},
 	render: function() {
 
-		if (isLoggedIn) {
+		if (this.state.isLoggedIn) {
 			//Display tableview and shit
 		} else {
 			//landing page
-			
+
 		}
 
 		return(

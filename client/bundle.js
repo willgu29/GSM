@@ -72,7 +72,7 @@
 		},
 		render: function render() {
 
-			if (isLoggedIn) {
+			if (this.state.isLoggedIn) {
 				//Display tableview and shit
 			} else {
 					//landing page
