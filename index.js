@@ -51,25 +51,25 @@ app.get("/gsm", ensureAdmin, function(req, res) {
 
 	//VIEWS 
 
-// app.get("/", function (req, res){
-//   res.sendFile(__dirname + "/client/index.html");
-// });
-
-app.get("/", function (req, res) {
-	console.log('/ GET');
-  if (!req.user) {
-    res.render('landingPage', {layout: "/layouts/main"});
-  } else {
-    var isFirst;
-    if (!req.user.lastLoginDate) {
-      isFirst = true;
-    } else {
-      isFirst = false;
-    }
-    res.render('index', {layout: "/layouts/main", isFirstTimeLogin: isFirst});
-
-  }
+app.get("/", function (req, res){
+  res.sendFile(__dirname + "/client/index.html");
 });
+
+// app.get("/", function (req, res) {
+// 	console.log('/ GET');
+//   if (!req.user) {
+//     res.render('landingPage', {layout: "/layouts/main"});
+//   } else {
+//     var isFirst;
+//     if (!req.user.lastLoginDate) {
+//       isFirst = true;
+//     } else {
+//       isFirst = false;
+//     }
+//     res.render('index', {layout: "/layouts/main", isFirstTimeLogin: isFirst});
+
+//   }
+// });
 
 //Main Nav Bar
 

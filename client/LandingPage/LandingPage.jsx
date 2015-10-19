@@ -94,7 +94,7 @@ var CreateAccountForm = React.createClass({
                 phone number: <input type="tel" name="phoneNumber" /> <br />
                 group code:&nbsp;&nbsp; 
                 
-                <img src='/public/imgs/InfoButtonBlack.png' style={groupStyle} onClick={this.handleClick}/>
+                <img src='./assets/images/InfoButtonBlack.png' style={groupStyle} onClick={this.handleClick}/>
                 <br/><i> {helptext}</i><br/>
                 
 
@@ -115,14 +115,14 @@ module.exports = React.createClass({
 
 				<div id="landingPage">
     
-    		<div class='container-fluid top'>
-    			<div class='row'>
- 					<div class="col-md-1"></div> 
-    					<div class="col-md-2">
-    					<div class="header">
-						<div class='header-logo'>iGrouply</div>
+    		<div className='container-fluid top'>
+    			<div className='row'>
+ 					<div className="col-md-1"></div> 
+    					<div className="col-md-3">
+    					<div className="header">
+						<div className='header-logo'>iGrouply</div>
 					<br/><p></p>
-					<p class='header-content'><br/>Discover your network.
+					<p className='header-content'><br/>Discover your network.
 							<ul id="valueProp">
 								<li>Find people who can help you with your projects and goals</li>
 								<li>Offer your skills and help other people</li>
@@ -133,7 +133,7 @@ module.exports = React.createClass({
 
 				</div>
 			</div>
-			<div class="col-md-2 login">
+			<div className="col-md-2 login">
 
 			    <LoginForm />
 			    <hr/>

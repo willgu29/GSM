@@ -1,6 +1,6 @@
 'use strict'
 import React from 'react'
-
+var $ = require('jquery');
 var helpTextStyle = {
   fontSize: "14px",
   display: "inline"
@@ -109,34 +109,6 @@ var UserImg = React.createClass({
   }
 });
 
-var SkillsColumn = React.createClass({
-
-
-  render: function() {
-
-    var skillsArray = this.props.skills;
-    var displaySkills = skillsArray.join(", ");
-    return (
-        <p>{displaySkills}</p>
-    );
-  }
-
-});
-
-var PersonalityColumn = React.createClass({
-  render: function() {
-
-    var personalityArray = this.props.personality;
-
-  
-    var displayPersonality = personalityArray.join(", ");
-
-    return (
-        <p>{displayPersonality}</p>
-    );
-  }
-
-});
 
 var TopFiveTimeColumn = React.createClass({
 
@@ -157,15 +129,6 @@ var ContactIfColumn = React.createClass({
 
 });
 
-var InterestingColumn = React.createClass({
-  render: function() {
-
-    return(
-      <p>{this.props.interesting}</p>
-    );
-  }
-
-});
 
 var MoreInfoColumn = React.createClass({
   render: function() {
@@ -334,13 +297,14 @@ var UserRow = React.createClass({
   </tr>
   */
 module.exports = React.createClass({
+  displayName: "GSMTableView",
   getInitialState:  function() {
     return ({users:[]});
   },
   componentDidMount: function() {
     $.ajax({
-      url: "localhost:3000"+"/api/users",
-      dataType: 'json',
+      url: "/api/users",
+      dataType: 'jsonp',
       cache: false,
       success: function(arrayOfUsers){
       if (this.isMounted()){

@@ -1,5 +1,6 @@
 'use strict'
 import React from 'react'
+var $ = require('jquery');
 
 module.exports = React.createClass({
     getInitialState: function() {
@@ -19,7 +20,7 @@ module.exports = React.createClass({
     componentDidMount: function() {
         $.ajax({
             url: "localhost:3000/api/users/me",
-            dataType: 'json',
+            dataType: 'jsonp',
             cache: false,
             success: function(userData){
             if (this.isMounted()){               

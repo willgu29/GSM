@@ -11,7 +11,7 @@ li {
 }
 
 #landingPage {
-	background: linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),url("/public/imgs/landing-bg.png");
+	background: linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),url("../images/landing-bg.png");
 	background-size: cover;
 }
 

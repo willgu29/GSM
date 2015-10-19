@@ -1,3 +1,5 @@
+var webpack = require("webpack");
+
 
 module.exports = {
     entry: './index.jsx',
@@ -24,9 +26,23 @@ module.exports = {
     externals: {
         //don't bundle the 'react' npm package with our bundle.js
         //but get it from a global 'React' variable
-        'react': 'React'
+        'react': 'React',
+        // require("jquery") is external and available
+        //  on the global var jQuery
+        // "jquery": "jQuery"
     },
     resolve: {
+
+        // alias: {
+        //     jquery: "./node_modules/jquery/dist/jquery"
+        // },
         extensions: ['', '.js', '.jsx']
-    }
+    },
+    /*
+    plugins: [
+        new webpack.ProvidePlugin({
+            $: "jquery",
+            jQuery: "jquery"
+        })
+    ]*/
 }

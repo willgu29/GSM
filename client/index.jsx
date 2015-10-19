@@ -1,11 +1,11 @@
 
 'use strict'
-import React from 'react'
+import ReactDOM from 'react-dom'
 import { Router, Route, Link } from 'react-router'
 
 var LandingPage = require("./LandingPage/LandingPage");
 
-var GSMNavBar = require('./Mixins/GSMHeader');
+var GSMHeader = require('./Mixins/GSMHeader');
 var GSMUserTableView = require("./GSMUserTableView");
 var Hello = require('./Hello');
 var Message = require('./Message');
@@ -16,7 +16,7 @@ var pathName = window.location.pathname;
 const App = React.createClass({
 	getInitialState: function() {
 		return({
-			isLoggedIn: false
+			isLoggedIn: true
 
 		})
 	},
@@ -27,7 +27,7 @@ const App = React.createClass({
 		if (this.state.isLoggedIn) {
 			//Display tableview and shit
 						//<GSMNavBar currentURL={pathName} />
-
+			content.push(<GSMHeader />);
 			content.push(<GSMUserTableView />);
 		} else {
 			//landing page
@@ -36,6 +36,13 @@ const App = React.createClass({
 
 		return(
 			<div>
+				<ul>
+          		<li><Link to="/">Home</Link></li>
+          		<li><Link to="/editAccount">My Profile</Link></li>
+          		<li><Link to="/groups">Groups</Link></li>
+
+
+        		</ul>
 				{content}
 				{this.props.children}
 			</div>
@@ -43,22 +50,16 @@ const App = React.createClass({
 	}
 });
 
-React.render((<Router>
+ReactDOM.render((<Router>
 				<Route path="/" component={App}>
-					<Route path="/editAccount" componen={EditAccount} />
+					<Route path="/editAccount" component={EditAccount} />
 					<Route path="/groups" component={Hello} />
 					<Route path="/messages" component={Message} />
 				</Route>
 			</Router>
 			), document.getElementById("content"));
 
-/*
-<ul>
-          		<li><Link to="/">Home</Link></li>
-          		<li><Link to="/editAccount">My Profile</Link></li>
-          		<li><Link to="/groups">Groups</Link></li>
 
 
-        	</ul>
-        	*/
+        	
 
