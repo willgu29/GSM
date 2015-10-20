@@ -10,16 +10,10 @@ var userSchema = new mongoose.Schema({
   fullName: String,
   avatarURL: String,
   dateCreated: {type: Date, default: Date.now},
-  overallRating: Number,
   identity : {
-  	skills: [String],
-  	personality: [String],
     topFiveTime: String,
-  	contactIf: String,
     canOffer: [String],
     wants: [String],
-    interesting: String,
-    reputation: String
   },
   groupsIn_ids: [mongoose.Schema.Types.ObjectId],
   groupsIn_names: [String],

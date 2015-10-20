@@ -1,6 +1,9 @@
 'use strict'
 import React from 'react'
 
+var LoginActions = require('../actions/LoginActions');
+
+
 
 var errorStyle = {
 
@@ -20,26 +23,7 @@ var LoginForm = React.createClass({
 			email: email,
 			password: password
 		};
-
-		$.ajax({
-			url: this.props.url,
-			dataType: 'json',
-			data: data,
-			type: "POST",
-			success: function(info){
-     			if (this.isMounted()){
-     				console.log(info);
-     				if (info == '/') {
-     					window.location.reload();
-     				} else {
-						this.setState({loginStatus:info.message});     					
-     				}
-      			}
-      		}.bind(this),
-      		error: function(xhr,status,err){
-      			console.log(err);
-      		}.bind(this)
-      	});
+		LoginActions.tryLogin(data);
 
 	},
 

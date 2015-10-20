@@ -3,6 +3,8 @@
 import ReactDOM from 'react-dom'
 import { Router, Route, Link } from 'react-router'
 
+var LoginStore = require('../stores/LoginStore');
+
 var LandingPage = require("./LandingPage/LandingPage");
 
 var GSMHeader = require('./Mixins/GSMHeader');
@@ -15,10 +17,16 @@ var pathName = window.location.pathname;
 
 const App = React.createClass({
 	getInitialState: function() {
-		return({
-			isLoggedIn: true
-
-		})
+		return LoginStore.getState();
+	},
+	componentDidMount: function() {
+		LoginStore.listen(this.onChange);
+	},
+	componentWillUnmount: function() {
+		LoginStore.unlisten(this.onChange);
+	},
+	onChange(state) {
+		this.setState(state);
 	},
 	render: function() {
 
