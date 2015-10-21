@@ -19,12 +19,15 @@ class LoginStore {
   }
 
   handleLogin(isLoggedIn) {
+  	console.log("Store: login");
    this.isLoggedIn = isLoggedIn;
   }
   handleLoginFailed(isLoggedIn) {
+  	console.log("Store; login failed");
   	this.isLoggedIn = isLoggedIn;
   }
   handleTryLogin() {
+  	console.log("Store: try login");
   	this.isLoggedIn = false;
   }
 

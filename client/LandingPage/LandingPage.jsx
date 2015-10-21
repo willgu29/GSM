@@ -1,8 +1,8 @@
 'use strict'
 import React from 'react'
-
+import ReactDOM from 'react-dom'
 var LoginActions = require('../actions/LoginActions');
-
+var LoginStore = require('../stores/LoginStore');
 
 
 var errorStyle = {
@@ -12,21 +12,26 @@ var errorStyle = {
 
 var LoginForm = React.createClass({
 	getInitialState: function() {
-		return ({loginStatus: ""});
+		return ({loginStatus: "",
+					email:"",
+					password:""});
 	},
 	handleSubmit: function(e) {
 		e.preventDefault();
 
-		var email = React.findDOMNode(this.refs.email).value.trim();
-		var password = React.findDOMNode(this.refs.password).value.trim();
 		var data = {
-			email: email,
-			password: password
+			email: this.state.email,
+			password: this.state.password
 		};
-		LoginActions.tryLogin(data);
+		LoginStore.tryLogin(data);
 
 	},
-
+	handleChangeEmail: function(e) {
+		this.setState({email:e.target.value});
+	},
+	handleChangePassword: function(e) {
+		this.setState({password:e.target.value});
+	},
 	render: function() {
 		var errorMessage;
 		if (this.state.loginStatus == "") {
@@ -34,13 +39,16 @@ var LoginForm = React.createClass({
 		} else {
 			errorMessage = <p style={errorStyle}>{this.state.loginStatus}</p>;
 		}
+
+		var email = this.state.email;
+		var password = this.state.password;
 		return(
 			<div>
 				<h4>Login </h4>
 				{errorMessage}
 				<form onSubmit={this.handleSubmit} className="loginForm" method="post" action="login" >
-         		 email: <input type="email" name="email" ref="email" /> <br />
-          		password: <input type="password" name="password"  ref="password" /> <br />
+         		 email: <input onChange={this.handleChangeEmail} type="email" name="email" value={email} /> <br />
+          		password: <input onChange={this.handleChangePassword} type="password" name="password"  value={password} /> <br />
           		<br />
           		<input type="submit" value="login" id="login" />
         		</form>

@@ -1,13 +1,14 @@
 var alt = require("../alt");
 
 class LoginActions {
-  login (isLoggedIn){
+  login(isLoggedIn){
     this.dispatch(isLoggedIn);
-  },
+  }
   loginFailed(isLoggedIn){
   	this.dispatch(isLoggedIn);
-  },
+  }
   tryLogin() {
+  	console.log("Actions: try login");
   	this.dispatch();
   }
 

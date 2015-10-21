@@ -3,10 +3,12 @@ var axios = require('axios');
 
 
 var LoginSource = {
-	tryLogin: {
+	tryLogin() {
+		return{
 			remote(data) {
+					console.log("Source : try login");
 					//TODO: Simulate server call
-					axios.post("/login", {
+					return axios.post("/login", {
 						email: data.email,
 						password: data.password
 					})
@@ -21,7 +23,9 @@ var LoginSource = {
 
 			},
 			success: LoginActions.login,
-			error: LoginActions.loginFailed
+			error: LoginActions.loginFailed,
+			loading: LoginActions.tryLogin
+		}
 	}
 }
 

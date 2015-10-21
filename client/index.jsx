@@ -3,7 +3,7 @@
 import ReactDOM from 'react-dom'
 import { Router, Route, Link } from 'react-router'
 
-var LoginStore = require('../stores/LoginStore');
+var LoginStore = require('./stores/LoginStore');
 
 var LandingPage = require("./LandingPage/LandingPage");
 
@@ -26,6 +26,7 @@ const App = React.createClass({
 		LoginStore.unlisten(this.onChange);
 	},
 	onChange(state) {
+		console.log("Change state: index: state: " + state);
 		this.setState(state);
 	},
 	render: function() {
