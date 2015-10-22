@@ -1,11 +1,9 @@
-var axios = require('axios');
+var axios = require("axios");
 
-const GroupAPI = {
+const EventAPI = {
 
-	//currently only level 1 is available (root groups)
-	//currently server only returns groups request user is part of
-	getGroupsAtLevelForCurrentUsers: function(level) {
-		axios.get("/api/groups?level=" + level)
+	getAllEvents: function() {
+		axios.get("/api/events/all")
 					.then(function (response) {
 						console.log(response);
 						return response.data;
@@ -15,8 +13,8 @@ const GroupAPI = {
 						return response.data;
 					});
 	}
-	getGroupByID: function(groupID) {
-		axios.get("/api/groups/" +groupID)
+	getEventsForCurrentUser: function() {
+		axios.get("/api/events")
 					.then(function (response) {
 						console.log(response);
 						return response.data;
@@ -25,9 +23,9 @@ const GroupAPI = {
 						console.log(response);
 						return response.data;
 					});
-
 	}
+	
+
 }
 
-
-module.exports = GroupAPI;
+module.exports = EventAPI;
