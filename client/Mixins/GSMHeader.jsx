@@ -43,17 +43,7 @@ var GSMNavBarItems = React.createClass({
 		var style3 = liStyle;
 		var style4 = liStyle;
 		var style5 = liStyle;
-		if (this.props.currentURL == "/") {
-			style1 = liStyleSelected;
-		} else if (this.props.currentURL == "/messages") {
-			style2 = liStyleSelected;
-		} else if (this.props.currentURL == "/groups") {
-			style3 = liStyleSelected;
-		} else if (this.props.currentURL == "/events") {
-			style4 = liStyleSelected;
-		} else if (this.props.currentURL == "/editAccount") {
-			style5 = liStyleSelected;
-		} 
+	
 		return(
 			<ul style={ulStyle}>
 				<li style={style1}><a style={aStyle} href="/">Member List</a></li>
@@ -77,7 +67,7 @@ module.exports  = React.createClass({
 		return(
 			<div id="navBar">
 				<h1 style={iGrouplyHeaderStyle}>iGrouply</h1>
-				<GSMNavBarItems currentURL={this.props.currentURL} />
+				<GSMNavBarItems />
 			</div>
 		);
 	}

@@ -61,9 +61,8 @@
 
 	var GSMHeader = __webpack_require__(223);
 	var GSMUserTableView = __webpack_require__(224);
-	var Hello = __webpack_require__(226);
-	var Message = __webpack_require__(227);
-	var EditAccount = __webpack_require__(228);
+	var Message = __webpack_require__(230);
+	var EditAccount = __webpack_require__(231);
 	var pathName = window.location.pathname;
 
 	var App = React.createClass({
@@ -85,10 +84,9 @@
 		render: function render() {
 
 			var content = [];
-
+			console.log("State: " + this.state.isLoggedIn);
 			if (this.state.isLoggedIn) {
-				//Display tableview and shit
-				//<GSMNavBar currentURL={pathName} />
+				console.log("what");
 				content.push(React.createElement(GSMHeader, null));
 				content.push(React.createElement(GSMUserTableView, null));
 			} else {
@@ -99,37 +97,6 @@
 			return React.createElement(
 				'div',
 				null,
-				React.createElement(
-					'ul',
-					null,
-					React.createElement(
-						'li',
-						null,
-						React.createElement(
-							_reactRouter.Link,
-							{ to: '/' },
-							'Home'
-						)
-					),
-					React.createElement(
-						'li',
-						null,
-						React.createElement(
-							_reactRouter.Link,
-							{ to: '/editAccount' },
-							'My Profile'
-						)
-					),
-					React.createElement(
-						'li',
-						null,
-						React.createElement(
-							_reactRouter.Link,
-							{ to: '/groups' },
-							'Groups'
-						)
-					)
-				),
 				content,
 				this.props.children
 			);
@@ -143,7 +110,7 @@
 			_reactRouter.Route,
 			{ path: '/', component: App },
 			React.createElement(_reactRouter.Route, { path: '/editAccount', component: EditAccount }),
-			React.createElement(_reactRouter.Route, { path: '/groups', component: Hello }),
+			React.createElement(_reactRouter.Route, { path: '/groups', component: Message }),
 			React.createElement(_reactRouter.Route, { path: '/messages', component: Message })
 		)
 	), document.getElementById("content"));
@@ -24700,7 +24667,11 @@
 	      LoginAPI.tryLogin(email, password).then(function (result) {
 	        console.log("NEW RESULT: " + JSON.stringify(result));
 	        //How to return result from here?
-	        _this.actions.loginSuccess(result);
+	        if (result == "/") {
+	          _this.actions.loginSuccess(result);
+	        } else {
+	          _this.actions.loginFailed(result);
+	        }
 	      })['catch'](function (error) {});
 	      //Problem is tryLogin is being received as an action, then no received action b/c of callback
 	      // this.dispatch(email);
@@ -25668,7 +25639,6 @@
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
 	var LoginActions = __webpack_require__(207);
-	var LoginStore = __webpack_require__(193);
 
 	var errorStyle = {
 
@@ -25938,17 +25908,7 @@
 			var style3 = liStyle;
 			var style4 = liStyle;
 			var style5 = liStyle;
-			if (this.props.currentURL == "/") {
-				style1 = liStyleSelected;
-			} else if (this.props.currentURL == "/messages") {
-				style2 = liStyleSelected;
-			} else if (this.props.currentURL == "/groups") {
-				style3 = liStyleSelected;
-			} else if (this.props.currentURL == "/events") {
-				style4 = liStyleSelected;
-			} else if (this.props.currentURL == "/editAccount") {
-				style5 = liStyleSelected;
-			}
+
 			return _react2['default'].createElement(
 				'ul',
 				{ style: ulStyle },
@@ -26008,7 +25968,7 @@
 					{ style: iGrouplyHeaderStyle },
 					'iGrouply'
 				),
-				_react2['default'].createElement(GSMNavBarItems, { currentURL: this.props.currentURL })
+				_react2['default'].createElement(GSMNavBarItems, null)
 			);
 		}
 	});
@@ -26030,29 +25990,13 @@
 	var _react2 = _interopRequireDefault(_react);
 
 	var $ = __webpack_require__(225);
+	var UserActions = __webpack_require__(226);
+	var UserStore = __webpack_require__(228);
+	var GSMSearchBar = __webpack_require__(229);
+
 	var helpTextStyle = {
 	  fontSize: "14px",
 	  display: "inline"
-	};
-	var infoButton = {
-	  display: "inline",
-	  padding: "6px 12px",
-	  marginBottom: "0",
-	  fontSize: "14px",
-	  fontWeight: "normal",
-	  lineHeight: "1.42857143",
-	  textAlign: "center",
-	  whiteSpace: "nowrap",
-	  verticalAlign: "middle",
-	  cursor: "pointer",
-	  backgroundImage: "none",
-	  border: "1px solid transparent",
-	  borderRadius: "4px",
-	  color: "#fff",
-	  background: "green",
-	  borderColor: "#46b8da",
-	  marginLeft: "10"
-
 	};
 
 	var cardStyle = {
@@ -26117,11 +26061,6 @@
 	  marginTop: "20px",
 	  marginRight: "20px"
 
-	};
-
-	var searchStyle = {
-	  marginLeft: "25px",
-	  marginBottom: "25px"
 	};
 
 	//Tabular Data Columns
@@ -26267,57 +26206,6 @@
 
 	});
 
-	var SearchBar = _react2['default'].createClass({
-	  displayName: 'SearchBar',
-
-	  getInitialState: function getInitialState() {
-	    return { infoText: "" };
-	  },
-	  handleInfoClick: function handleInfoClick() {
-	    if (this.state.infoText == "") {
-	      this.setState({ infoText: " Search by keywords (name, skills, activities, etc). Search nothing to see everyone." });
-	    } else {
-	      this.setState({ infoText: "" });
-	    }
-	  },
-	  handleSubmit: function handleSubmit(e) {
-	    e.preventDefault();
-
-	    var searchTerm = _react2['default'].findDOMNode(this.refs.searchText).value.trim();
-	    var searchURL = this.props.url + searchTerm;
-	    $.ajax({
-	      url: searchURL,
-	      dataType: 'json',
-	      success: (function (data) {
-	        this.props.handleChange(data);
-	      }).bind(this),
-	      error: (function (xhr, status, err) {
-	        console.log("Error: ", err);
-	      }).bind(this)
-	    });
-	  },
-
-	  render: function render() {
-
-	    var helpText = _react2['default'].createElement(
-	      'p',
-	      { style: helpTextStyle },
-	      this.state.infoText
-	    );
-	    return _react2['default'].createElement(
-	      'div',
-	      null,
-	      _react2['default'].createElement(
-	        'form',
-	        { onSubmit: this.handleSubmit, className: 'searchForm', style: searchStyle, method: 'get', action: '/api/searchUsers/' },
-	        _react2['default'].createElement('input', { type: 'text', name: 'searchText', ref: 'searchText', cols: '100', placeholder: ' Search by name, wants, skills...' }),
-	        _react2['default'].createElement('input', { style: infoButton, type: 'submit', value: 'Search' }),
-	        _react2['default'].createElement('br', null)
-	      )
-	    );
-	  }
-
-	});
 	//<button type="button" style={infoButton} onClick={this.handleInfoClick}>Info</button>
 	///****************
 
@@ -26372,25 +26260,18 @@
 	module.exports = _react2['default'].createClass({
 	  displayName: "GSMTableView",
 	  getInitialState: function getInitialState() {
-	    return { users: [] };
+	    return UserStore.getState();
 	  },
 	  componentDidMount: function componentDidMount() {
-	    $.ajax({
-	      url: "/api/users",
-	      dataType: 'jsonp',
-	      cache: false,
-	      success: (function (arrayOfUsers) {
-	        if (this.isMounted()) {
-	          this.setState({ users: arrayOfUsers });
-	        }
-	      }).bind(this),
-	      error: (function (xhr, status, err) {
-	        console.error(status, err.toString());
-	      }).bind(this)
-	    });
+	    UserStore.listen(this.onChange);
+	    UserActions.getAllUsers();
 	  },
-	  handleChange: function handleChange(users) {
-	    this.setState({ users: users });
+	  componentWillUnmount: function componentWillUnmount() {
+	    UserActions.unlisten(this.onChange);
+	  },
+	  onChange: function onChange(state) {
+	    console.log("User store change state: " + JSON.stringify(state));
+	    this.setState(state);
 	  },
 
 	  render: function render() {
@@ -26408,7 +26289,7 @@
 	    return _react2['default'].createElement(
 	      'div',
 	      null,
-	      _react2['default'].createElement(SearchBar, { url: '/api/searchUsers/', handleChange: this.handleChange }),
+	      _react2['default'].createElement(GSMSearchBar, null),
 	      arrayOfUserRows
 	    );
 	  }
@@ -35660,25 +35541,247 @@
 
 	'use strict';
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var _react = __webpack_require__(148);
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var _react2 = _interopRequireDefault(_react);
+	var alt = __webpack_require__(194);
+	var UserAPI = __webpack_require__(227);
 
-	module.exports = _react2['default'].createClass({
-	    displayName: 'HelloReact',
-	    render: function render() {
-	        return _react2['default'].createElement(
-	            'div',
-	            null,
-	            'Hello World'
-	        );
+	var UserActions = (function () {
+	  function UserActions() {
+	    _classCallCheck(this, UserActions);
+
+	    this.generateActions('usersReceived', 'userReceived');
+	  }
+
+	  _createClass(UserActions, [{
+	    key: 'getUser',
+	    value: function getUser(id) {
+	      var _this = this;
+
+	      UserAPI.getUserByID(id).then(function (result) {
+	        console.log("NEW RESULT: " + JSON.stringify(result));
+	        _this.actions.userReceived(result);
+	      })['catch'](function (error) {});
 	    }
-	});
+	  }, {
+	    key: 'getAllUsers',
+	    value: function getAllUsers() {
+	      var _this2 = this;
+
+	      UserAPI.getAllUsers().then(function (result) {
+	        console.log("NEW RESULT: " + JSON.stringify(result));
+	        _this2.actions.usersReceived(result);
+	      })['catch'](function (error) {});
+	    }
+	  }, {
+	    key: 'searchUsersByKeyword',
+	    value: function searchUsersByKeyword(searchText) {
+	      var _this3 = this;
+
+	      UserAPI.keywordSearchUsers(searchText).then(function (result) {
+	        console.log("NEW RESULT: " + JSON.stringify(result));
+	        _this3.actions.usersReceived(result);
+	      })['catch'](function (error) {});
+	    }
+	  }]);
+
+	  return UserActions;
+	})();
+
+	module.exports = alt.createActions(UserActions);
 
 /***/ },
 /* 227 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var axios = __webpack_require__(209);
+
+	var UserAPI = {
+
+		getUserByID: function getUserByID(id) {
+			return axios.get("/api/users/" + id).then(function (response) {
+				console.log(response);
+				return response.data;
+			})["catch"](function (response) {
+				console.log(response);
+				return response.data;
+			});
+		},
+		getAllUsers: function getAllUsers() {
+			return axios.get("/api/users/").then(function (response) {
+				console.log(response);
+				return response.data;
+			})["catch"](function (response) {
+				console.log(response);
+				return response.data;
+			});
+		},
+		keywordSearchUsers: function keywordSearchUsers(searchText) {
+			return axios.get("/api/searchUsers/" + searchText).then(function (response) {
+				return response.data;
+			})["catch"](function (response) {
+				return response.data;
+			});
+		},
+
+		updateProfile: function updateProfile(topFiveTime, wantsArray, canOfferArray) {
+			return axios.post("/api/users/me", {
+				topFiveTime: topFiveTime,
+				wants: wantsArray,
+				canOffer: canOfferArray
+			}).then(function (response) {
+				console.log(response);
+				return response.data;
+			})["catch"](function (response) {
+				console.log(response);
+				return response.data;
+			});
+		},
+
+		createUserAccount: function createUserAccount(email, password, phoneNumber, firstName, lastName, initialGroupCode) {
+			return axios.post("/createAccount", {
+				email: email,
+				password: password,
+				phoneNumber: phoneNumber,
+				firstName: firstName,
+				lastName: lastName,
+				initialGroupCode: initialGroupCode
+			}).then(function (response) {
+				console.log(response);
+				return response.data;
+			})["catch"](function (response) {
+				console.log(response);
+				return response.data;
+			});
+		}
+
+	};
+
+	module.exports = UserAPI;
+
+/***/ },
+/* 228 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	var alt = __webpack_require__(194);
+	var UserActions = __webpack_require__(226);
+
+	var UserStore = (function () {
+	  function UserStore() {
+	    _classCallCheck(this, UserStore);
+
+	    this.users = [];
+
+	    this.bindListeners({
+	      onUserReceived: UserActions.userReceived,
+	      onUsersReceived: UserActions.usersReceived
+	    });
+	  }
+
+	  _createClass(UserStore, [{
+	    key: 'onUserReceived',
+	    value: function onUserReceived(result) {
+	      //TODO: save user 
+	    }
+	  }, {
+	    key: 'onUsersReceived',
+	    value: function onUsersReceived(users) {
+	      this.users = users;
+	    }
+	  }]);
+
+	  return UserStore;
+	})();
+
+	module.exports = alt.createStore(UserStore, 'UserStore');
+
+/***/ },
+/* 229 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var UserActions = __webpack_require__(226);
+
+	var searchStyle = {
+	  marginLeft: "25px",
+	  marginBottom: "25px"
+	};
+
+	var infoButton = {
+	  display: "inline",
+	  padding: "6px 12px",
+	  marginBottom: "0",
+	  fontSize: "14px",
+	  fontWeight: "normal",
+	  lineHeight: "1.42857143",
+	  textAlign: "center",
+	  whiteSpace: "nowrap",
+	  verticalAlign: "middle",
+	  cursor: "pointer",
+	  backgroundImage: "none",
+	  border: "1px solid transparent",
+	  borderRadius: "4px",
+	  color: "#fff",
+	  background: "green",
+	  borderColor: "#46b8da",
+	  marginLeft: "10"
+
+	};
+
+	module.exports = React.createClass({
+	  displayName: "exports",
+
+	  getInitialState: function getInitialState() {
+	    return { infoText: "" };
+	  },
+	  handleInfoClick: function handleInfoClick() {
+	    if (this.state.infoText == "") {
+	      this.setState({ infoText: " Search by keywords (name, skills, activities, etc). Search nothing to see everyone." });
+	    } else {
+	      this.setState({ infoText: "" });
+	    }
+	  },
+	  handleSubmit: function handleSubmit(e) {
+	    e.preventDefault();
+	    var searchTerm = React.findDOMNode(this.refs.searchText).value.trim();
+	    UserActions.searchUsersByKeyword(searchTerm);
+	  },
+
+	  render: function render() {
+
+	    var helpText = React.createElement(
+	      "p",
+	      { style: helpTextStyle },
+	      this.state.infoText
+	    );
+	    return React.createElement(
+	      "div",
+	      null,
+	      React.createElement(
+	        "form",
+	        { onSubmit: this.handleSubmit, className: "searchForm", style: searchStyle, method: "get", action: "/api/searchUsers/" },
+	        React.createElement("input", { type: "text", name: "searchText", ref: "searchText", cols: "100", placeholder: " Search by name, wants, skills..." }),
+	        React.createElement("input", { style: infoButton, type: "submit", value: "Search" }),
+	        React.createElement("br", null)
+	      )
+	    );
+	  }
+
+	});
+
+/***/ },
+/* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35850,7 +35953,7 @@
 	// React.render(<MessageList convoTitle={convoTitle} convoID={convoID} url="/api/messages/" />, document.getElementById("message"));
 
 /***/ },
-/* 228 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

@@ -16,7 +16,7 @@ const MessageAPI = {
 						console.log(response);
 						return response.data;
 					});
-	}
+	},
 
 	//every message thread has a conversationID, this will fetch the entire message log.
 	getMessagesForMessageThreadByID: function(messageThreadID) {
@@ -29,7 +29,7 @@ const MessageAPI = {
 						console.log(response);
 						return response.data;
 					});	
-	}
+	},
 	//get 1 specific message thread object (not the messages in them)
 	//Check mongoose Models for clarification on data structure
 	getMessageThreadByID: function(messageThreadID) {
@@ -42,7 +42,7 @@ const MessageAPI = {
 						console.log(response);
 						return response.data;
 					});	
-	}
+	},
 
 	//Will automatically add current user's information on post
 	createNewMessageThread: function(participantID, participantFullName, participantEmail) {
@@ -59,7 +59,7 @@ const MessageAPI = {
 						console.log(response);
 						return response.data;
 					});
-	}
+	},
 
 	createNewMessageInThreadIDWithText: function(messageThreadID, messageToAdd) {
 		return axios.post("/api/message" + messageThreadID, {

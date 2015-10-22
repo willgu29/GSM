@@ -1,7 +1,7 @@
 var alt = require('../alt');
 var UserActions = require('../actions/UserActions');
 
-class LoginStore {
+class UserStore {
   constructor() {
     this.users = [];
     
@@ -14,8 +14,7 @@ class LoginStore {
   }
 
   onUserReceived(result) {
-    console.log("Store: login: " + result);
-  
+    //TODO: save user  
   }
   onUsersReceived(users) {
     this.users = users;
@@ -23,19 +22,4 @@ class LoginStore {
 
 }
 
-module.exports = alt.createStore(LoginStore, 'LoginStore');
-
-
-$.ajax({
-      url: "/api/users",
-      dataType: 'jsonp',
-      cache: false,
-      success: function(arrayOfUsers){
-      if (this.isMounted()){
-        this.setState({users:arrayOfUsers});
-      }
-      }.bind(this),
-      error: function(xhr,status,err){
-        console.error(status, err.toString());
-      }.bind(this)
-      });
+module.exports = alt.createStore(UserStore, 'UserStore');

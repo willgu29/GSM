@@ -12,7 +12,7 @@ const UserAPI = {
 						console.log(response);
 						return response.data;
 					});
-	}
+	},
 	getAllUsers: function() {
 		return axios.get("/api/users/")
 					.then(function (response) {
@@ -23,7 +23,7 @@ const UserAPI = {
 						console.log(response);
 						return response.data;
 					});
-	}
+	},
 	keywordSearchUsers: function(searchText) {
 		return axios.get("/api/searchUsers/" + searchText)
 					.then(function (response) {
@@ -32,7 +32,7 @@ const UserAPI = {
 					.catch(function (response) {
 						return response.data;
 					})
-	}
+	},
 
 	updateProfile: function(topFiveTime, wantsArray, canOfferArray) {
 		return axios.post("/api/users/me", {
@@ -49,7 +49,7 @@ const UserAPI = {
 						return response.data;
 					});
 
-	}
+	},
 
 	createUserAccount: function(email, password, phoneNumber, firstName, lastName, initialGroupCode) {
 		return axios.post("/createAccount", {
@@ -68,6 +68,7 @@ const UserAPI = {
 						console.log(response);
 						return response.data;
 					});
+
 	}
 	
 

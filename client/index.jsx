@@ -9,7 +9,6 @@ var LandingPage = require("./LandingPage/LandingPage");
 
 var GSMHeader = require('./Mixins/GSMHeader');
 var GSMUserTableView = require("./GSMUserTableView");
-var Hello = require('./Hello');
 var Message = require('./Message');
 var EditAccount = require('./EditAccountForm');
 var pathName = window.location.pathname;
@@ -32,10 +31,9 @@ const App = React.createClass({
 	render: function() {
 
 		var content = [];
-
+		console.log("State: " + this.state.isLoggedIn);
 		if (this.state.isLoggedIn) {
-			//Display tableview and shit
-						//<GSMNavBar currentURL={pathName} />
+			console.log("what");
 			content.push(<GSMHeader />);
 			content.push(<GSMUserTableView />);
 		} else {
@@ -45,13 +43,6 @@ const App = React.createClass({
 
 		return(
 			<div>
-				<ul>
-          		<li><Link to="/">Home</Link></li>
-          		<li><Link to="/editAccount">My Profile</Link></li>
-          		<li><Link to="/groups">Groups</Link></li>
-
-
-        		</ul>
 				{content}
 				{this.props.children}
 			</div>
@@ -62,7 +53,7 @@ const App = React.createClass({
 ReactDOM.render((<Router>
 				<Route path="/" component={App}>
 					<Route path="/editAccount" component={EditAccount} />
-					<Route path="/groups" component={Hello} />
+					<Route path="/groups" component={Message} />
 					<Route path="/messages" component={Message} />
 				</Route>
 			</Router>

@@ -1,30 +1,14 @@
 'use strict'
 import React from 'react'
 var $ = require('jquery');
+var UserActions = require("./actions/UserActions");
+var UserStore = require("./stores/UserStore");
+var GSMSearchBar = require("./components/GSMSearchBar");
+
 var helpTextStyle = {
   fontSize: "14px",
   display: "inline"
 }
-var infoButton = {
-  display: "inline",
-  padding: "6px 12px",
-  marginBottom: "0",
-  fontSize: "14px",
-  fontWeight: "normal",
-  lineHeight: "1.42857143",
-  textAlign: "center",
-  whiteSpace: "nowrap",
-  verticalAlign: "middle",
-  cursor: "pointer",
-  backgroundImage: "none",
-  border: "1px solid transparent",
-  borderRadius: "4px",
-   color: "#fff",
-  background: "green",
-  borderColor: "#46b8da",
-  marginLeft: "10"
-
-};
 
 
 var cardStyle = {
@@ -92,10 +76,7 @@ var profStyle = {
 
 }
 
-var searchStyle = {
-  marginLeft: "25px",
-  marginBottom: "25px"
-}
+
 
 //Tabular Data Columns
 
@@ -214,53 +195,7 @@ var RatingStars = React.createClass({
 
 
 
-var SearchBar = React.createClass({
-  getInitialState: function() {
-    return ({infoText:""});
-  },
-  handleInfoClick: function() {
-    if (this.state.infoText == "") {
-      this.setState({infoText:" Search by keywords (name, skills, activities, etc). Search nothing to see everyone."});
-    } else {
-      this.setState({infoText:""});
-    }
-  },
-  handleSubmit: function(e) {
-    e.preventDefault();
 
-    var searchTerm = React.findDOMNode(this.refs.searchText).value.trim();
-    var searchURL = this.props.url+searchTerm;
-    $.ajax({
-      url: searchURL,
-      dataType: 'json',
-      success: function(data) {
-        this.props.handleChange(data);
-      }.bind(this),
-      error: function(xhr,status,err){
-        console.log("Error: ", err);
-      }.bind(this)
-    });
-  },
-
-  
-
-  render: function() {
-
-    var helpText = <p style={helpTextStyle} >{this.state.infoText}</p>
-    return(
-      <div>
-        
-        
-        <form onSubmit={this.handleSubmit} className="searchForm"  style={searchStyle} method="get" action="/api/searchUsers/" >
-         <input type="text" name="searchText" ref="searchText" cols="100" placeholder=" Search by name, wants, skills..."/>
-         <input style={infoButton} type="submit" value="Search" />
-         <br/>
-        </form>
-        </div>
-    );
-  }
-
-});
 //<button type="button" style={infoButton} onClick={this.handleInfoClick}>Info</button> 
 ///****************
 
@@ -299,14 +234,20 @@ var UserRow = React.createClass({
 module.exports = React.createClass({
   displayName: "GSMTableView",
   getInitialState:  function() {
-    return ({users:[]});
+    return UserStore.getState();
   },
   componentDidMount: function() {
-    
+    UserStore.listen(this.onChange);
+    UserActions.getAllUsers();
   },
-  handleChange: function(users) {
-    this.setState({users:users});
+  componentWillUnmount: function() {
+    UserActions.unlisten(this.onChange);
   },
+  onChange(state){
+    console.log("User store change state: " + JSON.stringify(state));
+    this.setState(state);
+  },
+ 
 
   render: function() {
     var arrayOfUsers = this.state.users;
@@ -322,7 +263,7 @@ module.exports = React.createClass({
     }
     return(
       <div>
-      <SearchBar url="/api/searchUsers/" handleChange={this.handleChange} /> 
+      <GSMSearchBar />
       {arrayOfUserRows}
       </div>
 

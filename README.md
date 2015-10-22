@@ -4,16 +4,11 @@ NEWWW:
 
 GO to client folder and
 
-webpack --watch
+webpack
+
 then
-npm run start.
 
-Visit localhost:8090 to see app.
-(this is route router combined with webpack)
-
-You'll need to run the backend server normally via node index.js
-
-
+index.js as normal localhost:3000
 
 ***
 

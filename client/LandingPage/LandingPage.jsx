@@ -2,7 +2,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 var LoginActions = require('../actions/LoginActions');
-var LoginStore = require('../stores/LoginStore');
 
 
 var errorStyle = {

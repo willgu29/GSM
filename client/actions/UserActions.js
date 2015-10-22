@@ -1,7 +1,8 @@
 var alt = require("../alt");
-var LoginAPI = require('../utils/LoginAPI');
+var UserAPI = require('../utils/UserAPI');
 
 class UserActions {
+
   constructor() {
     this.generateActions(
       'usersReceived',
@@ -11,18 +12,31 @@ class UserActions {
   }
     
     getUser(id) {
-      LoginAPI.tryLogin(email, password).then((result) => {
+      UserAPI.getUserByID(id).then((result) => {
         console.log("NEW RESULT: "+ JSON.stringify(result));
-        //How to return result from here?
-        this.actions.usersReceived(result);
+        this.actions.userReceived(result);
       }).catch(function(error) {
 
       });
-      //Problem is tryLogin is being received as an action, then no received action b/c of callback
-      // this.dispatch(email);
-    }
-    getAllUsers() {
 
+    }
+
+    getAllUsers() {
+      UserAPI.getAllUsers().then((result) => {
+          console.log("NEW RESULT: "+ JSON.stringify(result));
+          this.actions.usersReceived(result);
+      }).catch(function(error) {
+
+      });
+    }
+
+    searchUsersByKeyword(searchText) {
+      UserAPI.keywordSearchUsers(searchText).then((result) => {
+          console.log("NEW RESULT: "+ JSON.stringify(result));
+          this.actions.usersReceived(result);
+      }).catch(function(error) {
+
+      });
     }
 
 

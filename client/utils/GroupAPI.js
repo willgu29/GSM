@@ -14,7 +14,7 @@ const GroupAPI = {
 						console.log(response);
 						return response.data;
 					});
-	}
+	},
 	getGroupByID: function(groupID) {
 		return axios.get("/api/groups/" +groupID)
 					.then(function (response) {
