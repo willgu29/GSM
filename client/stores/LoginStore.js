@@ -7,19 +7,19 @@ class LoginStore {
     
     this.bindListeners({
       onLoginSuccess: LoginActions.loginSuccess,
-      onLoginFailed: LoginActions.loginFailed
+      onLoginFailed: LoginActions.loginFailed,
     });
 
 
   }
 
   onLoginSuccess(result) {
-  	console.log("Store: login");
-   	this.isLoggedIn = true;
+  	console.log("Store: login: " + result);
+  	this.isLoggedIn = true;
+  
   }
   onLoginFailed(isLoggedIn) {
   	console.log("Store; login failed");
-  	this.isLoggedIn = isLoggedIn;
   }
 
 }

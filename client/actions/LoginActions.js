@@ -11,13 +11,15 @@ class LoginActions {
 	}
   	
   	tryLogin(email, password) {
-  		LoginAPI.tryLogin(email, password).then(function(result){
+  		LoginAPI.tryLogin(email, password).then((result) => {
   			console.log("NEW RESULT: "+ JSON.stringify(result));
-  			this.actions.loginSuccess(result);
-
+        //How to return result from here?
+        this.actions.loginSuccess(result);
   		}).catch(function(error) {
 
   		});
+      //Problem is tryLogin is being received as an action, then no received action b/c of callback
+      // this.dispatch(email);
   	}
 
 

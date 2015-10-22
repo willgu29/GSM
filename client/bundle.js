@@ -23081,14 +23081,13 @@
 	  _createClass(LoginStore, [{
 	    key: 'onLoginSuccess',
 	    value: function onLoginSuccess(result) {
-	      console.log("Store: login");
+	      console.log("Store: login: " + result);
 	      this.isLoggedIn = true;
 	    }
 	  }, {
 	    key: 'onLoginFailed',
 	    value: function onLoginFailed(isLoggedIn) {
 	      console.log("Store; login failed");
-	      this.isLoggedIn = isLoggedIn;
 	    }
 	  }]);
 
@@ -24696,10 +24695,15 @@
 	  _createClass(LoginActions, [{
 	    key: 'tryLogin',
 	    value: function tryLogin(email, password) {
+	      var _this = this;
+
 	      LoginAPI.tryLogin(email, password).then(function (result) {
 	        console.log("NEW RESULT: " + JSON.stringify(result));
-	        this.actions.loginSuccess(result);
+	        //How to return result from here?
+	        _this.actions.loginSuccess(result);
 	      })['catch'](function (error) {});
+	      //Problem is tryLogin is being received as an action, then no received action b/c of callback
+	      // this.dispatch(email);
 	    }
 	  }]);
 
