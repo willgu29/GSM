@@ -86,7 +86,6 @@
 			var content = [];
 			console.log("State: " + this.state.isLoggedIn);
 			if (this.state.isLoggedIn) {
-				console.log("what");
 				content.push(React.createElement(GSMHeader, null));
 				content.push(React.createElement(GSMUserTableView, null));
 			} else {
@@ -35713,6 +35712,11 @@
 
 	var UserActions = __webpack_require__(226);
 
+	var helpTextStyle = {
+	  fontSize: "14px",
+	  display: "inline"
+	};
+
 	var searchStyle = {
 	  marginLeft: "25px",
 	  marginBottom: "25px"
@@ -35743,7 +35747,8 @@
 	  displayName: "exports",
 
 	  getInitialState: function getInitialState() {
-	    return { infoText: "" };
+	    return { infoText: "",
+	      searchText: "" };
 	  },
 	  handleInfoClick: function handleInfoClick() {
 	    if (this.state.infoText == "") {
@@ -35752,10 +35757,14 @@
 	      this.setState({ infoText: "" });
 	    }
 	  },
+	  handleChange: function handleChange(e) {
+	    e.preventDefault();
+	    var searchText = e.target.value.trim();
+	    this.setState({ searchText: searchText });
+	  },
 	  handleSubmit: function handleSubmit(e) {
 	    e.preventDefault();
-	    var searchTerm = React.findDOMNode(this.refs.searchText).value.trim();
-	    UserActions.searchUsersByKeyword(searchTerm);
+	    UserActions.searchUsersByKeyword(this.state.searchText);
 	  },
 
 	  render: function render() {
@@ -35771,7 +35780,7 @@
 	      React.createElement(
 	        "form",
 	        { onSubmit: this.handleSubmit, className: "searchForm", style: searchStyle, method: "get", action: "/api/searchUsers/" },
-	        React.createElement("input", { type: "text", name: "searchText", ref: "searchText", cols: "100", placeholder: " Search by name, wants, skills..." }),
+	        React.createElement("input", { type: "text", name: "searchText", onChange: this.handleChange, cols: "100", placeholder: "Search by name, wants, skills..." }),
 	        React.createElement("input", { style: infoButton, type: "submit", value: "Search" }),
 	        React.createElement("br", null)
 	      )

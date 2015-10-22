@@ -33,7 +33,6 @@ const App = React.createClass({
 		var content = [];
 		console.log("State: " + this.state.isLoggedIn);
 		if (this.state.isLoggedIn) {
-			console.log("what");
 			content.push(<GSMHeader />);
 			content.push(<GSMUserTableView />);
 		} else {

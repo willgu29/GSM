@@ -1,6 +1,12 @@
 var UserActions = require("../actions/UserActions");
 
 
+var helpTextStyle = {
+  fontSize: "14px",
+  display: "inline"
+}
+
+
 var searchStyle = {
   marginLeft: "25px",
   marginBottom: "25px"
@@ -31,7 +37,8 @@ var infoButton = {
 
 module.exports = React.createClass({
   getInitialState: function() {
-    return ({infoText:""});
+    return ({infoText:"",
+			searchText: ""});
   },
   handleInfoClick: function() {
     if (this.state.infoText == "") {
@@ -40,10 +47,15 @@ module.exports = React.createClass({
       this.setState({infoText:""});
     }
   },
-  handleSubmit: function(e) {
+  handleChange: function(e) {
     e.preventDefault();
-    var searchTerm = React.findDOMNode(this.refs.searchText).value.trim();
-    UserActions.searchUsersByKeyword(searchTerm);
+    var searchText = e.target.value.trim();
+    this.setState({searchText:searchText})
+  },
+  handleSubmit: function(e) {
+  	e.preventDefault();
+  	UserActions.searchUsersByKeyword(this.state.searchText);
+
   },
 
   
@@ -56,7 +68,7 @@ module.exports = React.createClass({
         
         
         <form onSubmit={this.handleSubmit} className="searchForm"  style={searchStyle} method="get" action="/api/searchUsers/" >
-         <input type="text" name="searchText" ref="searchText" cols="100" placeholder=" Search by name, wants, skills..."/>
+         <input type="text" name="searchText" onChange={this.handleChange} cols="100" placeholder="Search by name, wants, skills..."/>
          <input style={infoButton} type="submit" value="Search" />
          <br/>
         </form>

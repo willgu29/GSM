@@ -10,7 +10,6 @@ var helpTextStyle = {
   display: "inline"
 }
 
-
 var cardStyle = {
   width: "90%",
   marginLeft: "25px",
