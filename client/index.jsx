@@ -26,7 +26,7 @@ const App = React.createClass({
 		LoginStore.unlisten(this.onChange);
 	},
 	onChange(state) {
-		console.log("Change state: index: state: " + state);
+		console.log("Change state: index: state: " + JSON.stringify(state));
 		this.setState(state);
 	},
 	render: function() {

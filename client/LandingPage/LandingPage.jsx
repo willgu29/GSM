@@ -19,11 +19,14 @@ var LoginForm = React.createClass({
 	handleSubmit: function(e) {
 		e.preventDefault();
 
+		var email = this.state.email;
+		var password = this.state.password;
 		var data = {
 			email: this.state.email,
 			password: this.state.password
 		};
-		LoginStore.tryLogin(data);
+		console.log(data);
+		LoginActions.tryLogin(email,password);
 
 	},
 	handleChangeEmail: function(e) {

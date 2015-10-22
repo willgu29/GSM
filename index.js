@@ -942,11 +942,11 @@ passport.use(new LocalStrategy({
 			if (err) {return done(err);}
 			if (!user) {
 				console.log("Incorrect email");
-       			return done(null, false, { message: 'Incorrect email.' });
+       			return done(null, false, { data: 'Incorrect email.' });
       		}
       		if (!(user.password == password)) {
       			console.log("Incorrect password");
-        		return done(null, false, { message: 'Incorrect password.' });
+        		return done(null, false, { data: 'Incorrect password.' });
       		}
       		return done(null, user);	
 		});

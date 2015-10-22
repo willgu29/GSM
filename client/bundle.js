@@ -79,7 +79,7 @@
 			LoginStore.unlisten(this.onChange);
 		},
 		onChange: function onChange(state) {
-			console.log("Change state: index: state: " + state);
+			console.log("Change state: index: state: " + JSON.stringify(state));
 			this.setState(state);
 		},
 		render: function render() {
@@ -23065,7 +23065,6 @@
 
 	var alt = __webpack_require__(194);
 	var LoginActions = __webpack_require__(207);
-	var LoginSource = __webpack_require__(208);
 
 	var LoginStore = (function () {
 	  function LoginStore() {
@@ -23074,32 +23073,22 @@
 	    this.isLoggedIn = false;
 
 	    this.bindListeners({
-	      handleLogin: LoginActions.LOGIN,
-	      handleLoginFailed: LoginActions.LOGIN_FAILED,
-	      handleTryLogin: LoginActions.TRY_LOGIN
-
+	      onLoginSuccess: LoginActions.loginSuccess,
+	      onLoginFailed: LoginActions.loginFailed
 	    });
-
-	    this.exportAsync(LoginSource);
 	  }
 
 	  _createClass(LoginStore, [{
-	    key: 'handleLogin',
-	    value: function handleLogin(isLoggedIn) {
+	    key: 'onLoginSuccess',
+	    value: function onLoginSuccess(result) {
 	      console.log("Store: login");
-	      this.isLoggedIn = isLoggedIn;
+	      this.isLoggedIn = true;
 	    }
 	  }, {
-	    key: 'handleLoginFailed',
-	    value: function handleLoginFailed(isLoggedIn) {
+	    key: 'onLoginFailed',
+	    value: function onLoginFailed(isLoggedIn) {
 	      console.log("Store; login failed");
 	      this.isLoggedIn = isLoggedIn;
-	    }
-	  }, {
-	    key: 'handleTryLogin',
-	    value: function handleTryLogin() {
-	      console.log("Store: try login");
-	      this.isLoggedIn = false;
 	    }
 	  }]);
 
@@ -24688,34 +24677,29 @@
 /* 207 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 	var alt = __webpack_require__(194);
+	var LoginAPI = __webpack_require__(208);
 
 	var LoginActions = (function () {
 	  function LoginActions() {
 	    _classCallCheck(this, LoginActions);
+
+	    this.generateActions('loginSuccess', 'loginFailed');
 	  }
 
 	  _createClass(LoginActions, [{
-	    key: "login",
-	    value: function login(isLoggedIn) {
-	      this.dispatch(isLoggedIn);
-	    }
-	  }, {
-	    key: "loginFailed",
-	    value: function loginFailed(isLoggedIn) {
-	      this.dispatch(isLoggedIn);
-	    }
-	  }, {
-	    key: "tryLogin",
-	    value: function tryLogin() {
-	      console.log("Actions: try login");
-	      this.dispatch();
+	    key: 'tryLogin',
+	    value: function tryLogin(email, password) {
+	      LoginAPI.tryLogin(email, password).then(function (result) {
+	        console.log("NEW RESULT: " + JSON.stringify(result));
+	        this.actions.loginSuccess(result);
+	      })['catch'](function (error) {});
 	    }
 	  }]);
 
@@ -24728,36 +24712,28 @@
 /* 208 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
-	var LoginActions = __webpack_require__(207);
 	var axios = __webpack_require__(209);
 
-	var LoginSource = {
-		tryLogin: function tryLogin() {
-			return {
-				remote: function remote(data) {
-					console.log("Source : try login");
-					//TODO: Simulate server call
-					return axios.post("/login", {
-						email: data.email,
-						password: data.password
-					}).then(function (response) {
-						console.log(response);
-						return response;
-					})['catch'](function (response) {
-						console.log(reponse);
-						return response;
-					});
-				},
-				success: LoginActions.login,
-				error: LoginActions.loginFailed,
-				loading: LoginActions.tryLogin
-			};
+	var LoginAPI = {
+
+		tryLogin: function tryLogin(email, password) {
+			return axios.post("/login", {
+				email: email,
+				password: password
+			}).then(function (response) {
+				console.log(response);
+				return response.data;
+			})["catch"](function (response) {
+				console.log(response);
+				return response.data;
+			});
 		}
+
 	};
 
-	module.exports = LoginSource;
+	module.exports = LoginAPI;
 
 /***/ },
 /* 209 */
@@ -25706,11 +25682,14 @@
 		handleSubmit: function handleSubmit(e) {
 			e.preventDefault();
 
+			var email = this.state.email;
+			var password = this.state.password;
 			var data = {
 				email: this.state.email,
 				password: this.state.password
 			};
-			LoginStore.tryLogin(data);
+			console.log(data);
+			LoginActions.tryLogin(email, password);
 		},
 		handleChangeEmail: function handleChangeEmail(e) {
 			this.setState({ email: e.target.value });
