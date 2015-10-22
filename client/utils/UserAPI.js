@@ -33,6 +33,24 @@ const UserAPI = {
 						return response.data;
 					})
 	}
+
+	updateProfile: function(topFiveTime, wantsArray, canOfferArray) {
+		return axios.post("/api/users/me", {
+						topFiveTime: topFiveTime,
+						wants: wantsArray,
+						canOffer: canOfferArray
+					})
+					.then(function (response) {
+						console.log(response);
+						return response.data;
+					})
+					.catch(function (response) {
+						console.log(response);
+						return response.data;
+					});
+
+	}
+
 	createUserAccount: function(email, password, phoneNumber, firstName, lastName, initialGroupCode) {
 		return axios.post("/createAccount", {
 						email: email,

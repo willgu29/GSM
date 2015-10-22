@@ -3,7 +3,7 @@ var axios = require("axios");
 const EventAPI = {
 
 	getAllEvents: function() {
-		axios.get("/api/events/all")
+		return axios.get("/api/events/all")
 					.then(function (response) {
 						console.log(response);
 						return response.data;
@@ -14,7 +14,7 @@ const EventAPI = {
 					});
 	}
 	getEventsForCurrentUser: function() {
-		axios.get("/api/events")
+		return axios.get("/api/events")
 					.then(function (response) {
 						console.log(response);
 						return response.data;
@@ -24,7 +24,7 @@ const EventAPI = {
 						return response.data;
 					});
 	}
-	
+
 
 }
 

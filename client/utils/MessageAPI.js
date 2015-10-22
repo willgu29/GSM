@@ -7,7 +7,7 @@ const MessageAPI = {
 	//Therefore, just pass in userID = nil, /api/messages/ will automatically put userID of current
 	//req user in.
 	getMessageThreadsForUserID: function(userID) {
-		axios.get("/api/messages/")
+		return axios.get("/api/messages/")
 					.then(function (response) {
 						console.log(response);
 						return response.data;
@@ -20,7 +20,7 @@ const MessageAPI = {
 
 	//every message thread has a conversationID, this will fetch the entire message log.
 	getMessagesForMessageThreadByID: function(messageThreadID) {
-		axios.get("/api/message/" + convoID)
+		return axios.get("/api/message/" + convoID)
 					.then(function (response) {
 						console.log(response);
 						return response.data;
@@ -33,7 +33,7 @@ const MessageAPI = {
 	//get 1 specific message thread object (not the messages in them)
 	//Check mongoose Models for clarification on data structure
 	getMessageThreadByID: function(messageThreadID) {
-		axios.get("/api/messageThread/" + messageThreadID)
+		return axios.get("/api/messageThread/" + messageThreadID)
 					.then(function (response) {
 						console.log(response);
 						return response.data;
@@ -46,7 +46,7 @@ const MessageAPI = {
 
 	//Will automatically add current user's information on post
 	createNewMessageThread: function(participantID, participantFullName, participantEmail) {
-		axios.post("/api/messages", {
+		return axios.post("/api/messages", {
 						_id : participantID,
 						fullName: participantFullName,
 						email: participantEmail
@@ -62,7 +62,7 @@ const MessageAPI = {
 	}
 
 	createNewMessageInThreadIDWithText: function(messageThreadID, messageToAdd) {
-		axios.post("/api/message" + messageThreadID, {
+		return axios.post("/api/message" + messageThreadID, {
 						text: messageToAdd
 					})
 					then(function (response) {
@@ -75,7 +75,7 @@ const MessageAPI = {
 					});
 
 	}
-	
+
 
 }
 

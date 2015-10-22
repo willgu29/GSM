@@ -870,7 +870,7 @@ app.post('/api/media/:userID', function(req, res){
 });
 
 
-app.delete("/api/user/:userID", function (req, res) {
+app.delete("/api/user/:userID", ensureAdmin, function (req, res) {
 
     var userID;
     if (req.params.userID == "none") {
