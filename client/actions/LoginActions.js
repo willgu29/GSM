@@ -26,6 +26,14 @@ class LoginActions {
       // this.dispatch(email);
   	}
 
+    logout() {
+      LoginAPI.logout().then((result) => {
+        this.dispatch();
+      });.catch(function(error) {
+
+      });
+    }
+
 
 
 }

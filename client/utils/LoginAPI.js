@@ -15,6 +15,17 @@ const LoginAPI = {
 						console.log(response);
 						return response.data;
 					});
+	},
+	logout: function() {
+		return axios.get("/logout")
+					.then(function (response) {
+						console.log(response);
+						return response.data;
+					})
+					.catch(function (response) {
+						console.log(response);
+						return response.data;
+					});
 	}
 
 };
