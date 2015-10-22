@@ -217,18 +217,18 @@ app.get("/api/users/:userID", function (req, res) {
 
 });
 
-app.get("/api/searchUsers/", function (req, res) {
-  //reset search form
+// app.get("/api/searchUsers/", function (req, res) {
+//   //reset search form
 
-  var query = User.find({}).limit(req.body.limit).skip(req.body.skip);
-  query.select('-password -phoneNumber');
-  query.exec(function (err, users) {
-    if (err) { console.log(err);} 
-    else { res.json(users);}
-  });
+//   var query = User.find({}).limit(req.body.limit).skip(req.body.skip);
+//   query.select('-password -phoneNumber');
+//   query.exec(function (err, users) {
+//     if (err) { console.log(err);} 
+//     else { res.json(users);}
+//   });
 
  
-});
+// });
 
 //Full text search
 app.get("/api/searchUsers/:searchText", function (req, res) {
@@ -236,7 +236,11 @@ app.get("/api/searchUsers/:searchText", function (req, res) {
   var searchText = req.params.searchText;
 
   var query = User.find({}).limit(req.body.limit).skip(req.body.skip);
-  query.where({$text : {$search : searchText}});
+  if (searchText == "") {
+
+  } else {
+    query.where({$text : {$search : searchText}});    
+  }
   //             { score : {$meta: "textScore"}});
   // query.sort({score : {$meta : "textScore"}});
   query.select('-password -phoneNumber');
@@ -251,11 +255,11 @@ app.get("/api/searchUsers/:searchText", function (req, res) {
 app.get("/api/messages/:convoID", loggedIn, function (req, res) {
   console.log("/api/messages/:convoID GET " + req.params.convoID);
   var searchID;
-  if (req.params.userID == "me") {
-    searchID = req.user._id;
-  } else {
+  // if (req.params.userID == "me") {
+  //   searchID = req.user._id;
+  // } else {
     searchID = req.params.convoID;
-  }
+  // }
 
   //sort by date created (does this by default)
   Message.find({toMessageThread_id:searchID}, function (err, messageObjects) {

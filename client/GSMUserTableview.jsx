@@ -302,19 +302,7 @@ module.exports = React.createClass({
     return ({users:[]});
   },
   componentDidMount: function() {
-    $.ajax({
-      url: "/api/users",
-      dataType: 'jsonp',
-      cache: false,
-      success: function(arrayOfUsers){
-      if (this.isMounted()){
-        this.setState({users:arrayOfUsers});
-      }
-      }.bind(this),
-      error: function(xhr,status,err){
-        console.error(status, err.toString());
-      }.bind(this)
-      });
+    
   },
   handleChange: function(users) {
     this.setState({users:users});
