@@ -217,18 +217,18 @@ app.get("/api/users/:userID", function (req, res) {
 
 });
 
-// app.get("/api/searchUsers/", function (req, res) {
-//   //reset search form
+app.get("/api/searchUsers/", function (req, res) {
+  //reset search form
 
-//   var query = User.find({}).limit(req.body.limit).skip(req.body.skip);
-//   query.select('-password -phoneNumber');
-//   query.exec(function (err, users) {
-//     if (err) { console.log(err);} 
-//     else { res.json(users);}
-//   });
+  var query = User.find({}).limit(req.body.limit).skip(req.body.skip);
+  query.select('-password -phoneNumber');
+  query.exec(function (err, users) {
+    if (err) { console.log(err);} 
+    else { res.json(users);}
+  });
 
  
-// });
+});
 
 //Full text search
 app.get("/api/searchUsers/:searchText", function (req, res) {

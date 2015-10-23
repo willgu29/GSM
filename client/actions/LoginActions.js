@@ -29,7 +29,7 @@ class LoginActions {
     logout() {
       LoginAPI.logout().then((result) => {
         this.dispatch();
-      });.catch(function(error) {
+      }).catch(function(error) {
 
       });
     }
