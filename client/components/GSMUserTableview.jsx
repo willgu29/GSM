@@ -1,9 +1,9 @@
 'use strict'
 import React from 'react'
 var $ = require('jquery');
-var UserActions = require("./actions/UserActions");
-var UserStore = require("./stores/UserStore");
-var GSMSearchBar = require("./components/GSMSearchBar");
+var TableActions = require("../actions/TableActions");
+var TableStore = require("../stores/TableStore");
+var GSMSearchBar = require("../components/GSMSearchBar");
 
 var helpTextStyle = {
   fontSize: "14px",
@@ -233,14 +233,14 @@ var UserRow = React.createClass({
 module.exports = React.createClass({
   displayName: "GSMTableView",
   getInitialState:  function() {
-    return UserStore.getState();
+    return TableStore.getState();
   },
   componentDidMount: function() {
-    UserStore.listen(this.onChange);
-    UserActions.getAllUsers();
+    TableStore.listen(this.onChange);
+    TableActions.getAllUsers();
   },
   componentWillUnmount: function() {
-    UserActions.unlisten(this.onChange);
+    TableActions.unlisten(this.onChange);
   },
   onChange(state){
     console.log("User store change state: " + JSON.stringify(state));

@@ -1,4 +1,4 @@
-var UserActions = require("../actions/UserActions");
+var TableActions = require("../actions/TableActions");
 
 
 var helpTextStyle = {
@@ -54,7 +54,7 @@ module.exports = React.createClass({
   },
   handleSubmit: function(e) {
   	e.preventDefault();
-  	UserActions.searchUsersByKeyword(this.state.searchText);
+  	TableActions.searchUsersByKeyword(this.state.searchText);
 
   },
 

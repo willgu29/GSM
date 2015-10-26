@@ -5,7 +5,6 @@ class UserActions {
 
   constructor() {
     this.generateActions(
-      'usersReceived',
       'userReceived'
 
     );
@@ -21,24 +20,7 @@ class UserActions {
 
     }
 
-    getAllUsers() {
-      UserAPI.getAllUsers().then((result) => {
-          console.log("NEW RESULT: "+ JSON.stringify(result));
-          this.actions.usersReceived(result);
-      }).catch(function(error) {
-
-      });
-    }
-
-    searchUsersByKeyword(searchText) {
-      UserAPI.keywordSearchUsers(searchText).then((result) => {
-          console.log("NEW RESULT: "+ JSON.stringify(result));
-          this.actions.usersReceived(result);
-      }).catch(function(error) {
-
-      });
-    }
-
+ 
 
 
 

@@ -1,5 +1,6 @@
 'use strict'
 import React from 'react'
+import { Router, Route, Link } from 'react-router'
 
 var iGrouplyHeaderStyle = {
 	fontFamily: "Avenir Medium",
@@ -46,11 +47,11 @@ var GSMNavBarItems = React.createClass({
 	
 		return(
 			<ul style={ulStyle}>
-				<li style={style1}><a style={aStyle} href="/">Member List</a></li>
-				<li style={style2}><a style={aStyle} href="/messages">Messages</a></li>
+				<li style={style1}><Link style={aStyle} to="/">Home</Link></li>
+				<li style={style2}><Link style={aStyle} to="/messages">Messages</Link></li>
 				
-				<li style={style5}><a style={aStyle} href="/editAccount">Edit Profile</a></li>
-				<li style={style5}><a style={aStyle} href="/logout">Logout</a></li>
+				<li style={style5}><Link style={aStyle} to="/editAccount">My Profile</Link></li>
+				<li style={style5}><Link style={aStyle} to="/logout">Logout</Link></li>
 			</ul>
 		);
 	}

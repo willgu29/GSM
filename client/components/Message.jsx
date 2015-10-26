@@ -1,5 +1,6 @@
 'use strict'
 import React from 'react'
+var $ = require("jquery");
 
 // var convoID = document.getElementById("convoID").getAttribute("value");
 

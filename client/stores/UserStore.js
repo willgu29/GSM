@@ -3,21 +3,25 @@ var UserActions = require('../actions/UserActions');
 
 class UserStore {
   constructor() {
-    this.users = [];
     
+    this.fetchedUser = {
+      _id: "",
+      email: "",
+      fullName: "",
+      wants: [],
+      canOffer: [],
+      topFiveTime: ""
+    };
+
     this.bindListeners({
       onUserReceived: UserActions.userReceived,
-      onUsersReceived: UserActions.usersReceived
     });
 
 
   }
 
   onUserReceived(result) {
-    //TODO: save user  
-  }
-  onUsersReceived(users) {
-    this.users = users;
+    this.fetchedUser = result;
   }
 
 }

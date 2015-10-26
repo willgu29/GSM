@@ -1,3 +1,7 @@
+'use strict'
+import React from 'react'
+var $ = require('jquery');
+
 var NewMessage = React.createClass({
 	
 
@@ -50,8 +54,8 @@ var NewMessage = React.createClass({
 });
 
 
-var UserProfile = React.createClass({
-	
+module.exports = React.createClass({
+	displayName: "UserProfile",
 	getInitialState: function() {
 		return ({
 			email: "",
@@ -120,8 +124,7 @@ var UserProfile = React.createClass({
 });
 
 
-var urlCall = "/api" + window.location.pathname;
-React.render(<UserProfile url={urlCall} />, document.getElementById("gsmUserProfile"));
+
 
 
 
