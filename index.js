@@ -166,7 +166,7 @@ app.post('/login', function(req, res, next) {
     if (!user) { return res.json(info); }
     req.logIn(user, function(err) {
       if (err) { return res.json(info); }
-      return res.json('/');
+      return res.json({info:"success", user: user});
     });
   })(req, res, next);
 });
@@ -946,11 +946,11 @@ passport.use(new LocalStrategy({
 			if (err) {return done(err);}
 			if (!user) {
 				console.log("Incorrect email");
-       			return done(null, false, { data: 'Incorrect email.' });
+       			return done(null, false, { info: 'Incorrect email.' });
       		}
       		if (!(user.password == password)) {
       			console.log("Incorrect password");
-        		return done(null, false, { data: 'Incorrect password.' });
+        		return done(null, false, { info: 'Incorrect password.' });
       		}
       		return done(null, user);	
 		});

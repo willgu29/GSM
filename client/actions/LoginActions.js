@@ -14,10 +14,10 @@ class LoginActions {
   		LoginAPI.tryLogin(email, password).then((result) => {
   			console.log("NEW RESULT: "+ JSON.stringify(result));
         //How to return result from here?
-        if (result == "/") {
-          this.actions.loginSuccess(result);          
+        if (result.info == "success") {
+          this.actions.loginSuccess(result.user);          
         } else {
-          this.actions.loginFailed(result);
+          this.actions.loginFailed(result.info);
         }
   		}).catch(function(error) {
 

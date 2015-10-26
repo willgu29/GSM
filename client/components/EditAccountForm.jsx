@@ -1,15 +1,12 @@
 'use strict'
 import React from 'react'
 var $ = require('jquery');
-
+var UserActions = require("../actions/UserActions");
 module.exports = React.createClass({
     getInitialState: function() {
         return ({
             
-            interesting: "",
             topFiveTime:  "",
-            personality: [],
-            skills: [],
             wants: [],
             canOffer: []
 
@@ -18,34 +15,17 @@ module.exports = React.createClass({
         });
     },
     componentDidMount: function() {
-        $.ajax({
-            url: "localhost:3000/api/users/me",
-            dataType: 'jsonp',
-            cache: false,
-            success: function(userData){
-            if (this.isMounted()){               
-                this.setState({
-                                interesting: userData.identity.interesting,
-                                topFiveTime: userData.identity.topFiveTime,
-                                personality: userData.identity.personality,
-                                skills: userData.identity.skills,
-                                canOffer: userData.identity.canOffer,
-                                wants: userData.identity.wants
-                                
-                            
-                        });
-            }
-            }.bind(this),
-            error: function(xhr,status,err){
-                console.error(status, err.toString());
-            }.bind(this)
-        });
+        UserActions.getUser("me");
      },
     handleChange: function(name, event) {
         var change = {};
         change[name] = event.target.value;
         this.setState(change);
     },
+    handleSubmit: function(e) {
+        e.preventDefault();
+
+    }
 	render: function() {
 
 
@@ -53,7 +33,7 @@ module.exports = React.createClass({
             <div>
 			 <h3>Edit Account</h3>
              <p>Be sure to click edit account below to save your profile.</p>
-			  <form className="editAccountForm" method="post" action="api/users/me" >
+			  <form onSubmit={this.handleSubmit} className="editAccountForm" method="post" action="api/users/me" >
 
                     Top 5 things you spend your time on: (be specific) <br /> 
                     <textarea id="topFiveTime" name="topFiveTime" value={this.state.topFiveTime} onChange={this.handleChange.bind(this, "topFiveTime")} cols="60" row="10" ></textarea> <br /><br />
