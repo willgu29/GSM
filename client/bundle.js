@@ -86,21 +86,25 @@
 		render: function render() {
 
 			var content = [];
+			var indexContent = [];
+
 			console.log("State: " + this.state.isLoggedIn);
+			console.log("Something: " + JSON.stringify(this.props.location.pathname));
 			if (this.state.isLoggedIn) {
 				content.push(React.createElement(GSMHeader, null));
-				if (window.location.pathname == "/") {
-					content.push(React.createElement(GSMUserTableView, null));
+				if (this.props.location.pathname == "/") {
+					indexContent.push(React.createElement(GSMUserTableView, null));
 				}
 			} else {
 				//landing page
-				content.push(React.createElement(LandingPage, null));
+				indexContent.push(React.createElement(LandingPage, null));
 			}
 
 			return React.createElement(
 				'div',
 				null,
 				content,
+				indexContent,
 				this.props.children
 			);
 		}
@@ -112,9 +116,9 @@
 		React.createElement(
 			_reactRouter.Route,
 			{ path: '/', component: App },
-			React.createElement(_reactRouter.Route, { path: '/users/:id', component: GSMUserProfile }),
-			React.createElement(_reactRouter.Route, { path: '/editAccount', component: EditAccount }),
-			React.createElement(_reactRouter.Route, { path: '/messages', component: Message })
+			React.createElement(_reactRouter.Route, { path: 'users/:id', component: GSMUserProfile }),
+			React.createElement(_reactRouter.Route, { path: 'editAccount', component: EditAccount }),
+			React.createElement(_reactRouter.Route, { path: 'messages', component: Message })
 		)
 	), document.getElementById("content"));
 
@@ -26296,7 +26300,7 @@
 	    TableActions.getAllUsers();
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
-	    TableActions.unlisten(this.onChange);
+	    TableStore.unlisten(this.onChange);
 	  },
 	  onChange: function onChange(state) {
 	    console.log("User store change state: " + JSON.stringify(state));

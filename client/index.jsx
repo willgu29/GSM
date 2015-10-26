@@ -2,6 +2,8 @@
 'use strict'
 import ReactDOM from 'react-dom'
 import { Router, Route, Link } from 'react-router'
+import { IndexRoute } from 'react-router'
+
 
 var LoginStore = require('./stores/LoginStore');
 
@@ -14,6 +16,7 @@ var EditAccount = require('./components/EditAccountForm');
 var GSMUserProfile = require("./components/GSMUserProfile");
 
 var pathName = window.location.pathname;
+
 
 
 const App = React.createClass({
@@ -33,20 +36,24 @@ const App = React.createClass({
 	render: function() {
 
 		var content = [];
+		var indexContent = [];
+
 		console.log("State: " + this.state.isLoggedIn);
+		console.log("Something: " + JSON.stringify(this.props.location.pathname));
 		if (this.state.isLoggedIn) {
 			content.push(<GSMHeader />);
-			if (window.location.pathname == "/") {
-				content.push(<GSMUserTableView />);
+			if (this.props.location.pathname == "/") {
+				indexContent.push(<GSMUserTableView />);				
 			}
 		} else {
 			//landing page
-			content.push(<LandingPage />);
+			indexContent.push(<LandingPage />);
 		}
 
 		return(
 			<div>
 				{content}
+				{indexContent}
 				{this.props.children}
 			</div>
 		);
@@ -55,9 +62,9 @@ const App = React.createClass({
 
 ReactDOM.render((<Router>
 				<Route path="/" component={App}>
-					<Route path="/users/:id" component={GSMUserProfile} />
-					<Route path="/editAccount" component={EditAccount} />
-					<Route path="/messages" component={Message} />
+					<Route path="users/:id" component={GSMUserProfile} />
+					<Route path="editAccount" component={EditAccount} />
+					<Route path="messages" component={Message} />
 				</Route>
 			</Router>
 			), document.getElementById("content"));

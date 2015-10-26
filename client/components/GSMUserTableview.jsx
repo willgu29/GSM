@@ -240,7 +240,7 @@ module.exports = React.createClass({
     TableActions.getAllUsers();
   },
   componentWillUnmount: function() {
-    TableActions.unlisten(this.onChange);
+    TableStore.unlisten(this.onChange);
   },
   onChange(state){
     console.log("User store change state: " + JSON.stringify(state));
