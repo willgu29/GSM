@@ -4,14 +4,6 @@ var UserActions = require('../actions/UserActions');
 class UserStore {
   constructor() {
     
-    this.currentUser = {
-      _id: "",
-      email: "",
-      fullName: "",
-      wants: [],
-      canOffer: [],
-      topFiveTime: ""
-    };
 
     this.fetchedUser = {
       _id: "",
@@ -30,7 +22,14 @@ class UserStore {
   }
 
   onUserReceived(result) {
-    this.fetchedUser = result;
+    this.fetchedUser = {
+      _id: result._id,
+      email: result.email,
+      fullName: result.fullName,
+      wants: result.identity.wants,
+      canOffer: result.identity.canOffer,
+      topFiveTime: result.identity.topFiveTime
+    }
   }
 
 }

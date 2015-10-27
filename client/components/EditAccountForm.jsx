@@ -25,7 +25,7 @@ module.exports = React.createClass({
     handleSubmit: function(e) {
         e.preventDefault();
 
-    }
+    },
 	render: function() {
 
 

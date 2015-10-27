@@ -30,7 +30,6 @@ const App = React.createClass({
 		LoginStore.unlisten(this.onChange);
 	},
 	onChange(state) {
-		console.log("Change state: index: state: " + JSON.stringify(state));
 		this.setState(state);
 	},
 	render: function() {
@@ -38,8 +37,6 @@ const App = React.createClass({
 		var content = [];
 		var indexContent = [];
 
-		console.log("State: " + this.state.isLoggedIn);
-		console.log("Something: " + JSON.stringify(this.props.location.pathname));
 		if (this.state.isLoggedIn) {
 			content.push(<GSMHeader />);
 			if (this.props.location.pathname == "/") {
@@ -62,7 +59,7 @@ const App = React.createClass({
 
 ReactDOM.render((<Router>
 				<Route path="/" component={App}>
-					<Route path="users/:id" component={GSMUserProfile} />
+					<Route path="users/:userID" component={GSMUserProfile} />
 					<Route path="editAccount" component={EditAccount} />
 					<Route path="messages" component={Message} />
 				</Route>

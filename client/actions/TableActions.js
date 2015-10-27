@@ -13,7 +13,6 @@ class TableActions {
 
 	getAllUsers() {
       UserAPI.getAllUsers().then((result) => {
-          console.log("NEW RESULT: "+ JSON.stringify(result));
           this.actions.userArrayReceived(result);
       }).catch(function(error) {
 
@@ -23,7 +22,6 @@ class TableActions {
 
     searchUsersByKeyword(searchText) {
       UserAPI.keywordSearchUsers(searchText).then((result) => {
-          console.log("NEW RESULT: "+ JSON.stringify(result));
           this.actions.userArrayReceived(result);
       }).catch(function(error) {
 

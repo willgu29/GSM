@@ -15,7 +15,6 @@ class LoginStore {
   }
 
   onLoginSuccess(result) {
-  	console.log("Store: login: " + result);
   	this.isLoggedIn = true;
     this.currentUserID = result._id;
   

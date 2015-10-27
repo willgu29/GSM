@@ -1,5 +1,7 @@
 'use strict'
 import React from 'react'
+import { Router, Route, Link } from 'react-router'
+
 var $ = require('jquery');
 var TableActions = require("../actions/TableActions");
 var TableStore = require("../stores/TableStore");
@@ -116,7 +118,7 @@ var MoreInfoColumn = React.createClass({
     var profileLink = "/users/" + this.props._id;
 
     return(
-      <a href={profileLink} style={profStyle}>More Info</a>
+      <Link to={profileLink} style={profStyle}>More Info</Link>
     );
   }
 });
@@ -243,7 +245,6 @@ module.exports = React.createClass({
     TableStore.unlisten(this.onChange);
   },
   onChange(state){
-    console.log("User store change state: " + JSON.stringify(state));
     this.setState(state);
   },
  

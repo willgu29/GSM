@@ -63,7 +63,7 @@
 	var GSMUserTableView = __webpack_require__(224);
 	var Message = __webpack_require__(230);
 	var EditAccount = __webpack_require__(231);
-	var GSMUserProfile = __webpack_require__(232);
+	var GSMUserProfile = __webpack_require__(233);
 
 	var pathName = window.location.pathname;
 
@@ -80,7 +80,6 @@
 			LoginStore.unlisten(this.onChange);
 		},
 		onChange: function onChange(state) {
-			console.log("Change state: index: state: " + JSON.stringify(state));
 			this.setState(state);
 		},
 		render: function render() {
@@ -88,8 +87,6 @@
 			var content = [];
 			var indexContent = [];
 
-			console.log("State: " + this.state.isLoggedIn);
-			console.log("Something: " + JSON.stringify(this.props.location.pathname));
 			if (this.state.isLoggedIn) {
 				content.push(React.createElement(GSMHeader, null));
 				if (this.props.location.pathname == "/") {
@@ -116,7 +113,7 @@
 		React.createElement(
 			_reactRouter.Route,
 			{ path: '/', component: App },
-			React.createElement(_reactRouter.Route, { path: 'users/:id', component: GSMUserProfile }),
+			React.createElement(_reactRouter.Route, { path: 'users/:userID', component: GSMUserProfile }),
 			React.createElement(_reactRouter.Route, { path: 'editAccount', component: EditAccount }),
 			React.createElement(_reactRouter.Route, { path: 'messages', component: Message })
 		)
@@ -23045,7 +23042,7 @@
 	    _classCallCheck(this, LoginStore);
 
 	    this.isLoggedIn = false;
-
+	    this.currentUserID = "";
 	    this.bindListeners({
 	      onLoginSuccess: LoginActions.loginSuccess,
 	      onLoginFailed: LoginActions.loginFailed,
@@ -23056,8 +23053,8 @@
 	  _createClass(LoginStore, [{
 	    key: 'onLoginSuccess',
 	    value: function onLoginSuccess(result) {
-	      console.log("Store: login: " + result);
 	      this.isLoggedIn = true;
+	      this.currentUserID = result._id;
 	    }
 	  }, {
 	    key: 'onLoginFailed',
@@ -24678,12 +24675,11 @@
 	      var _this = this;
 
 	      LoginAPI.tryLogin(email, password).then(function (result) {
-	        console.log("NEW RESULT: " + JSON.stringify(result));
 	        //How to return result from here?
-	        if (result == "/") {
-	          _this.actions.loginSuccess(result);
+	        if (result.info == "success") {
+	          _this.actions.loginSuccess(result.user);
 	        } else {
-	          _this.actions.loginFailed(result);
+	          _this.actions.loginFailed(result.info);
 	        }
 	      })['catch'](function (error) {});
 	      //Problem is tryLogin is being received as an action, then no received action b/c of callback
@@ -26022,6 +26018,8 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _reactRouter = __webpack_require__(146);
+
 	var $ = __webpack_require__(225);
 	var TableActions = __webpack_require__(226);
 	var TableStore = __webpack_require__(228);
@@ -26145,8 +26143,8 @@
 	    var profileLink = "/users/" + this.props._id;
 
 	    return _react2['default'].createElement(
-	      'a',
-	      { href: profileLink, style: profStyle },
+	      _reactRouter.Link,
+	      { to: profileLink, style: profStyle },
 	      'More Info'
 	    );
 	  }
@@ -26303,7 +26301,6 @@
 	    TableStore.unlisten(this.onChange);
 	  },
 	  onChange: function onChange(state) {
-	    console.log("User store change state: " + JSON.stringify(state));
 	    this.setState(state);
 	  },
 
@@ -35594,7 +35591,6 @@
 	            var _this = this;
 
 	            UserAPI.getAllUsers().then(function (result) {
-	                console.log("NEW RESULT: " + JSON.stringify(result));
 	                _this.actions.userArrayReceived(result);
 	            })['catch'](function (error) {});
 	        }
@@ -35604,7 +35600,6 @@
 	            var _this2 = this;
 
 	            UserAPI.keywordSearchUsers(searchText).then(function (result) {
-	                console.log("NEW RESULT: " + JSON.stringify(result));
 	                _this2.actions.userArrayReceived(result);
 	            })['catch'](function (error) {});
 	        }
@@ -36000,49 +35995,29 @@
 	var _react2 = _interopRequireDefault(_react);
 
 	var $ = __webpack_require__(225);
-
+	var UserActions = __webpack_require__(232);
 	module.exports = _react2['default'].createClass({
 	    displayName: 'exports',
 
 	    getInitialState: function getInitialState() {
 	        return {
 
-	            interesting: "",
 	            topFiveTime: "",
-	            personality: [],
-	            skills: [],
 	            wants: [],
 	            canOffer: []
 
 	        };
 	    },
 	    componentDidMount: function componentDidMount() {
-	        $.ajax({
-	            url: "localhost:3000/api/users/me",
-	            dataType: 'jsonp',
-	            cache: false,
-	            success: (function (userData) {
-	                if (this.isMounted()) {
-	                    this.setState({
-	                        interesting: userData.identity.interesting,
-	                        topFiveTime: userData.identity.topFiveTime,
-	                        personality: userData.identity.personality,
-	                        skills: userData.identity.skills,
-	                        canOffer: userData.identity.canOffer,
-	                        wants: userData.identity.wants
-
-	                    });
-	                }
-	            }).bind(this),
-	            error: (function (xhr, status, err) {
-	                console.error(status, err.toString());
-	            }).bind(this)
-	        });
+	        UserActions.getUser("me");
 	    },
 	    handleChange: function handleChange(name, event) {
 	        var change = {};
 	        change[name] = event.target.value;
 	        this.setState(change);
+	    },
+	    handleSubmit: function handleSubmit(e) {
+	        e.preventDefault();
 	    },
 	    render: function render() {
 
@@ -36061,7 +36036,7 @@
 	            ),
 	            _react2['default'].createElement(
 	                'form',
-	                { className: 'editAccountForm', method: 'post', action: 'api/users/me' },
+	                { onSubmit: this.handleSubmit, className: 'editAccountForm', method: 'post', action: 'api/users/me' },
 	                'Top 5 things you spend your time on: (be specific) ',
 	                _react2['default'].createElement('br', null),
 	                _react2['default'].createElement('textarea', { id: 'topFiveTime', name: 'topFiveTime', value: this.state.topFiveTime, onChange: this.handleChange.bind(this, "topFiveTime"), cols: '60', row: '10' }),
@@ -36109,6 +36084,44 @@
 
 	'use strict';
 
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	var alt = __webpack_require__(194);
+	var UserAPI = __webpack_require__(227);
+
+	var UserActions = (function () {
+	  function UserActions() {
+	    _classCallCheck(this, UserActions);
+
+	    this.generateActions('userReceived');
+	  }
+
+	  //Id = me to get current User
+
+	  _createClass(UserActions, [{
+	    key: 'getUser',
+	    value: function getUser(id) {
+	      var _this = this;
+
+	      UserAPI.getUserByID(id).then(function (result) {
+	        _this.actions.userReceived(result);
+	      })['catch'](function (error) {});
+	    }
+	  }]);
+
+	  return UserActions;
+	})();
+
+	module.exports = alt.createActions(UserActions);
+
+/***/ },
+/* 233 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 	var _react = __webpack_require__(148);
@@ -36116,6 +36129,8 @@
 	var _react2 = _interopRequireDefault(_react);
 
 	var $ = __webpack_require__(225);
+	var UserStore = __webpack_require__(234);
+	var UserActions = __webpack_require__(232);
 
 	var NewMessage = _react2['default'].createClass({
 		displayName: 'NewMessage',
@@ -36171,55 +36186,30 @@
 	module.exports = _react2['default'].createClass({
 		displayName: "UserProfile",
 		getInitialState: function getInitialState() {
-			return {
-				email: "",
-				fullName: "",
-				// interesting: "",
-				//          contactIf:  "",
-				//          personality: [],
-				//          skills: [],
-				wants: [],
-				canOffer: [],
-				topFiveTime: ""
-
-			};
+			return UserStore.getState();
 		},
 		componentDidMount: function componentDidMount() {
-			$.ajax({
-				url: this.props.url,
-				dataType: 'json',
-				cache: false,
-				success: (function (userData) {
-					if (this.isMounted()) {
-						this.setState({
-							_id: userData._id,
-							fullName: userData.fullName,
-							email: userData.email,
-							// interesting: userData.identity.interesting,
-							// personality: userData.identity.personality,
-							// skills: userData.identity.skills,
-							canOffer: userData.identity.canOffer,
-							wants: userData.identity.wants,
-							topFiveTime: userData.identity.topFiveTime
-							// contactIf: userData.identity.contactIf
-
-						});
-					}
-				}).bind(this),
-				error: (function (xhr, status, err) {
-					console.error(status, err.toString());
-				}).bind(this)
-			});
+			UserStore.listen(this.onChange);
+			UserActions.getUser(this.props.params.userID);
+		},
+		componentWillUnmount: function componentWillUnmount() {
+			UserStore.unlisten(this.onChange);
+		},
+		onChange: function onChange(state) {
+			this.setState(state);
 		},
 
 		render: function render() {
 
 			// var skillsArray = this.state.skills.join(", ");
 			// var personalityArray = this.state.personality.join(", ");
-			var canOfferArray = this.state.canOffer.join(", ");
-			var wantsArray = this.state.wants.join(", ");
+			var canOfferArray = this.state.fetchedUser.canOffer.join(", ");
+			var wantsArray = this.state.fetchedUser.wants.join(", ");
 
-			var fullName = this.state.fullName;
+			var fullName = this.state.fetchedUser.fullName;
+
+			console.log("FullName: +", fullName);
+			console.log("Wnats: + ", wantsArray);
 
 			return _react2['default'].createElement(
 				'div',
@@ -36234,7 +36224,7 @@
 					'p',
 					null,
 					'Spends Time Mostly: ',
-					this.state.topFiveTime
+					this.state.fetchedUser.topFiveTime
 				),
 				_react2['default'].createElement(
 					'p',
@@ -36248,7 +36238,7 @@
 					'Wants: ',
 					wantsArray
 				),
-				_react2['default'].createElement(NewMessage, { url: '/api/messages/', fullName: fullName, _id: this.state._id, email: this.state.email })
+				_react2['default'].createElement(NewMessage, { url: '/api/messages/', fullName: fullName, _id: this.state.fetchedUser._id, email: this.state.fetchedUser.email })
 			);
 		}
 
@@ -36261,6 +36251,56 @@
 					<p>Contact If: {this.state.contactIf}</p>
 
 					*/
+
+/***/ },
+/* 234 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	var alt = __webpack_require__(194);
+	var UserActions = __webpack_require__(232);
+
+	var UserStore = (function () {
+	  function UserStore() {
+	    _classCallCheck(this, UserStore);
+
+	    this.fetchedUser = {
+	      _id: "",
+	      email: "",
+	      fullName: "",
+	      wants: [],
+	      canOffer: [],
+	      topFiveTime: ""
+	    };
+
+	    this.bindListeners({
+	      onUserReceived: UserActions.userReceived
+	    });
+	  }
+
+	  _createClass(UserStore, [{
+	    key: 'onUserReceived',
+	    value: function onUserReceived(result) {
+	      this.fetchedUser = {
+	        _id: result._id,
+	        email: result.email,
+	        fullName: result.fullName,
+	        wants: result.identity.wants,
+	        canOffer: result.identity.canOffer,
+	        topFiveTime: result.identity.topFiveTime
+	      };
+	    }
+	  }]);
+
+	  return UserStore;
+	})();
+
+	module.exports = alt.createStore(UserStore, 'UserStore');
 
 /***/ }
 /******/ ]);

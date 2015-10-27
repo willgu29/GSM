@@ -1,6 +1,8 @@
 'use strict'
 import React from 'react'
 var $ = require('jquery');
+var UserStore = require("../stores/UserStore");
+var UserActions = require("../actions/UserActions");
 
 var NewMessage = React.createClass({
 	
@@ -57,65 +59,39 @@ var NewMessage = React.createClass({
 module.exports = React.createClass({
 	displayName: "UserProfile",
 	getInitialState: function() {
-		return ({
-			email: "",
-			fullName: "",
-			// interesting: "",
-   //          contactIf:  "",
-   //          personality: [],
-   //          skills: [],
-            wants: [],
-            canOffer: [],
-            topFiveTime: ""
-
-		});
+		return UserStore.getState();
 	},
 	componentDidMount: function() {
-		$.ajax({
-      		url: this.props.url,
-      		dataType: 'json',
-      		cache: false,
-      		success: function(userData){
-      		if (this.isMounted()){
-        		this.setState({
-        					_id: userData._id,
-        					fullName: userData.fullName,
-        					email: userData.email,
-                            // interesting: userData.identity.interesting,
-                            // personality: userData.identity.personality,
-                            // skills: userData.identity.skills,
-                            canOffer: userData.identity.canOffer,
-                            wants: userData.identity.wants,
-                            topFiveTime: userData.identity.topFiveTime
-                            // contactIf: userData.identity.contactIf
-                                
-                            
-                });
-      		}
-      		}.bind(this),
-      		error: function(xhr,status,err){
-        		console.error(status, err.toString());
-      		}.bind(this)
-      	});
+		UserStore.listen(this.onChange);
+		UserActions.getUser(this.props.params.userID)
+	},
+	componentWillUnmount: function() {
+		UserStore.unlisten(this.onChange);
+	},
+	onChange(state) {
+		this.setState(state);
 	},
 
 	render: function () {
 
 		// var skillsArray = this.state.skills.join(", ");
 		// var personalityArray = this.state.personality.join(", ");
-		var canOfferArray = this.state.canOffer.join(", ");
-		var wantsArray = this.state.wants.join(", ");
+		var canOfferArray = this.state.fetchedUser.canOffer.join(", ");
+		var wantsArray = this.state.fetchedUser.wants.join(", ");
 
-		var fullName = this.state.fullName;
+		var fullName = this.state.fetchedUser.fullName;
+
+		console.log("FullName: +", fullName);
+		console.log("Wnats: + ", wantsArray);
 
 		return(
 			<div>
 				<h3>About {fullName}</h3>
-				<p>Spends Time Mostly: {this.state.topFiveTime}</p>
+				<p>Spends Time Mostly: {this.state.fetchedUser.topFiveTime}</p>
 				<p>Can Offer: {canOfferArray}</p>
 				<p>Wants: {wantsArray}</p>
 
-				<NewMessage url="/api/messages/" fullName={fullName} _id={this.state._id} email={this.state.email} />
+				<NewMessage url="/api/messages/" fullName={fullName} _id={this.state.fetchedUser._id} email={this.state.fetchedUser.email} />
 			</div>
 
 		);

@@ -13,7 +13,6 @@ class UserActions {
     //Id = me to get current User
     getUser(id) {
       UserAPI.getUserByID(id).then((result) => {
-        console.log("NEW RESULT: "+ JSON.stringify(result));
         this.actions.userReceived(result);
       }).catch(function(error) {
 
