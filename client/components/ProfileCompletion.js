@@ -65,4 +65,4 @@ var ProfileCompletion = React.createClass({
 });
 
 
-React.render(<ProfileCompletion url="/api/users/me" />, document.getElementById("profileCompletion"));
+// React.render(<ProfileCompletion url="/api/users/me" />, document.getElementById("profileCompletion"));

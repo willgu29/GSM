@@ -10,15 +10,15 @@ var express = require('express'),
 	passport = require('passport'),
 	LocalStrategy = require('passport-local').Strategy,
 	session = require('express-session'),
-	User = require('./Models/User.js'),
-  Group = require('./Models/Group.js'),
-  Media = require('./Models/Media.js'),
-  Comment = require('./Models/Comment.js'),
-  MessageThread = require("./Models/MessageThread.js"),
-  Message = require("./Models/Message.js"),
-  Group = require("./Models/Group.js"),
-  Event = require("./Models/Event.js"),
-  KnownNetwork = require("./Models/KnownNetwork.js"),
+	User = require('./server/models/User.js'),
+  Group = require('./server/models/Group.js'),
+  Media = require('./server/models/Media.js'),
+  Comment = require('./server/models/Comment.js'),
+  MessageThread = require("./server/models/MessageThread.js"),
+  Message = require("./server/models/Message.js"),
+  Group = require("./server/models/Group.js"),
+  Event = require("./server/models/Event.js"),
+  KnownNetwork = require("./server/models/KnownNetwork.js"),
   aws = require('aws-sdk');
 
 
@@ -52,7 +52,7 @@ app.get("/gsm", ensureAdmin, function(req, res) {
 	//VIEWS 
 
 app.get("/", function (req, res){
-  res.sendFile(__dirname + "/client/index.html");
+  res.sendFile(__dirname + "/index.html");
 });
 
 // app.get("/", function (req, res) {

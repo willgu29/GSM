@@ -59,4 +59,4 @@ var MessageThreads = React.createClass({
 });
 
 
-React.render(<MessageThreads url="/api/messages/" />, document.getElementById("messageThreads"));
+// React.render(<MessageThreads url="/api/messages/" />, document.getElementById("messageThreads"));
