@@ -35,10 +35,9 @@ app.use(session({secret: 'baeMaxLoving'}))
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/ReactViews/build", express.static(__dirname + '/ReactViews/build'));
-app.use("/public/", express.static(__dirname + '/public/'));
 app.use("/client/", express.static(__dirname + '/client/'));
-
+app.use("/node_modules/", express.static(__dirname + '/node_modules/'));
+app.use("/dist/", express.static(__dirname + '/dist/'));
 
 //**********************************
 app.get("/gsm", ensureAdmin, function(req, res) {
