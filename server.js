@@ -599,6 +599,7 @@ app.post("/api/groups/" , loggedIn, function (req, res){
   var newGroup = new Group({
                     name: req.body.groupName,
                     description: req.body.description,
+                    membershipModel: req.body.membershipModel,
                     userIds_inGroup: [req.user._id],
                     fullNames_inGroup: [req.user.fullName],
                     emails_inGroup: [req.user.email],
@@ -606,7 +607,8 @@ app.post("/api/groups/" , loggedIn, function (req, res){
                     adminFullNames: [req.user.fullName], 
                     rootGroup_id: req.body.parentGroupID,
                     rootGroup_name: req.body.parentGroupName,
-                    level: req.body.level
+                    level: req.body.level,
+                    category: req.body.category
   });
 
   newGroup.save(function (err, newGroup) {
@@ -641,6 +643,7 @@ app.post("/api/groups/:rootGroupID" , loggedIn, function (req, res){
         var newGroup = new Group({
                           name: req.body.groupName,
                           description: req.body.description,
+                          membershipModel: req.body.membershipModel,
                           userIds_inGroup: [req.user._id],
                           fullNames_inGroup: [req.user.fullName],
                           emails_inGroup: [req.user.email],
@@ -648,7 +651,8 @@ app.post("/api/groups/:rootGroupID" , loggedIn, function (req, res){
                           adminFullNames: [req.user.fullName],
                           rootGroup_id: rootGroup._id,
                           rootGroup_name: rootGroup.name,
-                          level: newLevel });
+                          level: newLevel,
+                          category: req.body.category});
 
         newGroup.save(function (err, newGroup) {
             if (err) {console.error(err); return res.json({info: 

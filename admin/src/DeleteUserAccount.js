@@ -34,4 +34,4 @@ var DeleteUserAccount = React.createClass({
 
 });
 
-React.render(<DeleteUserAccount url="/api/user/" />, document.getElementById("deleteUserAccount"));
+ReactDOM.render(<DeleteUserAccount url="/api/user/" />, document.getElementById("deleteUserAccount"));

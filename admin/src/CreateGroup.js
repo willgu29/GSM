@@ -46,4 +46,4 @@ var CreateSubGroup = React.createClass({
 });
 
 
-React.render(<CreateGroup url="/api/groups/" />, document.getElementById("createGroup"));
+ReactDOM.render(<CreateGroup url="/api/groups/" />, document.getElementById("createGroup"));

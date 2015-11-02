@@ -18,4 +18,4 @@ var JoinGroupForm = React.createClass({
 	} 
 });
 
-React.render(<JoinGroupForm url="/api/joinGroup/none" />, document.getElementById("joinGroupForm"));
+ReactDOM.render(<JoinGroupForm url="/api/joinGroup/none" />, document.getElementById("joinGroupForm"));
