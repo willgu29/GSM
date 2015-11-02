@@ -2,6 +2,9 @@
 import React from 'react'
 import { Router, Route, Link } from 'react-router'
 
+import GroupStore from "../stores/GroupStore";
+import GroupActions from "../actions/GroupActions";
+
 var BABURL = ["http://bruinappbuilders.com","http://facebook.com/groups/bruinappbuilders"];
 var ACMURL = ["http://acm.cs.ucla.edu", "https://www.facebook.com/groups/uclaacm/"];
 var SEPURL = ["http://ucla.sigmaetapi.com"];
@@ -10,12 +13,34 @@ var BLURL = ["https://blackstonelaunchpad.org"];
 var BMEURL = ["http://uclabme.squarespace.com/#about", "https://www.facebook.com/BruinMedicalEntrepreneurs/"];
 module.exports = React.createClass({
 	displayName:"Groups",
+	getInitialState: function() {
+		GroupStore.getState();
+	},
+	componentDidMount: function() {
+		GroupsStore.listen(this.onChange);
+		GroupActions.getGroupsByCategory(this.props.params.categoryID)
+	},
+	componentWillUnmount: function() {
+		GroupStore.unlisten(this.onChange);
+	},
+	onChange(state){
+		this.setState(state);
+	}
 	render: function() {
 		var displayArray = [];
-		if (this.props.params.categoryID == "Tech") {
+		var groupsArray = this.state.groups;
+		for (var i = 0; i < groupsArray.length; i++) {
+			var group = groupsArray[i];
+			displayArray.push(<li><GroupInformation groupName={group.name}
+													shortName={group.shortName}
+													groupDescription={group.description}
+													model={group.membershipModel}
+													groupURLS={group.urls})
+		}
+		if (this.props.params.categoryID == "tech") {
 			displayArray.push(<li><GroupInformation groupName="Bruin App Builders (BAB)" groupDescription="Code apps"  model="Closed community, join FB group" groupURLs={BABURL} /></li>);
 			displayArray.push(<li><GroupInformation groupName="Association of Computing Machinery (ACM)" groupDescription="Code apps" model="Event based, free for everyone"  groupURLs={ACMURL} /></li>);
-		} else if (this.props.params.categoryID == "Entrepreneurship") {
+		} else if (this.props.params.categoryID == "entrepreneurship") {
 			displayArray.push(<li><GroupInformation groupName="Sigma Eta Pi (SEP)" groupDescription="Co-ed entrepreneurship fraternity" model="Fraternity. Recruiting again in Spring" groupURLs={SEPURL}/></li>);
 			displayArray.push(<li><GroupInformation groupName="Bruin Entrepreneurs (BE)" groupDescription="Undergraduate Entrepreneurship" model="Event based, free for everyone" groupURLs={BEURL}/></li>);
 			displayArray.push(<li><GroupInformation groupName="Blackstone Launchpad" groupDescription="Training the next generation of entrepreneurs" model="Program and mentorship-based, check website" groupURLs={BLURL}/></li>);

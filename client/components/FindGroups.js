@@ -9,8 +9,8 @@ module.exports = React.createClass({
 			<div>
 				<h3>Find Groups by Category</h3>
 				<ul>
-					<li><Link to="/find/groups/Tech">Tech</Link></li>
-					<li><Link to="/find/groups/Entrepreneurship">Entrepreneurship</Link></li>
+					<li><Link to="/find/groups/tech">Tech</Link></li>
+					<li><Link to="/find/groups/entrepreneurship">Entrepreneurship</Link></li>
 
 				</ul>
 				{this.props.children}

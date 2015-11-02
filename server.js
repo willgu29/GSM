@@ -595,7 +595,10 @@ app.post("/api/joinGroup/:groupID", loggedIn, function (req, res) {
 app.post("/api/groups/" , loggedIn, function (req, res){
   console.log("/api/groups POST");
 
-
+  var urlsArray = req.body.urls.split(",");
+  if (JSON.stringify(urlsArray) == JSON.stringify([""])) {
+        urlsArray = [];
+  }
   var newGroup = new Group({
                     name: req.body.groupName,
                     description: req.body.description,
@@ -608,7 +611,8 @@ app.post("/api/groups/" , loggedIn, function (req, res){
                     rootGroup_id: req.body.parentGroupID,
                     rootGroup_name: req.body.parentGroupName,
                     level: req.body.level,
-                    category: req.body.category
+                    category: req.body.category,
+                    urls: urlsArray
   });
 
   newGroup.save(function (err, newGroup) {
@@ -638,6 +642,10 @@ app.post("/api/groups/:rootGroupID" , loggedIn, function (req, res){
     if (err) {console.error(err); return res.json({info: 
       "There was an error. Please try again in a minute."});
       } else { 
+        var urlsArray = req.body.urls.split(",");
+         if (JSON.stringify(urlsArray) == JSON.stringify([""])) {
+        urlsArray = [];
+        }
         console.log("Root group: " + rootGroup);
         var newLevel = rootGroup.level + 1; //?
         var newGroup = new Group({
@@ -652,7 +660,8 @@ app.post("/api/groups/:rootGroupID" , loggedIn, function (req, res){
                           rootGroup_id: rootGroup._id,
                           rootGroup_name: rootGroup.name,
                           level: newLevel,
-                          category: req.body.category});
+                          category: req.body.category,
+                          urls: urlsArray});
 
         newGroup.save(function (err, newGroup) {
             if (err) {console.error(err); return res.json({info: 
@@ -729,12 +738,7 @@ app.post("/api/users/:userID", loggedIn, function (req, res) {
     if (JSON.stringify(canOfferArray) == JSON.stringify([""])) {
       canOfferArray = [];
     }
-    if 
-
-
-
-
-      (JSON.stringify(wantsArray) == JSON.stringify([""])) {
+    if (JSON.stringify(wantsArray) == JSON.stringify([""])) {
       wantsArray = [];
     }
 
