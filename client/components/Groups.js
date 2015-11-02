@@ -25,7 +25,7 @@ module.exports = React.createClass({
 	},
 	onChange(state){
 		this.setState(state);
-	}
+	},
 	render: function() {
 		var displayArray = [];
 		var groupsArray = this.state.groups;
@@ -35,7 +35,7 @@ module.exports = React.createClass({
 													shortName={group.shortName}
 													groupDescription={group.description}
 													model={group.membershipModel}
-													groupURLS={group.urls})
+													groupURLS={group.urls} /></li>)
 		}
 		if (this.props.params.categoryID == "tech") {
 			displayArray.push(<li><GroupInformation groupName="Bruin App Builders (BAB)" groupDescription="Code apps"  model="Closed community, join FB group" groupURLs={BABURL} /></li>);

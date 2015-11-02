@@ -1,11 +1,12 @@
 var alt = require('../alt');
-varr GroupActions = require('../actions/GroupActions');
+var GroupActions = require('../actions/GroupActions');
 
 class GroupStore {
   constructor() {
     this.groups = [];
     this.bindListeners({
       onGroupsReceived: GroupActions.groupsReceived,
+      onDataFetchFailed: GroupActions.dataFetchFailed
     });
 
 
@@ -14,7 +15,9 @@ class GroupStore {
   onGroupsReceived(result) {
     this.groups = result;
   }
+  onDataFetchFailed(result) {
 
+  }
 }
 
 module.exports = alt.createStore(GroupStore, 'GroupStore');

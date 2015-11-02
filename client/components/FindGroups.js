@@ -19,4 +19,3 @@ module.exports = React.createClass({
 	}
 });
 
-//TODO: Events way later

@@ -26,7 +26,7 @@ const GroupAPI = {
 						return response.data;
 					});
 
-	}
+	},
 	getGroupsByCategory: function(categoryName) {
 		return axios.get("/api/groupsByCategory/" +categoryName)
 					.then(function (response) {

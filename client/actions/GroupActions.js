@@ -5,6 +5,7 @@ class GroupsActions {
 	constructor() {
 		this.generateActions(
 			'groupsReceived',
+      'dataFetchFailed'
 		);
 	}
   	
