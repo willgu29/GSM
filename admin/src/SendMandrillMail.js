@@ -48,4 +48,4 @@ var SendMail = React.createClass({
 
 });
 
-// React.render(<SendMail />, document.getElementById("sendMandrillMail"));
+React.render(<SendMail />, document.getElementById("sendMandrillMail"));

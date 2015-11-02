@@ -22,4 +22,4 @@ var CreateEvent = React.createClass({
 
 });
 
-// React.render(<CreateEvent url="/api/events/" />, document.getElementById("createEvent"));
+React.render(<CreateEvent url="/api/events/" />, document.getElementById("createEvent"));

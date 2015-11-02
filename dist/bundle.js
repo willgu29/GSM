@@ -62,8 +62,10 @@
 	var GSMHeader = __webpack_require__(235);
 	var GSMUserTableView = __webpack_require__(236);
 	var Message = __webpack_require__(242);
-	var EditAccount = __webpack_require__(243);
-	var GSMUserProfile = __webpack_require__(245);
+	var EditAccount = __webpack_require__(246);
+	var GSMUserProfile = __webpack_require__(248);
+	var FindGroups = __webpack_require__(250);
+	var Groups = __webpack_require__(251);
 
 	var pathName = window.location.pathname;
 
@@ -93,8 +95,9 @@
 					indexContent.push(React.createElement(GSMUserTableView, null));
 				}
 			} else {
-				//landing page
-				indexContent.push(React.createElement(LandingPage, null));
+				if (this.props.location.pathname == "/") {
+					indexContent.push(React.createElement(LandingPage, null));
+				} else {}
 			}
 
 			return React.createElement(
@@ -115,7 +118,12 @@
 			{ path: '/', component: App },
 			React.createElement(_reactRouter.Route, { path: 'users/:userID', component: GSMUserProfile }),
 			React.createElement(_reactRouter.Route, { path: 'editAccount', component: EditAccount }),
-			React.createElement(_reactRouter.Route, { path: 'messages', component: Message })
+			React.createElement(_reactRouter.Route, { path: 'messages/:messageID', component: Message }),
+			React.createElement(
+				_reactRouter.Route,
+				{ path: 'find', component: FindGroups },
+				React.createElement(_reactRouter.Route, { path: 'groups/:categoryID', component: Groups })
+			)
 		)
 	), document.getElementById("content"));
 
@@ -24062,7 +24070,8 @@
 	    this.bindListeners({
 	      onLoginSuccess: LoginActions.loginSuccess,
 	      onLoginFailed: LoginActions.loginFailed,
-	      onLogout: LoginActions.logout
+	      onLogout: LoginActions.logout,
+	      onLoginStatusUpdated: LoginActions.loginStatusUpdated
 	    });
 	  }
 
@@ -24082,6 +24091,9 @@
 	    value: function onLogout() {
 	      this.isLoggedIn = false;
 	    }
+	  }, {
+	    key: 'onLoginStatusUpdated',
+	    value: function onLoginStatusUpdated() {}
 	  }]);
 
 	  return LoginStore;
@@ -25694,7 +25706,7 @@
 	  function LoginActions() {
 	    _classCallCheck(this, LoginActions);
 
-	    this.generateActions('loginSuccess', 'loginFailed');
+	    this.generateActions('loginSuccess', 'loginFailed', 'loginStatusUpdated');
 	  }
 
 	  _createClass(LoginActions, [{
@@ -25714,12 +25726,21 @@
 	      // this.dispatch(email);
 	    }
 	  }, {
-	    key: 'logout',
-	    value: function logout() {
+	    key: 'updateLoginDate',
+	    value: function updateLoginDate() {
 	      var _this2 = this;
 
+	      LoginAPI.updateLoginDate().then(function (result) {
+	        _this2.actions.loginStatusUpdated();
+	      })['catch'](function (error) {});
+	    }
+	  }, {
+	    key: 'logout',
+	    value: function logout() {
+	      var _this3 = this;
+
 	      LoginAPI.logout().then(function (result) {
-	        _this2.dispatch();
+	        _this3.dispatch();
 	      })['catch'](function (error) {});
 	    }
 	  }]);
@@ -25753,6 +25774,15 @@
 		},
 		logout: function logout() {
 			return axios.get("/logout").then(function (response) {
+				console.log(response);
+				return response.data;
+			})["catch"](function (response) {
+				console.log(response);
+				return response.data;
+			});
+		},
+		updateLoginDate: function updateLoginDate() {
+			return axios.post("/api/updateLoginDate").then(function (response) {
 				console.log(response);
 				return response.data;
 			})["catch"](function (response) {
@@ -36649,7 +36679,7 @@
 	var UserAPI = {
 
 		getUserByID: function getUserByID(id) {
-			return axios.get("localhost:3000/api/users/" + id).then(function (response) {
+			return axios.get("/api/users/" + id).then(function (response) {
 				console.log(response);
 				return response.data;
 			})["catch"](function (response) {
@@ -36850,6 +36880,8 @@
 
 	var $ = __webpack_require__(237);
 
+	var MessageActions = __webpack_require__(243);
+	var MessageStore = __webpack_require__(245);
 	// var convoID = document.getElementById("convoID").getAttribute("value");
 
 	// var convoTitle = document.getElementById("convoTitle").getAttribute("value");
@@ -36870,8 +36902,7 @@
 	});
 
 	module.exports = _react2['default'].createClass({
-	  displayName: 'exports',
-
+	  displayName: "MessageList",
 	  getInitialProps: function getInitialProps() {
 	    return {
 	      url: "/api/messages",
@@ -36880,25 +36911,21 @@
 	    };
 	  },
 	  getInitialState: function getInitialState() {
-	    return { messages: [] };
+	    return MessageStore.getState();
+	  },
+	  componentDidMount: function componentDidMount() {
+	    MessageStore.listen(this.onChange);
+	    this.loadMessages();
+	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    MessageStore.unlisten(this.onChange);
+	  },
+	  onChange: function onChange(state) {
+	    this.setState(state);
 	  },
 
 	  loadMessages: function loadMessages() {
-	    var urlGet = this.props.url + this.props.convoID;
-	    $.ajax({
-	      url: urlGet,
-	      type: "GET",
-	      dataType: "json",
-	      success: (function (messages) {
-	        this.setState({ messages: messages });
-	      }).bind(this),
-	      error: (function (xhr, status, err) {
-	        console.log("Error: ", err);
-	      }).bind(this)
-	    });
-	  },
-	  componentDidMount: function componentDidMount() {
-	    this.loadMessages();
+	    MessageActions.getMessagesForThread(this.state.messageThread._id);
 	  },
 	  refreshMessageList: function refreshMessageList() {
 	    this.loadMessages();
@@ -36941,19 +36968,7 @@
 	  onChange: function onChange(e) {
 	    this.setState({ text: e.target.value });
 	  },
-	  componentDidMount: function componentDidMount() {
-	    $.ajax({
-	      url: "/api/messageThread/" + this.props.convoID,
-	      type: "GET",
-	      dataType: "json",
-	      success: (function (messageThread) {
-	        this.setState({ emails: messageThread.participant_emails });
-	      }).bind(this),
-	      error: (function (xhr, status, err) {
-	        console.log("Error: ", err);
-	      }).bind(this)
-	    });
-	  },
+	  componentDidMount: function componentDidMount() {},
 	  handleSubmit: function handleSubmit(e) {
 	    e.preventDefault();
 
@@ -37014,6 +37029,188 @@
 /* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
+	"use strict";
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var alt = __webpack_require__(206);
+	var MessageAPI = __webpack_require__(244);
+
+	var MessageActions = (function () {
+		function MessageActions() {
+			_classCallCheck(this, MessageActions);
+
+			this.generateActions("messageThreadReceived", "messageCreated", "messagesForThreadReceived");
+		}
+
+		_createClass(MessageActions, [{
+			key: "getMessageThreadByID",
+			value: function getMessageThreadByID(id) {}
+		}, {
+			key: "getMessagesForThreadByID",
+			value: function getMessagesForThreadByID(threadID) {
+				var _this = this;
+
+				MessageAPI.getMessagesForMessageThreadByID(threadID).then(function (result) {
+					_this.actions.messagesForThreadReceived(result);
+				})["catch"](function (error) {});
+			}
+		}, {
+			key: "createMessageThread",
+			value: function createMessageThread(participantID, participantFullName, participantEmail) {
+				var _this2 = this;
+
+				MessageAPI.createNewMessageThread(participantID, participantFullName, participantEmail).then(function (result) {
+					_this2.actions.messageThreadReceived(result);
+				})["catch"](function (error) {});
+			}
+		}, {
+			key: "createMessageForThreadID",
+			value: function createMessageForThreadID(threadID, messageText) {
+				var _this3 = this;
+
+				MessageAPI.createNewMessageInThreadIDWithText(threadID, messageText).then(function (result) {
+					_this3.actions.messageCreated(result);
+				})["catch"](function (error) {});
+			}
+		}]);
+
+		return MessageActions;
+	})();
+
+	module.exports = alt.createActions(MessageActions);
+
+/***/ },
+/* 244 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var axios = __webpack_require__(221);
+
+	var MessageAPI = {
+
+		//Currently only gets message thread for current logged in user.
+		//Therefore, just pass in userID = nil, /api/messages/ will automatically put userID of current
+		//req user in.
+		getMessageThreadsForUserID: function getMessageThreadsForUserID(userID) {
+			return axios.get("/api/messages/").then(function (response) {
+				console.log(response);
+				return response.data;
+			})["catch"](function (response) {
+				console.log(response);
+				return response.data;
+			});
+		},
+
+		//every message thread has a conversationID, this will fetch the entire message log.
+		getMessagesForMessageThreadByID: function getMessagesForMessageThreadByID(messageThreadID) {
+			return axios.get("/api/message/" + convoID).then(function (response) {
+				console.log(response);
+				return response.data;
+			})["catch"](function (response) {
+				console.log(response);
+				return response.data;
+			});
+		},
+		//get 1 specific message thread object (not the messages in them)
+		//Check mongoose Models for clarification on data structure
+		getMessageThreadByID: function getMessageThreadByID(messageThreadID) {
+			return axios.get("/api/messageThread/" + messageThreadID).then(function (response) {
+				console.log(response);
+				return response.data;
+			})["catch"](function (response) {
+				console.log(response);
+				return response.data;
+			});
+		},
+
+		//Will automatically add current user's information on post, will return conversation thread.
+		//If conversation thread exists, will return exisitng one.
+		createNewMessageThread: function createNewMessageThread(participantID, participantFullName, participantEmail) {
+			return axios.post("/api/messages", {
+				_id: participantID,
+				fullName: participantFullName,
+				email: participantEmail
+			}).then(function (response) {
+				console.log(response);
+				return response.data;
+			})["catch"](function (response) {
+				console.log(response);
+				return response.data;
+			});
+		},
+
+		createNewMessageInThreadIDWithText: function createNewMessageInThreadIDWithText(messageThreadID, messageToAdd) {
+			return axios.post("/api/message" + messageThreadID, {
+				text: messageToAdd
+			});
+			then(function (response) {
+				console.log(response);
+				return response.data;
+			})["catch"](function (response) {
+				console.log(response);
+				return response.data;
+			});
+		}
+
+	};
+
+	module.exports = MessageAPI;
+
+/***/ },
+/* 245 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	var alt = __webpack_require__(206);
+	var MessageActions = __webpack_require__(243);
+
+	var MessageStore = (function () {
+	  function MessageStore() {
+	    _classCallCheck(this, MessageStore);
+
+	    this.messageThread = {};
+	    this.messages = [];
+
+	    this.bindListeners({
+	      onMessageThreadReceived: MessageActions.messageThreadReceived,
+	      onMessageCreated: MessageActions.messageCreated,
+	      onMessagesForThreadReceived: MessageActions.messagesForThreadReceived
+	    });
+	  }
+
+	  _createClass(MessageStore, [{
+	    key: 'onMessageThreadReceived',
+	    value: function onMessageThreadReceived(result) {
+	      this.messageThread = result;
+	    }
+	  }, {
+	    key: 'onMessagesForThreadReceived',
+	    value: function onMessagesForThreadReceived(result) {
+	      this.messages = result;
+	    }
+	  }, {
+	    key: 'onMessageCreated',
+	    value: function onMessageCreated(message) {}
+	  }]);
+
+	  return MessageStore;
+	})();
+
+	module.exports = alt.createStore(MessageStore, 'MessageStore');
+
+/***/ },
+/* 246 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -37023,7 +37220,7 @@
 	var _react2 = _interopRequireDefault(_react);
 
 	var $ = __webpack_require__(237);
-	var UserActions = __webpack_require__(244);
+	var UserActions = __webpack_require__(247);
 	module.exports = _react2['default'].createClass({
 	    displayName: 'exports',
 
@@ -37107,7 +37304,7 @@
 	                    */
 
 /***/ },
-/* 244 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37145,7 +37342,7 @@
 	module.exports = alt.createActions(UserActions);
 
 /***/ },
-/* 245 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37157,19 +37354,30 @@
 	var _react2 = _interopRequireDefault(_react);
 
 	var $ = __webpack_require__(237);
-	var UserStore = __webpack_require__(246);
-	var UserActions = __webpack_require__(244);
+	var UserStore = __webpack_require__(249);
+	var UserActions = __webpack_require__(247);
+	var MessageActions = __webpack_require__(243);
+	var MessageStore = __webpack_require__(245);
 
 	var NewMessage = _react2['default'].createClass({
 		displayName: 'NewMessage',
 
+		componentDidMount: function componentDidMount() {
+			MessageStore.listen(this.onChange);
+		},
+		componentWillUnmount: function componentWillUnmount() {
+			MessageStore.unlisten(this.onChange);
+		},
+		onChange: function onChange(state) {
+			console.log("State Message: ", state);
+		},
 		createNewMessageThread: function createNewMessageThread() {
 			var data = {
 				_id: this.props._id,
 				fullName: this.props.fullName,
 				email: this.props.email
 			};
-
+			MessageActions.createMessageThread();
 			$.ajax({
 				url: this.props.url,
 				dataType: 'json',
@@ -37281,7 +37489,7 @@
 					*/
 
 /***/ },
-/* 246 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37291,7 +37499,7 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 	var alt = __webpack_require__(206);
-	var UserActions = __webpack_require__(244);
+	var UserActions = __webpack_require__(247);
 
 	var UserStore = (function () {
 	  function UserStore() {
@@ -37329,6 +37537,180 @@
 	})();
 
 	module.exports = alt.createStore(UserStore, 'UserStore');
+
+/***/ },
+/* 250 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _react = __webpack_require__(149);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(147);
+
+	module.exports = _react2['default'].createClass({
+		displayName: "FindGroups",
+		render: function render() {
+			return _react2['default'].createElement(
+				'div',
+				null,
+				_react2['default'].createElement(
+					'h3',
+					null,
+					'Find Groups by Category'
+				),
+				_react2['default'].createElement(
+					'ul',
+					null,
+					_react2['default'].createElement(
+						'li',
+						null,
+						_react2['default'].createElement(
+							_reactRouter.Link,
+							{ to: '/find/groups/Tech' },
+							'Tech'
+						)
+					),
+					_react2['default'].createElement(
+						'li',
+						null,
+						_react2['default'].createElement(
+							_reactRouter.Link,
+							{ to: '/find/groups/Entrepreneurship' },
+							'Entrepreneurship'
+						)
+					)
+				),
+				this.props.children
+			);
+		}
+	});
+
+	//TODO: Events way later
+
+/***/ },
+/* 251 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _react = __webpack_require__(149);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(147);
+
+	var BABURL = ["http://bruinappbuilders.com", "http://facebook.com/groups/bruinappbuilders"];
+	var ACMURL = ["http://acm.cs.ucla.edu", "https://www.facebook.com/groups/uclaacm/"];
+	var SEPURL = ["http://ucla.sigmaetapi.com"];
+	var BEURL = ["http://www.bruinentrepreneurs.org"];
+	var BLURL = ["https://blackstonelaunchpad.org"];
+	var BMEURL = ["http://uclabme.squarespace.com/#about", "https://www.facebook.com/BruinMedicalEntrepreneurs/"];
+	module.exports = _react2['default'].createClass({
+		displayName: "Groups",
+		render: function render() {
+			var displayArray = [];
+			if (this.props.params.categoryID == "Tech") {
+				displayArray.push(_react2['default'].createElement(
+					'li',
+					null,
+					_react2['default'].createElement(GroupInformation, { groupName: 'Bruin App Builders (BAB)', groupDescription: 'Code apps', model: 'Closed community, join FB group', groupURLs: BABURL })
+				));
+				displayArray.push(_react2['default'].createElement(
+					'li',
+					null,
+					_react2['default'].createElement(GroupInformation, { groupName: 'Association of Computing Machinery (ACM)', groupDescription: 'Code apps', model: 'Event based, free for everyone', groupURLs: ACMURL })
+				));
+			} else if (this.props.params.categoryID == "Entrepreneurship") {
+				displayArray.push(_react2['default'].createElement(
+					'li',
+					null,
+					_react2['default'].createElement(GroupInformation, { groupName: 'Sigma Eta Pi (SEP)', groupDescription: 'Co-ed entrepreneurship fraternity', model: 'Fraternity. Recruiting again in Spring', groupURLs: SEPURL })
+				));
+				displayArray.push(_react2['default'].createElement(
+					'li',
+					null,
+					_react2['default'].createElement(GroupInformation, { groupName: 'Bruin Entrepreneurs (BE)', groupDescription: 'Undergraduate Entrepreneurship', model: 'Event based, free for everyone', groupURLs: BEURL })
+				));
+				displayArray.push(_react2['default'].createElement(
+					'li',
+					null,
+					_react2['default'].createElement(GroupInformation, { groupName: 'Blackstone Launchpad', groupDescription: 'Training the next generation of entrepreneurs', model: 'Program and mentorship-based, check website', groupURLs: BLURL })
+				));
+				displayArray.push(_react2['default'].createElement(
+					'li',
+					null,
+					_react2['default'].createElement(GroupInformation, { groupName: 'Bruin Medical Entrepreneurs (BME)', groupDescription: 'Healthcare based entrepreneurship', model: 'Event based, free for everyone', groupURLs: BMEURL })
+				));
+			}
+
+			return _react2['default'].createElement(
+				'div',
+				null,
+				_react2['default'].createElement(
+					'h3',
+					null,
+					this.props.params.categoryID,
+					' Groups @ UCLA'
+				),
+				_react2['default'].createElement(
+					'ul',
+					null,
+					displayArray
+				)
+			);
+		}
+	});
+
+	var GroupInformation = _react2['default'].createClass({
+		displayName: "GroupInfo",
+		render: function render() {
+
+			var urls = this.props.groupURLs;
+			var urlArray = [];
+			for (var i = 0; i < urls.length; i++) {
+				var url = urls[i];
+				urlArray.push(_react2['default'].createElement(
+					'li',
+					null,
+					url
+				));
+			};
+
+			return _react2['default'].createElement(
+				'div',
+				null,
+				_react2['default'].createElement(
+					'h4',
+					null,
+					this.props.groupName
+				),
+				_react2['default'].createElement(
+					'p',
+					null,
+					this.props.groupDescription
+				),
+				_react2['default'].createElement(
+					'p',
+					null,
+					'Membership model: ',
+					this.props.model,
+					' '
+				),
+				_react2['default'].createElement(
+					'ul',
+					null,
+					urlArray
+				)
+			);
+		}
+	});
 
 /***/ }
 /******/ ]);

@@ -8,7 +8,8 @@ class LoginStore {
     this.bindListeners({
       onLoginSuccess: LoginActions.loginSuccess,
       onLoginFailed: LoginActions.loginFailed,
-      onLogout: LoginActions.logout
+      onLogout: LoginActions.logout,
+      onLoginStatusUpdated: LoginActions.loginStatusUpdated
     });
 
 
@@ -24,6 +25,9 @@ class LoginStore {
   }
   onLogout() {
   	this.isLoggedIn = false;
+  }
+  onLoginStatusUpdated() {
+    
   }
 
 }

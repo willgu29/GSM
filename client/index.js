@@ -14,6 +14,9 @@ var GSMUserTableView = require("./components/GSMUserTableView");
 var Message = require('./components/Message');
 var EditAccount = require('./components/EditAccountForm');
 var GSMUserProfile = require("./components/GSMUserProfile");
+var FindGroups = require("./components/FindGroups");
+var Groups = require("./components/Groups");
+
 
 var pathName = window.location.pathname;
 
@@ -43,8 +46,11 @@ var App = React.createClass({
 				indexContent.push(<GSMUserTableView />);				
 			}
 		} else {
-			//landing page
-			indexContent.push(<LandingPage />);
+			if (this.props.location.pathname == "/") {
+				indexContent.push(<LandingPage />);				
+			} else {
+
+			}
 		}
 
 		return(
@@ -61,7 +67,11 @@ ReactDOM.render((<Router>
 				<Route path="/" component={App}>
 					<Route path="users/:userID" component={GSMUserProfile} />
 					<Route path="editAccount" component={EditAccount} />
-					<Route path="messages" component={Message} />
+					<Route path="messages/:messageID" component={Message} />
+					<Route path="find" component={FindGroups} >
+						<Route path="groups/:categoryID" component={Groups} />
+					</Route>
+
 				</Route>
 			</Router>
 			), document.getElementById("content"));

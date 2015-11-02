@@ -44,7 +44,8 @@ const MessageAPI = {
 					});	
 	},
 
-	//Will automatically add current user's information on post
+	//Will automatically add current user's information on post, will return conversation thread.
+	//If conversation thread exists, will return exisitng one.
 	createNewMessageThread: function(participantID, participantFullName, participantEmail) {
 		return axios.post("/api/messages", {
 						_id : participantID,

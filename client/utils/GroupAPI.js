@@ -27,6 +27,17 @@ const GroupAPI = {
 					});
 
 	}
+	getGroupsByCategory: function(categoryName) {
+		return axios.get("/api/groupsByCategory/" +categoryName)
+					.then(function (response) {
+						console.log(response);
+						return response.data;
+					})
+					.catch(function (response) {
+						console.log(response);
+						return response.data;
+					});
+	}
 }
 
 

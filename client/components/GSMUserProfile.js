@@ -3,17 +3,29 @@ import React from 'react'
 var $ = require('jquery');
 var UserStore = require("../stores/UserStore");
 var UserActions = require("../actions/UserActions");
+var MessageActions = require("../actions/MessageActions");
+var MessageStore = require("../stores/MessageStore");
+
 
 var NewMessage = React.createClass({
 	
 
+	componentDidMount: function() {
+		MessageStore.listen(this.onChange);
+	},
+	componentWillUnmount: function() {
+		MessageStore.unlisten(this.onChange);
+	},
+	onChange(state) {
+		console.log("State Message: ", state);
+	},
 	createNewMessageThread: function() {
 		var data = {
 			_id: this.props._id,
 			fullName: this.props.fullName,
 			email: this.props.email
 		};
-
+		MessageActions.createMessageThread();
 		$.ajax({
 			url: this.props.url,
 			dataType: 'json',

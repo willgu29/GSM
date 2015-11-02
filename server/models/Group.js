@@ -5,6 +5,7 @@ var groupSchema = new mongoose.Schema({
 	dateCreated: {type: Date, default: Date.now},
 	name: String,
 	description: String,
+    membershipModel: String,
     userIds_inGroup: [mongoose.Schema.Types.ObjectId],
     fullNames_inGroup: [String],
     emails_inGroup: [String],
@@ -14,8 +15,8 @@ var groupSchema = new mongoose.Schema({
     rootGroup_name: String,
     childrenGroup_ids: [mongoose.Schema.Types.ObjectId],
     childrenGroup_names: [String],
-    level: Number //if 1 == root
-
+    level: Number, //if 1 == root
+    category: String
 });
 
 module.exports = Group = mongoose.model('Group', groupSchema);

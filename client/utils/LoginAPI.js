@@ -26,6 +26,17 @@ const LoginAPI = {
 						console.log(response);
 						return response.data;
 					});
+	},
+	updateLoginDate: function() {
+		return axios.post("/api/updateLoginDate")
+					.then(function (response) {
+						console.log(response);
+						return response.data;
+					})
+					.catch(function (response) {
+						console.log(response);
+						return response.data;
+					});
 	}
 
 };

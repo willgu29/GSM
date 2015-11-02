@@ -2,6 +2,8 @@
 import React from 'react'
 var $ = require("jquery");
 
+var MessageActions = require("../actions/MessageActions");
+var MessageStore = require("../stores/MessageStore");
 // var convoID = document.getElementById("convoID").getAttribute("value");
 
 // var convoTitle = document.getElementById("convoTitle").getAttribute("value");
@@ -17,6 +19,7 @@ var MessageRow = React.createClass({
 });
 
 module.exports = React.createClass({
+  displayName:"MessageList",
   getInitialProps: function() {
     return( {
       url: "/api/messages",
@@ -25,25 +28,21 @@ module.exports = React.createClass({
     });
   },
 	getInitialState: function() {
-		return ({messages: []});
+		return MessageStore.getState();
 	},
+  componentDidMount: function() {
+    MessageStore.listen(this.onChange);
+    this.loadMessages();
+  },
+  componentWillUnmount: function() {
+    MessageStore.unlisten(this.onChange);
+  },
+  onChange(state) {
+    this.setState(state);
+  },
 
 	loadMessages: function() {
-		var urlGet = this.props.url + this.props.convoID;
-		$.ajax({
-			url: urlGet,
-			type: "GET",
-			dataType: "json",
-			success: function(messages) {
-        		this.setState({messages: messages});
-      		}.bind(this),
-      		error: function(xhr,status,err){
-        		console.log("Error: ", err);
-      		}.bind(this)
-		});
-	},
-	componentDidMount: function() {
-		this.loadMessages();
+    MessageActions.getMessagesForThread(this.state.messageThread._id);
 	},
 	refreshMessageList: function() {
 		this.loadMessages();
@@ -80,17 +79,7 @@ var MessageSend = React.createClass({
     	this.setState({text: e.target.value});
   	},
   	componentDidMount: function() {
-  		$.ajax({
-    		url: "/api/messageThread/" + this.props.convoID,
-    		type:"GET",
-    		dataType: "json",
-    		success: function(messageThread) {
-    			this.setState({emails: messageThread.participant_emails});
-    		}.bind(this),
-    		error: function(xhr,status,err){
-    			console.log("Error: ", err);
-    		}.bind(this)
-    	});
+  		
   	},
   	handleSubmit: function(e) {
     	e.preventDefault();

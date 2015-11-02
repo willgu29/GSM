@@ -1,18 +1,9 @@
-NEWWW:
+NEW:
 
-*****
-
-GO to client folder and
-
-webpack
-
-then
-
-index.js as normal localhost:3000
-
-***
-
-
+Run webpack --watch -> node index.js
+Hot loading? -> run webpack --config webpack.config.dev.js -> node devServer.js
+In progress: refactor into server folder (express router)
+In progress: refactor client into alt + react
 
 
 

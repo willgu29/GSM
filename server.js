@@ -35,6 +35,7 @@ app.use(session({secret: 'baeMaxLoving'}))
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use("/admin/build", express.static(__dirname + "/admin/build"));
 app.use("/client/", express.static(__dirname + '/client/'));
 app.use("/node_modules/", express.static(__dirname + '/node_modules/'));
 app.use("/dist/", express.static(__dirname + '/dist/'));
@@ -43,7 +44,7 @@ app.use("/dist/", express.static(__dirname + '/dist/'));
 app.get("/gsm", ensureAdmin, function(req, res) {
   console.log("/gsm GET");
   //res.sendFile(__dirname + "/public/adminPanel.html");
-  res.render("adminPanel", {layout: "/layouts/main"});
+  res.sendFile(__dirname + "/admin/gsm.html");
 });
 
 //ROUTING
@@ -515,6 +516,13 @@ app.post("/api/sendMailTo/", loggedIn, function (req, res) {
         });
     }
   }
+});
+app.get("/api/groupsByCategory/:categoryID", function (req, res) {
+  console.log("/api/groupsByCategory/:categoryID " + req.params.categoryID);
+  Group.find({category:req.params.categoryID}, function (err, groups) {
+    if (err) { res.json(err) }
+      else { return res.json(groups);}
+  });
 });
 
 app.post("/api/joinGroup/:groupID", loggedIn, function (req, res) {

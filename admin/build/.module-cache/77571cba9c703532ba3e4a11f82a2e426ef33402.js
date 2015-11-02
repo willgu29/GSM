@@ -1,5 +1,5 @@
 
-var DeleteUserAccount = React.createClass({
+var DeleteUserAccount = React.createClass({displayName: "DeleteUserAccount",
 	getInitialState: function() {
     	return {value: ''};
   	},
@@ -20,15 +20,15 @@ var DeleteUserAccount = React.createClass({
 	},
 	render: function() {
 		return(
-			<div>
-				<h3>Delete User: </h3>
-					User ID: <br />
-					<input id="userID" name="userID" type="text" value={this.state.value} onChange={this.handleChange} />
-					<input onClick={this.handleClick} type="submit" value="delete user" id="deleteUser" />
+			React.createElement("div", null, 
+				React.createElement("h3", null, "Delete User: "), 
+					"User ID: ", React.createElement("br", null), 
+					React.createElement("input", {id: "userID", name: "userID", type: "text", value: this.state.value, onChange: this.handleChange}), 
+					React.createElement("input", {onClick: this.handleClick, type: "submit", value: "delete user", id: "deleteUser"})
 
 
 		
-			</div>
+			)
 		);
 	}
 

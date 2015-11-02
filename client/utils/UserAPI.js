@@ -3,7 +3,7 @@ var axios = require('axios');
 const UserAPI = {
 
 	getUserByID: function(id) {
-		return axios.get("localhost:3000/api/users/" + id)
+		return axios.get("/api/users/" + id)
 					.then(function (response) {
 						console.log(response);
 						return response.data;

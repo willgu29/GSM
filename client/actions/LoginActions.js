@@ -5,7 +5,8 @@ class LoginActions {
 	constructor() {
 		this.generateActions(
 			'loginSuccess',
-			'loginFailed'
+			'loginFailed',
+      'loginStatusUpdated'
 
 		);
 	}
@@ -24,6 +25,14 @@ class LoginActions {
       //Problem is tryLogin is being received as an action, then no received action b/c of callback
       // this.dispatch(email);
   	}
+
+    updateLoginDate() {
+      LoginAPI.updateLoginDate().then((result) => {
+        this.actions.loginStatusUpdated();
+      }).catch(function(error) {
+
+      });
+    }
 
     logout() {
       LoginAPI.logout().then((result) => {
