@@ -56,6 +56,7 @@
 	var _reactRouter = __webpack_require__(147);
 
 	var LoginStore = __webpack_require__(205);
+	var LoginActions = __webpack_require__(219);
 
 	var LandingPage = __webpack_require__(234);
 
@@ -26953,6 +26954,10 @@
 
 	var _reactRouter = __webpack_require__(147);
 
+	var _actionsLoginActions = __webpack_require__(219);
+
+	var _actionsLoginActions2 = _interopRequireDefault(_actionsLoginActions);
+
 	var iGrouplyHeaderStyle = {
 		fontFamily: "Avenir Medium",
 		fontSize: "30px",
@@ -26989,6 +26994,11 @@
 	var GSMNavBarItems = _react2['default'].createClass({
 		displayName: 'GSMNavBarItems',
 
+		handleClick: function handleClick(e) {
+			e.preventDefault();
+			console.log("handle");
+			_actionsLoginActions2['default'].logout();
+		},
 		render: function render() {
 			var style1 = liStyle;
 			var style2 = liStyle;
@@ -27030,8 +27040,8 @@
 					'li',
 					{ style: style5 },
 					_react2['default'].createElement(
-						_reactRouter.Link,
-						{ style: aStyle, to: '/logout' },
+						'a',
+						{ style: aStyle, onClick: this.handleClick },
 						'Logout'
 					)
 				)

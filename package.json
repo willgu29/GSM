@@ -9,9 +9,11 @@
     "dev": "webpack-dev-server --progress --colors --port 8090",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  /* for babel src --out-dir build
   "babel": {
     "presets":["react"]
   },
+  */
   "engines": {
     "node": "0.12.2"
   },

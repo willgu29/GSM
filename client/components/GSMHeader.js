@@ -1,6 +1,7 @@
 'use strict'
 import React from 'react'
 import { Router, Route, Link } from 'react-router'
+import LoginActions from "../actions/LoginActions";
 
 var iGrouplyHeaderStyle = {
 	fontFamily: "Avenir Medium",
@@ -37,7 +38,11 @@ var aStyle = {
 
 
 var GSMNavBarItems = React.createClass({
-	
+	handleClick: function(e) {
+		e.preventDefault();
+		console.log("handle");
+		LoginActions.logout();
+	},
 	render: function() {
 		var style1 = liStyle;
 		var style2 = liStyle;
@@ -51,7 +56,7 @@ var GSMNavBarItems = React.createClass({
 				<li style={style2}><Link style={aStyle} to="/messages">Messages</Link></li>
 				
 				<li style={style5}><Link style={aStyle} to="/editAccount">My Profile</Link></li>
-				<li style={style5}><Link style={aStyle} to="/logout">Logout</Link></li>
+				<li style={style5}><a style={aStyle} onClick={this.handleClick}>Logout</a></li>
 			</ul>
 		);
 	}

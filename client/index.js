@@ -6,6 +6,7 @@ import { IndexRoute } from 'react-router'
 
 
 var LoginStore = require('./stores/LoginStore');
+var LoginActions = require("./actions/LoginActions");
 
 var LandingPage = require("./components/LandingPage");
 
@@ -36,7 +37,7 @@ var App = React.createClass({
 		this.setState(state);
 	},
 	render: function() {
-
+		
 		var content = [];
 		var indexContent = [];
 
