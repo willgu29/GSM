@@ -4,6 +4,7 @@ var CreateEvent = React.createClass({
 
 	render: function() {
 		return(
+			
 			<div className="CreateEvent">
 				<h3>Create Event</h3>
 				<form method="post" action={this.props.url}>
