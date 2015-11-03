@@ -66,7 +66,7 @@
 	var EditAccount = __webpack_require__(246);
 	var GSMUserProfile = __webpack_require__(248);
 	var FindGroups = __webpack_require__(250);
-	var Groups = __webpack_require__(251);
+	var Groups = __webpack_require__(253);
 
 	var pathName = window.location.pathname;
 
@@ -37562,8 +37562,15 @@
 
 	var _reactRouter = __webpack_require__(147);
 
+	var _actionsGroupActions = __webpack_require__(251);
+
+	var _actionsGroupActions2 = _interopRequireDefault(_actionsGroupActions);
+
 	module.exports = _react2['default'].createClass({
 		displayName: "FindGroups",
+		handleClick: function handleClick(categoryID) {
+			_actionsGroupActions2['default'].getGroupsByCategory(categoryID);
+		},
 		render: function render() {
 			return _react2['default'].createElement(
 				'div',
@@ -37581,7 +37588,7 @@
 						null,
 						_react2['default'].createElement(
 							_reactRouter.Link,
-							{ to: '/find/groups/tech' },
+							{ onClick: this.handleClick.bind(this, "tech"), to: '/find/groups/tech' },
 							'Tech'
 						)
 					),
@@ -37590,7 +37597,7 @@
 						null,
 						_react2['default'].createElement(
 							_reactRouter.Link,
-							{ to: '/find/groups/entrepreneurship' },
+							{ onClick: this.handleClick.bind(this, "entrepreneurship"), to: '/find/groups/entrepreneurship' },
 							'Entrepreneurship'
 						)
 					)
@@ -37606,205 +37613,12 @@
 
 	'use strict';
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	var _react = __webpack_require__(149);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(147);
-
-	var _storesGroupStore = __webpack_require__(252);
-
-	var _storesGroupStore2 = _interopRequireDefault(_storesGroupStore);
-
-	var _actionsGroupActions = __webpack_require__(253);
-
-	var _actionsGroupActions2 = _interopRequireDefault(_actionsGroupActions);
-
-	var BABURL = ["http://bruinappbuilders.com", "http://facebook.com/groups/bruinappbuilders"];
-	var ACMURL = ["http://acm.cs.ucla.edu", "https://www.facebook.com/groups/uclaacm/"];
-	var SEPURL = ["http://ucla.sigmaetapi.com"];
-	var BEURL = ["http://www.bruinentrepreneurs.org"];
-	var BLURL = ["https://blackstonelaunchpad.org"];
-	var BMEURL = ["http://uclabme.squarespace.com/#about", "https://www.facebook.com/BruinMedicalEntrepreneurs/"];
-	module.exports = _react2['default'].createClass({
-		displayName: "Groups",
-		getInitialState: function getInitialState() {
-			_storesGroupStore2['default'].getState();
-		},
-		componentDidMount: function componentDidMount() {
-			GroupsStore.listen(this.onChange);
-			_actionsGroupActions2['default'].getGroupsByCategory(this.props.params.categoryID);
-		},
-		componentWillUnmount: function componentWillUnmount() {
-			_storesGroupStore2['default'].unlisten(this.onChange);
-		},
-		onChange: function onChange(state) {
-			this.setState(state);
-		},
-		render: function render() {
-			var displayArray = [];
-			var groupsArray = this.state.groups;
-			for (var i = 0; i < groupsArray.length; i++) {
-				var group = groupsArray[i];
-				displayArray.push(_react2['default'].createElement(
-					'li',
-					null,
-					_react2['default'].createElement(GroupInformation, { groupName: group.name,
-						shortName: group.shortName,
-						groupDescription: group.description,
-						model: group.membershipModel,
-						groupURLS: group.urls })
-				));
-			}
-			if (this.props.params.categoryID == "tech") {
-				displayArray.push(_react2['default'].createElement(
-					'li',
-					null,
-					_react2['default'].createElement(GroupInformation, { groupName: 'Bruin App Builders (BAB)', groupDescription: 'Code apps', model: 'Closed community, join FB group', groupURLs: BABURL })
-				));
-				displayArray.push(_react2['default'].createElement(
-					'li',
-					null,
-					_react2['default'].createElement(GroupInformation, { groupName: 'Association of Computing Machinery (ACM)', groupDescription: 'Code apps', model: 'Event based, free for everyone', groupURLs: ACMURL })
-				));
-			} else if (this.props.params.categoryID == "entrepreneurship") {
-				displayArray.push(_react2['default'].createElement(
-					'li',
-					null,
-					_react2['default'].createElement(GroupInformation, { groupName: 'Sigma Eta Pi (SEP)', groupDescription: 'Co-ed entrepreneurship fraternity', model: 'Fraternity. Recruiting again in Spring', groupURLs: SEPURL })
-				));
-				displayArray.push(_react2['default'].createElement(
-					'li',
-					null,
-					_react2['default'].createElement(GroupInformation, { groupName: 'Bruin Entrepreneurs (BE)', groupDescription: 'Undergraduate Entrepreneurship', model: 'Event based, free for everyone', groupURLs: BEURL })
-				));
-				displayArray.push(_react2['default'].createElement(
-					'li',
-					null,
-					_react2['default'].createElement(GroupInformation, { groupName: 'Blackstone Launchpad', groupDescription: 'Training the next generation of entrepreneurs', model: 'Program and mentorship-based, check website', groupURLs: BLURL })
-				));
-				displayArray.push(_react2['default'].createElement(
-					'li',
-					null,
-					_react2['default'].createElement(GroupInformation, { groupName: 'Bruin Medical Entrepreneurs (BME)', groupDescription: 'Healthcare based entrepreneurship', model: 'Event based, free for everyone', groupURLs: BMEURL })
-				));
-			}
-
-			return _react2['default'].createElement(
-				'div',
-				null,
-				_react2['default'].createElement(
-					'h3',
-					null,
-					this.props.params.categoryID,
-					' Groups @ UCLA'
-				),
-				_react2['default'].createElement(
-					'ul',
-					null,
-					displayArray
-				)
-			);
-		}
-	});
-
-	var GroupInformation = _react2['default'].createClass({
-		displayName: "GroupInfo",
-		render: function render() {
-
-			var urls = this.props.groupURLs;
-			var urlArray = [];
-			for (var i = 0; i < urls.length; i++) {
-				var url = urls[i];
-				urlArray.push(_react2['default'].createElement(
-					'li',
-					null,
-					url
-				));
-			};
-
-			return _react2['default'].createElement(
-				'div',
-				null,
-				_react2['default'].createElement(
-					'h4',
-					null,
-					this.props.groupName
-				),
-				_react2['default'].createElement(
-					'p',
-					null,
-					this.props.groupDescription
-				),
-				_react2['default'].createElement(
-					'p',
-					null,
-					'Membership model: ',
-					this.props.model,
-					' '
-				),
-				_react2['default'].createElement(
-					'ul',
-					null,
-					urlArray
-				)
-			);
-		}
-	});
-
-/***/ },
-/* 252 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 	var alt = __webpack_require__(206);
-	var GroupActions = __webpack_require__(253);
-
-	var GroupStore = (function () {
-	  function GroupStore() {
-	    _classCallCheck(this, GroupStore);
-
-	    this.groups = [];
-	    this.bindListeners({
-	      onGroupsReceived: GroupActions.groupsReceived,
-	      onDataFetchFailed: GroupActions.dataFetchFailed
-	    });
-	  }
-
-	  _createClass(GroupStore, [{
-	    key: 'onGroupsReceived',
-	    value: function onGroupsReceived(result) {
-	      this.groups = result;
-	    }
-	  }, {
-	    key: 'onDataFetchFailed',
-	    value: function onDataFetchFailed(result) {}
-	  }]);
-
-	  return GroupStore;
-	})();
-
-	module.exports = alt.createStore(GroupStore, 'GroupStore');
-
-/***/ },
-/* 253 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	var alt = __webpack_require__(206);
-	var GroupAPI = __webpack_require__(254);
+	var GroupAPI = __webpack_require__(252);
 
 	var GroupsActions = (function () {
 	  function GroupsActions() {
@@ -37830,7 +37644,7 @@
 	module.exports = alt.createActions(GroupsActions);
 
 /***/ },
-/* 254 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -37871,6 +37685,167 @@
 	};
 
 	module.exports = GroupAPI;
+
+/***/ },
+/* 253 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _react = __webpack_require__(149);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(147);
+
+	var _storesGroupStore = __webpack_require__(254);
+
+	var _storesGroupStore2 = _interopRequireDefault(_storesGroupStore);
+
+	var _actionsGroupActions = __webpack_require__(251);
+
+	var _actionsGroupActions2 = _interopRequireDefault(_actionsGroupActions);
+
+	var BABURL = ["http://bruinappbuilders.com", "http://facebook.com/groups/bruinappbuilders"];
+	var ACMURL = ["http://acm.cs.ucla.edu", "https://www.facebook.com/groups/uclaacm/"];
+	var SEPURL = ["http://ucla.sigmaetapi.com"];
+	var BEURL = ["http://www.bruinentrepreneurs.org"];
+	var BLURL = ["https://blackstonelaunchpad.org"];
+	var BMEURL = ["http://uclabme.squarespace.com/#about", "https://www.facebook.com/BruinMedicalEntrepreneurs/"];
+	module.exports = _react2['default'].createClass({
+		displayName: "Groups",
+		getInitialState: function getInitialState() {
+			return _storesGroupStore2['default'].getState();
+		},
+		componentDidMount: function componentDidMount() {
+			_storesGroupStore2['default'].listen(this.onChange);
+			// GroupActions.getGroupsByCategory(this.props.params.categoryID);
+		},
+		componentWillUnmount: function componentWillUnmount() {
+			_storesGroupStore2['default'].unlisten(this.onChange);
+		},
+		onChange: function onChange(state) {
+			this.setState(state);
+		},
+		render: function render() {
+			var displayArray = [];
+			var groupsArray = this.state.groups;
+			for (var i = 0; i < groupsArray.length; i++) {
+				var group = groupsArray[i];
+				displayArray.push(_react2['default'].createElement(
+					'li',
+					null,
+					_react2['default'].createElement(GroupInformation, { groupName: group.name,
+						shortName: group.shortName,
+						groupDescription: group.description,
+						model: group.membershipModel,
+						groupURLS: group.urls })
+				));
+			}
+
+			return _react2['default'].createElement(
+				'div',
+				null,
+				_react2['default'].createElement(
+					'h3',
+					null,
+					this.props.params.categoryID,
+					' Groups @ UCLA'
+				),
+				_react2['default'].createElement(
+					'ul',
+					null,
+					displayArray
+				)
+			);
+		}
+	});
+
+	var GroupInformation = _react2['default'].createClass({
+		displayName: "GroupInfo",
+		render: function render() {
+
+			var urls = this.props.groupURLS;
+			var urlArray = [];
+			for (var i = 0; i < urls.length; i++) {
+				var url = urls[i];
+				urlArray.push(_react2['default'].createElement(
+					'li',
+					null,
+					url
+				));
+			};
+
+			return _react2['default'].createElement(
+				'div',
+				null,
+				_react2['default'].createElement(
+					'h4',
+					null,
+					this.props.groupName
+				),
+				_react2['default'].createElement(
+					'p',
+					null,
+					this.props.groupDescription
+				),
+				_react2['default'].createElement(
+					'p',
+					null,
+					'Membership model: ',
+					this.props.model,
+					' '
+				),
+				_react2['default'].createElement(
+					'ul',
+					null,
+					urlArray
+				)
+			);
+		}
+	});
+
+/***/ },
+/* 254 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	var alt = __webpack_require__(206);
+	var GroupActions = __webpack_require__(251);
+
+	var GroupStore = (function () {
+	  function GroupStore() {
+	    _classCallCheck(this, GroupStore);
+
+	    this.groups = [];
+	    this.bindListeners({
+	      onGroupsReceived: GroupActions.groupsReceived,
+	      onDataFetchFailed: GroupActions.dataFetchFailed
+	    });
+	  }
+
+	  _createClass(GroupStore, [{
+	    key: 'onGroupsReceived',
+	    value: function onGroupsReceived(result) {
+	      console.log("result : " + result);
+	      this.groups = result;
+	    }
+	  }, {
+	    key: 'onDataFetchFailed',
+	    value: function onDataFetchFailed(result) {}
+	  }]);
+
+	  return GroupStore;
+	})();
+
+	module.exports = alt.createStore(GroupStore, 'GroupStore');
 
 /***/ }
 /******/ ]);

@@ -14,11 +14,11 @@ var BMEURL = ["http://uclabme.squarespace.com/#about", "https://www.facebook.com
 module.exports = React.createClass({
 	displayName:"Groups",
 	getInitialState: function() {
-		GroupStore.getState();
+		return GroupStore.getState();
 	},
 	componentDidMount: function() {
-		GroupsStore.listen(this.onChange);
-		GroupActions.getGroupsByCategory(this.props.params.categoryID)
+		GroupStore.listen(this.onChange);
+		// GroupActions.getGroupsByCategory(this.props.params.categoryID);
 	},
 	componentWillUnmount: function() {
 		GroupStore.unlisten(this.onChange);
@@ -37,16 +37,7 @@ module.exports = React.createClass({
 													model={group.membershipModel}
 													groupURLS={group.urls} /></li>)
 		}
-		if (this.props.params.categoryID == "tech") {
-			displayArray.push(<li><GroupInformation groupName="Bruin App Builders (BAB)" groupDescription="Code apps"  model="Closed community, join FB group" groupURLs={BABURL} /></li>);
-			displayArray.push(<li><GroupInformation groupName="Association of Computing Machinery (ACM)" groupDescription="Code apps" model="Event based, free for everyone"  groupURLs={ACMURL} /></li>);
-		} else if (this.props.params.categoryID == "entrepreneurship") {
-			displayArray.push(<li><GroupInformation groupName="Sigma Eta Pi (SEP)" groupDescription="Co-ed entrepreneurship fraternity" model="Fraternity. Recruiting again in Spring" groupURLs={SEPURL}/></li>);
-			displayArray.push(<li><GroupInformation groupName="Bruin Entrepreneurs (BE)" groupDescription="Undergraduate Entrepreneurship" model="Event based, free for everyone" groupURLs={BEURL}/></li>);
-			displayArray.push(<li><GroupInformation groupName="Blackstone Launchpad" groupDescription="Training the next generation of entrepreneurs" model="Program and mentorship-based, check website" groupURLs={BLURL}/></li>);
-			displayArray.push(<li><GroupInformation groupName="Bruin Medical Entrepreneurs (BME)" groupDescription="Healthcare based entrepreneurship" model="Event based, free for everyone" groupURLs={BMEURL}/></li>);
-
-		}
+		
 
 		return(
 			<div>
@@ -63,7 +54,7 @@ var GroupInformation = React.createClass({
 	displayName:"GroupInfo",
 	render: function() {
 
-		var urls = this.props.groupURLs;
+		var urls = this.props.groupURLS;
 		var urlArray = [];
 		for (var i = 0; i < urls.length; i++) {
 			var url = urls[i];

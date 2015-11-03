@@ -13,6 +13,7 @@ class GroupStore {
   }
 
   onGroupsReceived(result) {
+    console.log("result : " +result );
     this.groups = result;
   }
   onDataFetchFailed(result) {
