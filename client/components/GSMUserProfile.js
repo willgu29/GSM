@@ -6,10 +6,12 @@ var UserActions = require("../actions/UserActions");
 var MessageActions = require("../actions/MessageActions");
 var MessageStore = require("../stores/MessageStore");
 
+var { Router, Route } = require('react-router');
+import History from 'react-router/lib/History'
+
 
 var NewMessage = React.createClass({
-	
-
+	mixins: [History],
 	componentDidMount: function() {
 		MessageStore.listen(this.onChange);
 	},
@@ -17,7 +19,12 @@ var NewMessage = React.createClass({
 		MessageStore.unlisten(this.onChange);
 	},
 	onChange(state) {
-		console.log("State Message: ", state);
+		if (state.messageThread.info == "success") {
+			console.log("hello?");
+			var pathURL = "/messages/" + state.messageThread._id;
+			this.history.pushState(null, pathURL, null);
+
+		}
 	},
 	createNewMessageThread: function() {
 		var data = {
@@ -25,31 +32,7 @@ var NewMessage = React.createClass({
 			fullName: this.props.fullName,
 			email: this.props.email
 		};
-		MessageActions.createMessageThread();
-		$.ajax({
-			url: this.props.url,
-			dataType: 'json',
-			data: data,
-			type: "POST",
-			success: function(info){
-     			if (this.isMounted()){
-     				console.log(info);
-  					if (info.info == "success") {
-  						//TODO: segue to messages page
-  						var url = "/messages/" + info._id + "?convoTitle=" + info.convoTitle;
-  						console.log(url);
-     					window.location.replace(url);
-     				} else {
-     					alert("There was an error. Please try again in a minute.");
-     				}
-      			}
-      		}.bind(this),
-      		error: function(xhr,status,err){
-      			console.log(err);
-      		}.bind(this)
-
-
-		});
+		MessageActions.createMessageThread(this.props._id, this.props.fullName,this.props.email);
 	},
 
 	buttonClick: function(e) {

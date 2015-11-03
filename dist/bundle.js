@@ -37363,15 +37363,25 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _reactRouterLibHistory = __webpack_require__(199);
+
+	var _reactRouterLibHistory2 = _interopRequireDefault(_reactRouterLibHistory);
+
 	var $ = __webpack_require__(237);
 	var UserStore = __webpack_require__(249);
 	var UserActions = __webpack_require__(247);
 	var MessageActions = __webpack_require__(243);
 	var MessageStore = __webpack_require__(245);
 
+	var _require = __webpack_require__(147);
+
+	var Router = _require.Router;
+	var Route = _require.Route;
+
 	var NewMessage = _react2['default'].createClass({
 		displayName: 'NewMessage',
 
+		mixins: [_reactRouterLibHistory2['default']],
 		componentDidMount: function componentDidMount() {
 			MessageStore.listen(this.onChange);
 		},
@@ -37379,7 +37389,11 @@
 			MessageStore.unlisten(this.onChange);
 		},
 		onChange: function onChange(state) {
-			console.log("State Message: ", state);
+			if (state.messageThread.info == "success") {
+				console.log("hello?");
+				var pathURL = "/messages/" + state.messageThread._id;
+				this.history.pushState(null, pathURL, null);
+			}
 		},
 		createNewMessageThread: function createNewMessageThread() {
 			var data = {
@@ -37387,30 +37401,7 @@
 				fullName: this.props.fullName,
 				email: this.props.email
 			};
-			MessageActions.createMessageThread();
-			$.ajax({
-				url: this.props.url,
-				dataType: 'json',
-				data: data,
-				type: "POST",
-				success: (function (info) {
-					if (this.isMounted()) {
-						console.log(info);
-						if (info.info == "success") {
-							//TODO: segue to messages page
-							var url = "/messages/" + info._id + "?convoTitle=" + info.convoTitle;
-							console.log(url);
-							window.location.replace(url);
-						} else {
-							alert("There was an error. Please try again in a minute.");
-						}
-					}
-				}).bind(this),
-				error: (function (xhr, status, err) {
-					console.log(err);
-				}).bind(this)
-
-			});
+			MessageActions.createMessageThread(this.props._id, this.props.fullName, this.props.email);
 		},
 
 		buttonClick: function buttonClick(e) {
