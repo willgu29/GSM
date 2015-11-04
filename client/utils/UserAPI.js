@@ -49,27 +49,9 @@ const UserAPI = {
 						return response.data;
 					});
 
-	},
-
-	createUserAccount: function(email, password, phoneNumber, firstName, lastName, initialGroupCode) {
-		return axios.post("/createAccount", {
-						email: email,
-						password: password,
-						phoneNumber: phoneNumber,
-						firstName: firstName,
-						lastName: lastName,
-						initialGroupCode: initialGroupCode
-					})
-					.then(function (response) {
-						console.log(response);
-						return response.data;
-					})
-					.catch(function (response) {
-						console.log(response);
-						return response.data;
-					});
-
 	}
+
+	
 	
 
 };

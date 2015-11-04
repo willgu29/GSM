@@ -2,6 +2,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 var LoginActions = require('../actions/LoginActions');
+var LinkedStateMixin = require('react-addons-linked-state-mixin');
 
 
 var errorStyle = {
@@ -63,17 +64,34 @@ var LoginForm = React.createClass({
 var groupStyle = {
 
     cursor: "pointer",
-    width: "10%",
+    width: "2%",
     height: "auto"
 }
 
 
+
 var CreateAccountForm = React.createClass({
+	mixins: [LinkedStateMixin],
     getInitialState: function() {
-        return {help: false};
+        return {help: false,
+        		email: "",
+        		password: "",
+        		firstName: "",
+        		lastName: "",
+        		phoneNumber: "",
+        		initialGroupCode: "BABRocks"};
     },
     handleClick: function(event) {
         this.setState({help: !this.state.help});
+    },
+    handleCreateAccount: function(e) {
+    	e.preventDefault();
+    	LoginActions.createAccount(this.state.email,
+    								this.state.password,
+    								this.state.phoneNumber,
+    								this.state.firstName,
+    								this.state.lastName,
+    								this.state.initialGroupCode);
     },
 	render: function() {
         var helptext = this.state.help ? 'iGrouply is still in Alpha testing. To join, enter a valid group code if you\'re in a group. If you would like to start a group, email hi@igrouply.com' : '';
@@ -81,21 +99,21 @@ var CreateAccountForm = React.createClass({
 			<div>
 			<h4>New to iGrouply? Sign Up.</h4>
 			 <form className="createAccountForm" method="post" action="createAccount" >
-                email: <input type="email" name="email" /> <br />
-                password: <input type="password" name="password" /> <br />
-             	first name: <input type="text" name="firstName" /> <br />
-                last name: <input type="text" name="lastName" /> <br />
-                phone number: <input type="tel" name="phoneNumber" /> <br />
+                email: <input type="email" name="email" valueLink={this.linkState('email')} /> <br />
+                password: <input type="password" name="password" valueLink={this.linkState('password')} /> <br />
+             	first name: <input type="text" name="firstName" valueLink={this.linkState('firstName')} /> <br />
+                last name: <input type="text" name="lastName" valueLink={this.linkState('lastName')} /> <br />
+                phone number: <input type="tel" name="phoneNumber"valueLink={this.linkState('phoneNumber')}  /> <br />
                 group code:&nbsp;&nbsp; 
                 
-                <img src='./assets/images/InfoButtonBlack.png' style={groupStyle} onClick={this.handleClick}/>
+                <img src='./client/assets/images/infoButtonBlack.png' style={groupStyle} onClick={this.handleClick}/>
                 <br/><i> {helptext}</i><br/>
                 
 
-                <input type="text" name="initialGroupCode" /> <br />
+                <input type="text" name="initialGroupCode" valueLink={this.linkState('initialGroupCode')} /> <br />
 
                 <br />
-                <input type="submit" value="create account" id="createAccount" />
+                <input onClick={this.handleCreateAccount} type="submit" value="create account" id="createAccount" />
             </form>
             </div>
              

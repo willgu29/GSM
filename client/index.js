@@ -7,6 +7,7 @@ import { IndexRoute } from 'react-router'
 
 var LoginStore = require('./stores/LoginStore');
 var LoginActions = require("./actions/LoginActions");
+var GroupActions = require("./actions/GroupActions");
 
 var LandingPage = require("./components/LandingPage");
 
@@ -35,6 +36,11 @@ var App = React.createClass({
 		LoginStore.unlisten(this.onChange);
 	},
 	onChange(state) {
+		if (state.isFirstLogin == true && state.newAccountInfo._id) {
+			console.log("New Account: " + JSON.stringify(state));
+			LoginActions.tryLogin(state.newAccountInfo.email, state.newAccountInfo.password);
+			//TODO: Join Group via initial group code
+		}
 		this.setState(state);
 	},
 	render: function() {

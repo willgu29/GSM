@@ -152,8 +152,7 @@ app.post('/createAccount', function (req, res) {
                 	return res.send("There was an error creating your account. Please try again in a minute.");
                 } else {
                 	console.log(newUser);
-                  var htmlLazyMe = "<p>Account created! Feel free to login and update your user profile!</p>" + "<a href=/>Back</a>";
-                	return res.send(htmlLazyMe);
+                	return res.json(newUser);
                 }
         });
 });

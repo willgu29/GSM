@@ -57,6 +57,7 @@
 
 	var LoginStore = __webpack_require__(205);
 	var LoginActions = __webpack_require__(219);
+	var GroupActions = __webpack_require__(251);
 
 	var LandingPage = __webpack_require__(234);
 
@@ -84,6 +85,11 @@
 			LoginStore.unlisten(this.onChange);
 		},
 		onChange: function onChange(state) {
+			if (state.isFirstLogin == true && state.newAccountInfo._id) {
+				console.log("New Account: " + JSON.stringify(state));
+				LoginActions.tryLogin(state.newAccountInfo.email, state.newAccountInfo.password);
+				//TODO: Join Group via initial group code
+			}
 			this.setState(state);
 		},
 		render: function render() {
@@ -24073,17 +24079,27 @@
 
 	    this.isLoggedIn = false;
 	    this.currentUserID = "";
+	    this.isFirstLogin = false;
+	    this.newAccountInfo = {};
 	    this.bindListeners({
 	      onLoginSuccess: LoginActions.loginSuccess,
 	      onLoginFailed: LoginActions.loginFailed,
 	      onLogout: LoginActions.logout,
-	      onLoginStatusUpdated: LoginActions.loginStatusUpdated
+	      onLoginStatusUpdated: LoginActions.loginStatusUpdated,
+	      onNewAccountCreated: LoginActions.newAccountCreated
 	    });
 	  }
 
 	  _createClass(LoginStore, [{
+	    key: 'onNewAccountCreated',
+	    value: function onNewAccountCreated(result) {
+	      this.isFirstLogin = true;
+	      this.newAccountInfo = result;
+	    }
+	  }, {
 	    key: 'onLoginSuccess',
 	    value: function onLoginSuccess(result) {
+	      this.isFirstLogin = false;
 	      this.isLoggedIn = true;
 	      this.currentUserID = result._id;
 	    }
@@ -25712,20 +25728,29 @@
 	  function LoginActions() {
 	    _classCallCheck(this, LoginActions);
 
-	    this.generateActions('loginSuccess', 'loginFailed', 'loginStatusUpdated');
+	    this.generateActions('loginSuccess', 'loginFailed', 'loginStatusUpdated', 'newAccountCreated');
 	  }
 
 	  _createClass(LoginActions, [{
+	    key: 'createAccount',
+	    value: function createAccount(email, password, phoneNumber, firstName, lastName, initialGroupCode) {
+	      var _this = this;
+
+	      LoginAPI.createUserAccount(email, password, phoneNumber, firstName, lastName, initialGroupCode).then(function (result) {
+	        _this.actions.newAccountCreated(result);
+	      })['catch'](function (error) {});
+	    }
+	  }, {
 	    key: 'tryLogin',
 	    value: function tryLogin(email, password) {
-	      var _this = this;
+	      var _this2 = this;
 
 	      LoginAPI.tryLogin(email, password).then(function (result) {
 	        //How to return result from here?
 	        if (result.info == "success") {
-	          _this.actions.loginSuccess(result.user);
+	          _this2.actions.loginSuccess(result.user);
 	        } else {
-	          _this.actions.loginFailed(result.info);
+	          _this2.actions.loginFailed(result.info);
 	        }
 	      })['catch'](function (error) {});
 	      //Problem is tryLogin is being received as an action, then no received action b/c of callback
@@ -25734,19 +25759,19 @@
 	  }, {
 	    key: 'updateLoginDate',
 	    value: function updateLoginDate() {
-	      var _this2 = this;
+	      var _this3 = this;
 
 	      LoginAPI.updateLoginDate().then(function (result) {
-	        _this2.actions.loginStatusUpdated();
+	        _this3.actions.loginStatusUpdated();
 	      })['catch'](function (error) {});
 	    }
 	  }, {
 	    key: 'logout',
 	    value: function logout() {
-	      var _this3 = this;
+	      var _this4 = this;
 
 	      LoginAPI.logout().then(function (result) {
-	        _this3.dispatch();
+	        _this4.dispatch();
 	      })['catch'](function (error) {});
 	    }
 	  }]);
@@ -25789,6 +25814,22 @@
 		},
 		updateLoginDate: function updateLoginDate() {
 			return axios.post("/api/updateLoginDate").then(function (response) {
+				console.log(response);
+				return response.data;
+			})["catch"](function (response) {
+				console.log(response);
+				return response.data;
+			});
+		},
+		createUserAccount: function createUserAccount(email, password, phoneNumber, firstName, lastName, initialGroupCode) {
+			return axios.post("/createAccount", {
+				email: email,
+				password: password,
+				phoneNumber: phoneNumber,
+				firstName: firstName,
+				lastName: lastName,
+				initialGroupCode: initialGroupCode
+			}).then(function (response) {
 				console.log(response);
 				return response.data;
 			})["catch"](function (response) {
@@ -26730,6 +26771,7 @@
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
 	var LoginActions = __webpack_require__(219);
+	var LinkedStateMixin = __webpack_require__(285);
 
 	var errorStyle = {
 
@@ -26806,18 +26848,29 @@
 	var groupStyle = {
 
 		cursor: "pointer",
-		width: "10%",
+		width: "2%",
 		height: "auto"
 	};
 
 	var CreateAccountForm = _react2['default'].createClass({
 		displayName: 'CreateAccountForm',
 
+		mixins: [LinkedStateMixin],
 		getInitialState: function getInitialState() {
-			return { help: false };
+			return { help: false,
+				email: "",
+				password: "",
+				firstName: "",
+				lastName: "",
+				phoneNumber: "",
+				initialGroupCode: "BABRocks" };
 		},
 		handleClick: function handleClick(event) {
 			this.setState({ help: !this.state.help });
+		},
+		handleCreateAccount: function handleCreateAccount(e) {
+			e.preventDefault();
+			LoginActions.createAccount(this.state.email, this.state.password, this.state.phoneNumber, this.state.firstName, this.state.lastName, this.state.initialGroupCode);
 		},
 		render: function render() {
 			var helptext = this.state.help ? 'iGrouply is still in Alpha testing. To join, enter a valid group code if you\'re in a group. If you would like to start a group, email hi@igrouply.com' : '';
@@ -26833,27 +26886,27 @@
 					'form',
 					{ className: 'createAccountForm', method: 'post', action: 'createAccount' },
 					'email: ',
-					_react2['default'].createElement('input', { type: 'email', name: 'email' }),
+					_react2['default'].createElement('input', { type: 'email', name: 'email', valueLink: this.linkState('email') }),
 					' ',
 					_react2['default'].createElement('br', null),
 					'password: ',
-					_react2['default'].createElement('input', { type: 'password', name: 'password' }),
+					_react2['default'].createElement('input', { type: 'password', name: 'password', valueLink: this.linkState('password') }),
 					' ',
 					_react2['default'].createElement('br', null),
 					'first name: ',
-					_react2['default'].createElement('input', { type: 'text', name: 'firstName' }),
+					_react2['default'].createElement('input', { type: 'text', name: 'firstName', valueLink: this.linkState('firstName') }),
 					' ',
 					_react2['default'].createElement('br', null),
 					'last name: ',
-					_react2['default'].createElement('input', { type: 'text', name: 'lastName' }),
+					_react2['default'].createElement('input', { type: 'text', name: 'lastName', valueLink: this.linkState('lastName') }),
 					' ',
 					_react2['default'].createElement('br', null),
 					'phone number: ',
-					_react2['default'].createElement('input', { type: 'tel', name: 'phoneNumber' }),
+					_react2['default'].createElement('input', { type: 'tel', name: 'phoneNumber', valueLink: this.linkState('phoneNumber') }),
 					' ',
 					_react2['default'].createElement('br', null),
 					'group code:  ',
-					_react2['default'].createElement('img', { src: './assets/images/InfoButtonBlack.png', style: groupStyle, onClick: this.handleClick }),
+					_react2['default'].createElement('img', { src: './client/assets/images/infoButtonBlack.png', style: groupStyle, onClick: this.handleClick }),
 					_react2['default'].createElement('br', null),
 					_react2['default'].createElement(
 						'i',
@@ -26862,11 +26915,11 @@
 						helptext
 					),
 					_react2['default'].createElement('br', null),
-					_react2['default'].createElement('input', { type: 'text', name: 'initialGroupCode' }),
+					_react2['default'].createElement('input', { type: 'text', name: 'initialGroupCode', valueLink: this.linkState('initialGroupCode') }),
 					' ',
 					_react2['default'].createElement('br', null),
 					_react2['default'].createElement('br', null),
-					_react2['default'].createElement('input', { type: 'submit', value: 'create account', id: 'createAccount' })
+					_react2['default'].createElement('input', { onClick: this.handleCreateAccount, type: 'submit', value: 'create account', id: 'createAccount' })
 				)
 			);
 		}
@@ -36731,23 +36784,6 @@
 				console.log(response);
 				return response.data;
 			});
-		},
-
-		createUserAccount: function createUserAccount(email, password, phoneNumber, firstName, lastName, initialGroupCode) {
-			return axios.post("/createAccount", {
-				email: email,
-				password: password,
-				phoneNumber: phoneNumber,
-				firstName: firstName,
-				lastName: lastName,
-				initialGroupCode: initialGroupCode
-			}).then(function (response) {
-				console.log(response);
-				return response.data;
-			})["catch"](function (response) {
-				console.log(response);
-				return response.data;
-			});
 		}
 
 	};
@@ -37997,6 +38033,236 @@
 	});
 
 	// React.render(<MessageThreads url="/api/messages/" />, document.getElementById("messageThreads"));
+
+/***/ },
+/* 285 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(286);
+
+/***/ },
+/* 286 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule LinkedStateMixin
+	 * @typechecks static-only
+	 */
+
+	'use strict';
+
+	var ReactLink = __webpack_require__(287);
+	var ReactStateSetters = __webpack_require__(288);
+
+	/**
+	 * A simple mixin around ReactLink.forState().
+	 */
+	var LinkedStateMixin = {
+	  /**
+	   * Create a ReactLink that's linked to part of this component's state. The
+	   * ReactLink will have the current value of this.state[key] and will call
+	   * setState() when a change is requested.
+	   *
+	   * @param {string} key state key to update. Note: you may want to use keyOf()
+	   * if you're using Google Closure Compiler advanced mode.
+	   * @return {ReactLink} ReactLink instance linking to the state.
+	   */
+	  linkState: function (key) {
+	    return new ReactLink(this.state[key], ReactStateSetters.createStateKeySetter(this, key));
+	  }
+	};
+
+	module.exports = LinkedStateMixin;
+
+/***/ },
+/* 287 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactLink
+	 * @typechecks static-only
+	 */
+
+	'use strict';
+
+	/**
+	 * ReactLink encapsulates a common pattern in which a component wants to modify
+	 * a prop received from its parent. ReactLink allows the parent to pass down a
+	 * value coupled with a callback that, when invoked, expresses an intent to
+	 * modify that value. For example:
+	 *
+	 * React.createClass({
+	 *   getInitialState: function() {
+	 *     return {value: ''};
+	 *   },
+	 *   render: function() {
+	 *     var valueLink = new ReactLink(this.state.value, this._handleValueChange);
+	 *     return <input valueLink={valueLink} />;
+	 *   },
+	 *   _handleValueChange: function(newValue) {
+	 *     this.setState({value: newValue});
+	 *   }
+	 * });
+	 *
+	 * We have provided some sugary mixins to make the creation and
+	 * consumption of ReactLink easier; see LinkedValueUtils and LinkedStateMixin.
+	 */
+
+	var React = __webpack_require__(150);
+
+	/**
+	 * @param {*} value current value of the link
+	 * @param {function} requestChange callback to request a change
+	 */
+	function ReactLink(value, requestChange) {
+	  this.value = value;
+	  this.requestChange = requestChange;
+	}
+
+	/**
+	 * Creates a PropType that enforces the ReactLink API and optionally checks the
+	 * type of the value being passed inside the link. Example:
+	 *
+	 * MyComponent.propTypes = {
+	 *   tabIndexLink: ReactLink.PropTypes.link(React.PropTypes.number)
+	 * }
+	 */
+	function createLinkTypeChecker(linkType) {
+	  var shapes = {
+	    value: typeof linkType === 'undefined' ? React.PropTypes.any.isRequired : linkType.isRequired,
+	    requestChange: React.PropTypes.func.isRequired
+	  };
+	  return React.PropTypes.shape(shapes);
+	}
+
+	ReactLink.PropTypes = {
+	  link: createLinkTypeChecker
+	};
+
+	module.exports = ReactLink;
+
+/***/ },
+/* 288 */
+/***/ function(module, exports) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactStateSetters
+	 */
+
+	'use strict';
+
+	var ReactStateSetters = {
+	  /**
+	   * Returns a function that calls the provided function, and uses the result
+	   * of that to set the component's state.
+	   *
+	   * @param {ReactCompositeComponent} component
+	   * @param {function} funcReturningState Returned callback uses this to
+	   *                                      determine how to update state.
+	   * @return {function} callback that when invoked uses funcReturningState to
+	   *                    determined the object literal to setState.
+	   */
+	  createStateSetter: function (component, funcReturningState) {
+	    return function (a, b, c, d, e, f) {
+	      var partialState = funcReturningState.call(component, a, b, c, d, e, f);
+	      if (partialState) {
+	        component.setState(partialState);
+	      }
+	    };
+	  },
+
+	  /**
+	   * Returns a single-argument callback that can be used to update a single
+	   * key in the component's state.
+	   *
+	   * Note: this is memoized function, which makes it inexpensive to call.
+	   *
+	   * @param {ReactCompositeComponent} component
+	   * @param {string} key The key in the state that you should update.
+	   * @return {function} callback of 1 argument which calls setState() with
+	   *                    the provided keyName and callback argument.
+	   */
+	  createStateKeySetter: function (component, key) {
+	    // Memoize the setters.
+	    var cache = component.__keySetters || (component.__keySetters = {});
+	    return cache[key] || (cache[key] = createStateKeySetter(component, key));
+	  }
+	};
+
+	function createStateKeySetter(component, key) {
+	  // Partial state is allocated outside of the function closure so it can be
+	  // reused with every call, avoiding memory allocation when this function
+	  // is called.
+	  var partialState = {};
+	  return function stateKeySetter(value) {
+	    partialState[key] = value;
+	    component.setState(partialState);
+	  };
+	}
+
+	ReactStateSetters.Mixin = {
+	  /**
+	   * Returns a function that calls the provided function, and uses the result
+	   * of that to set the component's state.
+	   *
+	   * For example, these statements are equivalent:
+	   *
+	   *   this.setState({x: 1});
+	   *   this.createStateSetter(function(xValue) {
+	   *     return {x: xValue};
+	   *   })(1);
+	   *
+	   * @param {function} funcReturningState Returned callback uses this to
+	   *                                      determine how to update state.
+	   * @return {function} callback that when invoked uses funcReturningState to
+	   *                    determined the object literal to setState.
+	   */
+	  createStateSetter: function (funcReturningState) {
+	    return ReactStateSetters.createStateSetter(this, funcReturningState);
+	  },
+
+	  /**
+	   * Returns a single-argument callback that can be used to update a single
+	   * key in the component's state.
+	   *
+	   * For example, these statements are equivalent:
+	   *
+	   *   this.setState({x: 1});
+	   *   this.createStateKeySetter('x')(1);
+	   *
+	   * Note: this is memoized function, which makes it inexpensive to call.
+	   *
+	   * @param {string} key The key in the state that you should update.
+	   * @return {function} callback of 1 argument which calls setState() with
+	   *                    the provided keyName and callback argument.
+	   */
+	  createStateKeySetter: function (key) {
+	    return ReactStateSetters.createStateKeySetter(this, key);
+	  }
+	};
+
+	module.exports = ReactStateSetters;
 
 /***/ }
 /******/ ]);

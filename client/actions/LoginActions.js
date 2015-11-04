@@ -6,11 +6,18 @@ class LoginActions {
 		this.generateActions(
 			'loginSuccess',
 			'loginFailed',
-      'loginStatusUpdated'
+      'loginStatusUpdated',
+      'newAccountCreated'
 
 		);
 	}
-  	
+  	createAccount(email, password, phoneNumber, firstName, lastName, initialGroupCode) {
+      LoginAPI.createUserAccount(email, password, phoneNumber, firstName, lastName, initialGroupCode).then((result) => {
+        this.actions.newAccountCreated(result);
+      }).catch(function(error) {
+
+      });
+    }
   	tryLogin(email, password) {
   		LoginAPI.tryLogin(email, password).then((result) => {
         //How to return result from here?
