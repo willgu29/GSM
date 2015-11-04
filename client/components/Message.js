@@ -42,12 +42,15 @@ module.exports = React.createClass({
   },
 
 	loadMessages: function() {
-    MessageActions.getMessagesForThread(this.state.messageThread._id);
+    MessageActions.getMessagesForThreadByID(this.state.selectedMessageThread._id);
 	},
 	refreshMessageList: function() {
 		this.loadMessages();
 	},
 	render: function (){
+    console.log("Message Thread: " + JSON.stringify(this.state.selectedMessageThread));
+    var messageThread = this.state.selectedMessageThread;
+    var convoTitle = messageThread.participant_fullNames.join(", ");
 		var messageArray = this.state.messages;
 		var messageDisplay = [];
 		for (var i = 0; i < messageArray.length; i++) {
@@ -59,11 +62,13 @@ module.exports = React.createClass({
 
 		return(
 			<div>
-				<h3>Conversation with {this.props.convoTitle}</h3>
+				<h3>Conversation with {convoTitle}</h3>
 				<li>
 					{messageDisplay}
 				</li>
-				<MessageSend url={this.props.url} convoID={this.props.convoID} handleMessageSubmit={this.refreshMessageList} />
+				<MessageSend email={messageThread.participant_emails}
+                      convoID={messageThread._id} 
+                      handleMessageSubmit={this.refreshMessageList} />
 			</div>
 		);
 	}
@@ -88,26 +93,14 @@ var MessageSend = React.createClass({
     		text: this.state.text
     	};
     	//create message
-    	var urlPost = this.props.url + this.props.convoID;
-    	$.ajax({
-    		url: urlPost,
-    		type:"POST",
-    		dataType:"json",
-    		data: data,
-			success: function(messages) {
-        		this.props.handleMessageSubmit();
-      		}.bind(this),
-      		error: function(xhr,status,err){
-        		console.log("Error: ", err);
-      		}.bind(this)
-    	});
-
+      MessageActions.createMessageForThreadID(this.props.convoID, this.state.text);
+    	
     	
     	var emailData = {
-    		emails: this.state.emails,
+    		emails: this.props.emails,
     		text: this.state.text
     	};
-    	//
+    	//Email notification
     	console.log(emailData);
     	$.ajax({
     		url: "/api/sendMailTo/",

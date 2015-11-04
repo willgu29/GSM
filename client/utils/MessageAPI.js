@@ -20,7 +20,7 @@ const MessageAPI = {
 
 	//every message thread has a conversationID, this will fetch the entire message log.
 	getMessagesForMessageThreadByID: function(messageThreadID) {
-		return axios.get("/api/message/" + convoID)
+		return axios.get("/api/message/" +  messageThreadID)
 					.then(function (response) {
 						console.log(response);
 						return response.data;

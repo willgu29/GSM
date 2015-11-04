@@ -13,6 +13,7 @@ var LandingPage = require("./components/LandingPage");
 var GSMHeader = require('./components/GSMHeader');
 var GSMUserTableView = require("./components/GSMUserTableView");
 var Message = require('./components/Message');
+var MessageThreads = require("./components/MessageThreads");
 var EditAccount = require('./components/EditAccountForm');
 var GSMUserProfile = require("./components/GSMUserProfile");
 var FindGroups = require("./components/FindGroups");
@@ -68,7 +69,9 @@ ReactDOM.render((<Router>
 				<Route path="/" component={App}>
 					<Route path="users/:userID" component={GSMUserProfile} />
 					<Route path="editAccount" component={EditAccount} />
-					<Route path="messages/:messageID" component={Message} />
+					<Route path="messages" component={MessageThreads}>
+						<Route path="conversation/:messageID" component={Message} />					
+					</Route>
 					<Route path="find" component={FindGroups} >
 						<Route path="groups/:categoryID" component={Groups} />
 					</Route>

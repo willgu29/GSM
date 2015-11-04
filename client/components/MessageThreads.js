@@ -1,5 +1,18 @@
-var MessageThreadRow = React.createClass({
+'use strict'
+import React from 'react'
+var $ = require("jquery");
+import { Router, Route, Link } from 'react-router'
 
+
+var MessageActions = require("../actions/MessageActions");
+var MessageStore = require("../stores/MessageStore");
+
+
+var MessageThreadRow = React.createClass({
+	handleClick: function() {
+		MessageActions.setSelectedThreadTo(this.props.convoID);
+		MessageActions.getMessagesForThreadByID(this.props.convoID);
+	},
 	render: function() {
 		var fullName = this.props.fullName;
 		var participantNames = this.props.participants;
@@ -8,41 +21,38 @@ var MessageThreadRow = React.createClass({
 
 		var convoURL = this.props.url + this.props.convoID + "?convoTitle=" + participantNames;
 		return(
-			<li><a href={convoURL}>{participants}: {infoText}</a></li>
+			<li><Link onClick={this.handleClick} to={convoURL}>{participants}: {infoText}</Link></li>
 
 		);
 	}
 
 })
 
-var MessageThreads = React.createClass({
+module.exports = React.createClass({
+	displayName:"MessageThreads",
 	getInitialState: function() {
-		return({threads:[]});
+		return MessageStore.getState();
 	},
 	componentDidMount: function() {
-		$.ajax({
-			url: this.props.url,
-			dataType: 'json',
-			cache: false,
-			success: function(arrayOfThreads){
-				console.log(arrayOfThreads);
-				this.setState({threads:arrayOfThreads});
-			}.bind(this),
-			error: function(xhr,status,err){
-        		console.error(status, err.toString());
-      		}.bind(this)
-		});	
+		MessageStore.listen(this.onChange);
+		MessageActions.getMessageThreadsForUserID("me");
+	},
+	componentWillUnmount: function() {
+		MessageStore.unlisten(this.onChange);
+	},
+	onChange(state){
+		this.setState(state);
 	},
 	render: function() {
 
-		var arrayOfThreads = this.state.threads;
+		var arrayOfThreads = this.state.messageThreads;
 		var arrayOfRows = [];
 		for (var i = 0; i < arrayOfThreads.length; i++) {
 			var thread = arrayOfThreads[i];
 			arrayOfRows.push(<MessageThreadRow fullName={thread.fullName} 
 												participants={thread.participant_fullNames}
 												messageCount={thread.messageCount} 
-												url="/messages/"
+												url="/messages/conversation/"
 												convoID={thread._id}/>);
 		}
 
@@ -51,9 +61,12 @@ var MessageThreads = React.createClass({
 				to send individuals a message!</li>);
 		}
 		return(
-			<ul>
-				{arrayOfRows}
-			</ul>
+			<div>
+				<ul>
+					{arrayOfRows}
+				</ul>
+				{this.props.children}
+			</div>
 		);
 	}
 });

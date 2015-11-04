@@ -418,7 +418,7 @@ app.post("/api/messages/", loggedIn, function (req, res) {
            return res.json({info: "There was an error. Please try again in a minute."});
           } else {
            console.log(newThread);
-           return res.json({info: "success", _id: newThread._id, convoTitle: [clientOneFullName, clientTwoFullName]});
+           return res.json(newThread);
           }
         });
       }

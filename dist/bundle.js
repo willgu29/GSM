@@ -63,6 +63,7 @@
 	var GSMHeader = __webpack_require__(235);
 	var GSMUserTableView = __webpack_require__(236);
 	var Message = __webpack_require__(242);
+	var MessageThreads = __webpack_require__(284);
 	var EditAccount = __webpack_require__(246);
 	var GSMUserProfile = __webpack_require__(248);
 	var FindGroups = __webpack_require__(250);
@@ -119,7 +120,11 @@
 			{ path: '/', component: App },
 			React.createElement(_reactRouter.Route, { path: 'users/:userID', component: GSMUserProfile }),
 			React.createElement(_reactRouter.Route, { path: 'editAccount', component: EditAccount }),
-			React.createElement(_reactRouter.Route, { path: 'messages/:messageID', component: Message }),
+			React.createElement(
+				_reactRouter.Route,
+				{ path: 'messages', component: MessageThreads },
+				React.createElement(_reactRouter.Route, { path: 'conversation/:messageID', component: Message })
+			),
 			React.createElement(
 				_reactRouter.Route,
 				{ path: 'find', component: FindGroups },
@@ -36935,12 +36940,15 @@
 	  },
 
 	  loadMessages: function loadMessages() {
-	    MessageActions.getMessagesForThread(this.state.messageThread._id);
+	    MessageActions.getMessagesForThreadByID(this.state.selectedMessageThread._id);
 	  },
 	  refreshMessageList: function refreshMessageList() {
 	    this.loadMessages();
 	  },
 	  render: function render() {
+	    console.log("Message Thread: " + JSON.stringify(this.state.selectedMessageThread));
+	    var messageThread = this.state.selectedMessageThread;
+	    var convoTitle = messageThread.participant_fullNames.join(", ");
 	    var messageArray = this.state.messages;
 	    var messageDisplay = [];
 	    for (var i = 0; i < messageArray.length; i++) {
@@ -36956,14 +36964,16 @@
 	        'h3',
 	        null,
 	        'Conversation with ',
-	        this.props.convoTitle
+	        convoTitle
 	      ),
 	      _react2['default'].createElement(
 	        'li',
 	        null,
 	        messageDisplay
 	      ),
-	      _react2['default'].createElement(MessageSend, { url: this.props.url, convoID: this.props.convoID, handleMessageSubmit: this.refreshMessageList })
+	      _react2['default'].createElement(MessageSend, { email: messageThread.participant_emails,
+	        convoID: messageThread._id,
+	        handleMessageSubmit: this.refreshMessageList })
 	    );
 	  }
 	});
@@ -36986,25 +36996,13 @@
 	      text: this.state.text
 	    };
 	    //create message
-	    var urlPost = this.props.url + this.props.convoID;
-	    $.ajax({
-	      url: urlPost,
-	      type: "POST",
-	      dataType: "json",
-	      data: data,
-	      success: (function (messages) {
-	        this.props.handleMessageSubmit();
-	      }).bind(this),
-	      error: (function (xhr, status, err) {
-	        console.log("Error: ", err);
-	      }).bind(this)
-	    });
+	    MessageActions.createMessageForThreadID(this.props.convoID, this.state.text);
 
 	    var emailData = {
-	      emails: this.state.emails,
+	      emails: this.props.emails,
 	      text: this.state.text
 	    };
-	    //
+	    //Email notification
 	    console.log(emailData);
 	    $.ajax({
 	      url: "/api/sendMailTo/",
@@ -37052,37 +37050,53 @@
 		function MessageActions() {
 			_classCallCheck(this, MessageActions);
 
-			this.generateActions("messageThreadReceived", "messageCreated", "messagesForThreadReceived");
+			this.generateActions("messageThreadsReceived", "messageThreadReceived", "messageCreated", "messagesForThreadReceived");
 		}
 
 		_createClass(MessageActions, [{
+			key: "setSelectedThreadTo",
+			value: function setSelectedThreadTo(convoID) {
+				this.dispatch(convoID);
+			}
+
+			//only returns current user (pass in nil)
+		}, {
+			key: "getMessageThreadsForUserID",
+			value: function getMessageThreadsForUserID(userID) {
+				var _this = this;
+
+				MessageAPI.getMessageThreadsForUserID(userID).then(function (result) {
+					_this.actions.messageThreadsReceived(result);
+				})["catch"](function (error) {});
+			}
+		}, {
 			key: "getMessageThreadByID",
 			value: function getMessageThreadByID(id) {}
 		}, {
 			key: "getMessagesForThreadByID",
 			value: function getMessagesForThreadByID(threadID) {
-				var _this = this;
+				var _this2 = this;
 
 				MessageAPI.getMessagesForMessageThreadByID(threadID).then(function (result) {
-					_this.actions.messagesForThreadReceived(result);
+					_this2.actions.messagesForThreadReceived(result);
 				})["catch"](function (error) {});
 			}
 		}, {
 			key: "createMessageThread",
 			value: function createMessageThread(participantID, participantFullName, participantEmail) {
-				var _this2 = this;
+				var _this3 = this;
 
 				MessageAPI.createNewMessageThread(participantID, participantFullName, participantEmail).then(function (result) {
-					_this2.actions.messageThreadReceived(result);
+					_this3.actions.messageThreadReceived(result);
 				})["catch"](function (error) {});
 			}
 		}, {
 			key: "createMessageForThreadID",
 			value: function createMessageForThreadID(threadID, messageText) {
-				var _this3 = this;
+				var _this4 = this;
 
 				MessageAPI.createNewMessageInThreadIDWithText(threadID, messageText).then(function (result) {
-					_this3.actions.messageCreated(result);
+					_this4.actions.messageCreated(result);
 				})["catch"](function (error) {});
 			}
 		}]);
@@ -37117,7 +37131,7 @@
 
 		//every message thread has a conversationID, this will fetch the entire message log.
 		getMessagesForMessageThreadByID: function getMessagesForMessageThreadByID(messageThreadID) {
-			return axios.get("/api/message/" + convoID).then(function (response) {
+			return axios.get("/api/message/" + messageThreadID).then(function (response) {
 				console.log(response);
 				return response.data;
 			})["catch"](function (response) {
@@ -37187,20 +37201,39 @@
 	  function MessageStore() {
 	    _classCallCheck(this, MessageStore);
 
-	    this.messageThread = {};
+	    this.messageThreads = [];
+	    this.selectedMessageThread = {};
 	    this.messages = [];
 
 	    this.bindListeners({
+	      onMessageThreadsReceived: MessageActions.messageThreadsReceived,
 	      onMessageThreadReceived: MessageActions.messageThreadReceived,
 	      onMessageCreated: MessageActions.messageCreated,
-	      onMessagesForThreadReceived: MessageActions.messagesForThreadReceived
+	      onMessagesForThreadReceived: MessageActions.messagesForThreadReceived,
+	      onSetSelectedThreadTo: MessageActions.setSelectedThreadTo
 	    });
 	  }
 
 	  _createClass(MessageStore, [{
+	    key: 'onSetSelectedThreadTo',
+	    value: function onSetSelectedThreadTo(convoID) {
+	      for (var i = 0; i < this.messageThreads.length; i++) {
+	        var messageThread = this.messageThreads[i];
+	        if (messageThread._id == convoID) {
+	          this.selectedMessageThread = messageThread;
+	          break;
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'onMessageThreadsReceived',
+	    value: function onMessageThreadsReceived(result) {
+	      this.messageThreads = result;
+	    }
+	  }, {
 	    key: 'onMessageThreadReceived',
 	    value: function onMessageThreadReceived(result) {
-	      this.messageThread = result;
+	      this.selectedMessageThread = result;
 	    }
 	  }, {
 	    key: 'onMessagesForThreadReceived',
@@ -37389,9 +37422,9 @@
 			MessageStore.unlisten(this.onChange);
 		},
 		onChange: function onChange(state) {
-			if (state.messageThread.info == "success") {
+			if (state.selectedMessageThread._id) {
 				console.log("hello?");
-				var pathURL = "/messages/" + state.messageThread._id;
+				var pathURL = "/messages/conversation/" + state.selectedMessageThread._id;
 				this.history.pushState(null, pathURL, null);
 			}
 		},
@@ -37837,6 +37870,133 @@
 	})();
 
 	module.exports = alt.createStore(GroupStore, 'GroupStore');
+
+/***/ },
+/* 255 */,
+/* 256 */,
+/* 257 */,
+/* 258 */,
+/* 259 */,
+/* 260 */,
+/* 261 */,
+/* 262 */,
+/* 263 */,
+/* 264 */,
+/* 265 */,
+/* 266 */,
+/* 267 */,
+/* 268 */,
+/* 269 */,
+/* 270 */,
+/* 271 */,
+/* 272 */,
+/* 273 */,
+/* 274 */,
+/* 275 */,
+/* 276 */,
+/* 277 */,
+/* 278 */,
+/* 279 */,
+/* 280 */,
+/* 281 */,
+/* 282 */,
+/* 283 */,
+/* 284 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _react = __webpack_require__(149);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(147);
+
+	var $ = __webpack_require__(237);
+
+	var MessageActions = __webpack_require__(243);
+	var MessageStore = __webpack_require__(245);
+
+	var MessageThreadRow = _react2['default'].createClass({
+		displayName: 'MessageThreadRow',
+
+		handleClick: function handleClick() {
+			MessageActions.setSelectedThreadTo(this.props.convoID);
+			MessageActions.getMessagesForThreadByID(this.props.convoID);
+		},
+		render: function render() {
+			var fullName = this.props.fullName;
+			var participantNames = this.props.participants;
+			var participants = participantNames.join(", ");
+			var infoText = this.props.messageCount + " messages in conversation";
+
+			var convoURL = this.props.url + this.props.convoID + "?convoTitle=" + participantNames;
+			return _react2['default'].createElement(
+				'li',
+				null,
+				_react2['default'].createElement(
+					_reactRouter.Link,
+					{ onClick: this.handleClick, to: convoURL },
+					participants,
+					': ',
+					infoText
+				)
+			);
+		}
+
+	});
+
+	module.exports = _react2['default'].createClass({
+		displayName: "MessageThreads",
+		getInitialState: function getInitialState() {
+			return MessageStore.getState();
+		},
+		componentDidMount: function componentDidMount() {
+			MessageStore.listen(this.onChange);
+			MessageActions.getMessageThreadsForUserID("me");
+		},
+		componentWillUnmount: function componentWillUnmount() {
+			MessageStore.unlisten(this.onChange);
+		},
+		onChange: function onChange(state) {
+			this.setState(state);
+		},
+		render: function render() {
+
+			var arrayOfThreads = this.state.messageThreads;
+			var arrayOfRows = [];
+			for (var i = 0; i < arrayOfThreads.length; i++) {
+				var thread = arrayOfThreads[i];
+				arrayOfRows.push(_react2['default'].createElement(MessageThreadRow, { fullName: thread.fullName,
+					participants: thread.participant_fullNames,
+					messageCount: thread.messageCount,
+					url: '/messages/conversation/',
+					convoID: thread._id }));
+			}
+
+			if (arrayOfRows.length == 0) {
+				arrayOfRows = _react2['default'].createElement(
+					'li',
+					null,
+					'No conversations started yet. Browse members and click more info to send individuals a message!'
+				);
+			}
+			return _react2['default'].createElement(
+				'div',
+				null,
+				_react2['default'].createElement(
+					'ul',
+					null,
+					arrayOfRows
+				),
+				this.props.children
+			);
+		}
+	});
+
+	// React.render(<MessageThreads url="/api/messages/" />, document.getElementById("messageThreads"));
 
 /***/ }
 /******/ ]);

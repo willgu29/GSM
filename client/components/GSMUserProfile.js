@@ -19,9 +19,9 @@ var NewMessage = React.createClass({
 		MessageStore.unlisten(this.onChange);
 	},
 	onChange(state) {
-		if (state.messageThread.info == "success") {
+		if (state.selectedMessageThread._id) {
 			console.log("hello?");
-			var pathURL = "/messages/" + state.messageThread._id;
+			var pathURL = "/messages/conversation/" + state.selectedMessageThread._id;
 			this.history.pushState(null, pathURL, null);
 
 		}
