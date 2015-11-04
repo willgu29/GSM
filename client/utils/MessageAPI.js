@@ -20,7 +20,7 @@ const MessageAPI = {
 
 	//every message thread has a conversationID, this will fetch the entire message log.
 	getMessagesForMessageThreadByID: function(messageThreadID) {
-		return axios.get("/api/message/" +  messageThreadID)
+		return axios.get("/api/messages/" +  messageThreadID)
 					.then(function (response) {
 						console.log(response);
 						return response.data;
@@ -63,7 +63,7 @@ const MessageAPI = {
 	},
 
 	createNewMessageInThreadIDWithText: function(messageThreadID, messageToAdd) {
-		return axios.post("/api/message" + messageThreadID, {
+		return axios.post("/api/messages" + messageThreadID, {
 						text: messageToAdd
 					})
 					then(function (response) {

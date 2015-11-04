@@ -401,7 +401,7 @@ app.post("/api/messages/", loggedIn, function (req, res) {
     } else {
 
       if (thread) {
-          return res.json({info: "success", _id: thread._id, convoTitle: [clientOneFullName, clientTwoFullName]});
+          return res.json(thread);
       } else {
         //Create it
         var newThread =new MessageThread({ user_id: startID, 

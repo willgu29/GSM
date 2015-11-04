@@ -37131,7 +37131,7 @@
 
 		//every message thread has a conversationID, this will fetch the entire message log.
 		getMessagesForMessageThreadByID: function getMessagesForMessageThreadByID(messageThreadID) {
-			return axios.get("/api/message/" + messageThreadID).then(function (response) {
+			return axios.get("/api/messages/" + messageThreadID).then(function (response) {
 				console.log(response);
 				return response.data;
 			})["catch"](function (response) {
@@ -37168,7 +37168,7 @@
 		},
 
 		createNewMessageInThreadIDWithText: function createNewMessageInThreadIDWithText(messageThreadID, messageToAdd) {
-			return axios.post("/api/message" + messageThreadID, {
+			return axios.post("/api/messages" + messageThreadID, {
 				text: messageToAdd
 			});
 			then(function (response) {
