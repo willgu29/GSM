@@ -25,7 +25,6 @@ var LoginForm = React.createClass({
 			email: this.state.email,
 			password: this.state.password
 		};
-		console.log(data);
 		LoginActions.tryLogin(email,password);
 
 	},

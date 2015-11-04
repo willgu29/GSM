@@ -26795,7 +26795,6 @@
 				email: this.state.email,
 				password: this.state.password
 			};
-			console.log(data);
 			LoginActions.tryLogin(email, password);
 		},
 		handleChangeEmail: function handleChangeEmail(e) {
@@ -37299,21 +37298,23 @@
 	var _react2 = _interopRequireDefault(_react);
 
 	var $ = __webpack_require__(237);
+	var UserStore = __webpack_require__(249);
 	var UserActions = __webpack_require__(247);
 	module.exports = _react2['default'].createClass({
 	    displayName: 'exports',
 
 	    getInitialState: function getInitialState() {
-	        return {
-
-	            topFiveTime: "",
-	            wants: [],
-	            canOffer: []
-
-	        };
+	        UserStore.getState();
 	    },
 	    componentDidMount: function componentDidMount() {
+	        UserStore.listen(this.onChange);
 	        UserActions.getUser("me");
+	    },
+	    componentWillUnmount: function componentWillUnmount() {
+	        UserStore.unlisten(this.onChange);
+	    },
+	    onChange: function onChange(state) {
+	        this.setState(state);
 	    },
 	    handleChange: function handleChange(name, event) {
 	        var change = {};

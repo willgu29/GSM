@@ -1,22 +1,22 @@
 'use strict'
 import React from 'react'
 var $ = require('jquery');
+var UserStore = require("../stores/UserStore");
 var UserActions = require("../actions/UserActions");
 module.exports = React.createClass({
     getInitialState: function() {
-        return ({
-            
-            topFiveTime:  "",
-            wants: [],
-            canOffer: []
-
-    
-            
-        });
+        UserStore.getState();
     },
     componentDidMount: function() {
+        UserStore.listen(this.onChange);
         UserActions.getUser("me");
      },
+    componentWillUnmount: function() {
+        UserStore.unlisten(this.onChange);
+    },
+    onChange(state) {
+        this.setState(state);
+    },
     handleChange: function(name, event) {
         var change = {};
         change[name] = event.target.value;
